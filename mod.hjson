@@ -1,0 +1,8 @@
+displayName: "Sueno"
+name: "Sueno"
+author: "Durmiendo & FixmanOffical"
+main: "org.durmiendo.sueno"
+description: ""
+version: 1.0
+minGameVersion: 140
+java: true
