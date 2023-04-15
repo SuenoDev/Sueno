@@ -25,9 +25,11 @@ allprojects {
 
 dependencies {
     compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-    compileOnly files("B:/m/Mindustry.jar")
+    compileOnly "com.github.Anuken.MindustryJitpack:core:$mindustryVersion"
+
 
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+
 }
 
 configurations.all {
@@ -39,7 +41,7 @@ configurations.all {
 }
 
 jar {
-    archiveFileName = "${project.archivesBaseName}Desktop.jar"
+    archiveFileName = "SuenoDesktop.jar"
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }

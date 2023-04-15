@@ -1,16 +1,9 @@
 package org.durmiendo.sueno.extend;
 
-import arc.Core;
-import arc.func.Func;
+
 import arc.graphics.Color;
-import arc.math.Mathf;
-import mindustry.core.UI;
-import mindustry.gen.Building;
-import mindustry.graphics.Pal;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
-import mindustry.world.consumers.ConsumeLiquid;
-import mindustry.world.consumers.ConsumeLiquids;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 import mindustry.world.meta.StatValues;
