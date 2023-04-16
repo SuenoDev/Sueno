@@ -2,12 +2,10 @@ package org.durmiendo.sueno.extend;
 
 
 import arc.graphics.Color;
-import mindustry.gen.Building;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SAttributes;
 
-import java.awt.*;
 
 public class SuenoBlock extends Block  {
 
@@ -24,7 +22,7 @@ public class SuenoBlock extends Block  {
     @Override
     public void setStats(){
         super.setStats();
-        this.stats.add(SuenoStat.temperature, " from @ to @",  new Object[]{(Object) this.attributes.get(SAttributes.temperatureMin), (Object) this.attributes.get(SAttributes.temperatureMax)});
+        this.stats.add(SuenoStat.temperature, " from @ to @", this.attributes.get(SAttributes.temperatureMin), this.attributes.get(SAttributes.temperatureMax));
     }
 
 
