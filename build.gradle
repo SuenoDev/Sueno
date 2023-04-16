@@ -16,7 +16,7 @@ ext{
     //the build number that this mod is made for
     mindustryVersion = 'v142'
     jabelVersion = "93fde537c7"
-    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
+    //sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
 //java 8 backwards compatibility flag
@@ -41,7 +41,7 @@ configurations.all{
         }
     }
 }
-
+/*
 task jarAndroid{
     dependsOn "jar"
 
@@ -60,7 +60,7 @@ task jarAndroid{
                 .execute(null, new File("$buildDir/libs")).waitForProcessOutput(System.out, System.err)
     }
 }
-
+*/
 jar{
     archiveFileName = "${project.archivesBaseName}Desktop.jar"
 
@@ -78,16 +78,16 @@ jar{
 }
 
 task deploy(type: Jar){
-    dependsOn jarAndroid
+    //dependsOn jarAndroid
     dependsOn jar
     archiveFileName = "${project.archivesBaseName}.jar"
 
-    from{ [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar"), zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")] }
+    from{ [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar")/*, zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")*/] }
 
     doLast{
         delete{
             delete "$buildDir/libs/${project.archivesBaseName}Desktop.jar"
-            delete "$buildDir/libs/${project.archivesBaseName}Android.jar"
+            //delete "$buildDir/libs/${project.archivesBaseName}Android.jar"
         }
     }
 }
