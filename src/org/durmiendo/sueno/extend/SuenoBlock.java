@@ -7,18 +7,13 @@ import mindustry.world.Block;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
 import mindustry.world.meta.StatValues;
+import org.durmiendo.sueno.content.SAttributes;
 
 import java.awt.*;
 
 public class SuenoBlock extends Block  {
 
-    public int sizeX = 1;
-    public int sizeY = 1;
-
-    public float temperature = 0;
-    public float temperatureMax = 200;
-    public float temperatureMin = -200;
-    public int size = (int) Math.sqrt(sizeX*sizeY);
+    public int size = 1;
 
 
 
@@ -30,8 +25,7 @@ public class SuenoBlock extends Block  {
     @Override
     public void setStats(){
 
-        this.stats.add(Stat.size, "@x@", new Object[]{(Object) sizeX, (Object) sizeY});
-        this.stats.add(SuenoStat.temperature, "@/@",  new Object[]{(Object) this.temperatureMax, (Object) this.temperatureMin});
+        this.stats.add(SuenoStat.temperature, "@/@",  new Object[]{(Object) this.attributes.get(SAttributes.temperatureMax), (Object) this.attributes.get(SAttributes.temperatureMin)});
 
         if(synthetic()){
             stats.add(Stat.health, health, StatUnit.none);

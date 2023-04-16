@@ -17,8 +17,8 @@ public class MainSueno extends Mod {
 
         Events.on(ClientLoadEvent.class, e -> {
             Time.runTask(15f, () -> {
-                BaseDialog dialog = new BaseDialog("Welcome to the Sueno");
-                dialog.cont.button("I see", dialog::hide).size(100f, 50f);
+                BaseDialog dialog = new BaseDialog("Welcome to the Sueno v0.1");
+                dialog.cont.button("Close", dialog::hide).size(100f, 50f);
                 dialog.show();
             });
         });
@@ -26,6 +26,7 @@ public class MainSueno extends Mod {
 
     @Override
     public void loadContent(){
+
         SPlanets.load();
         SBlock.load();
         Log.info("Loading some Sueno content.");

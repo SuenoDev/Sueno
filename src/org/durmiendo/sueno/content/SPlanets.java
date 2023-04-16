@@ -7,48 +7,62 @@ import mindustry.content.Items;
 import mindustry.content.Planets;
 import mindustry.game.Team;
 import mindustry.graphics.g3d.HexMesh;
+import mindustry.graphics.g3d.HexSkyMesh;
+import mindustry.graphics.g3d.MultiMesh;
+import mindustry.maps.planet.ErekirPlanetGenerator;
 import mindustry.maps.planet.SerpuloPlanetGenerator;
 import mindustry.type.Planet;
+import mindustry.world.meta.Attribute;
+import mindustry.world.meta.Env;
 
 public class SPlanets extends Planets {
     public static Planet hielo;
 
     public static void load() {
-        hielo = new Planet("hielo", sun, 0.7f, 5){
-            {
-             this.generator = new SerpuloPlanetGenerator();
-                this.meshLoader = () -> {
-                    return new HexMesh(this, 6);
-                };
-                this.alwaysUnlocked = true;;
-                this.defaultEnv = 17;
-                this.startSector = 10;
-                this.atmosphereRadIn = 0;
-                this.atmosphereRadOut = 0;
-                this.tidalLock = false;
-                this.orbitSpacing = 7.0F;
-                this.totalRadius += 2.6F;
-                this.lightSrcTo = 0.5F;
-                this.lightDstFrom = 0.2F;
-                this.clearSectorOnLose = true;
-                this.defaultCore = Blocks.coreBastion;
-                this.iconColor = Color.valueOf("c5e6fa");
-                this.hiddenItems.addAll(Items.serpuloItems);
-                this.enemyBuildSpeedMultiplier = 0.4F;
-                this.updateLighting = false;
-                this.ruleSetter = (r) -> {
-                    r.waveTeam = Team.malis;
-                    r.placeRangeCheck = false;
-                    r.showSpawns = true;
-                    r.fog = true;
-                    r.staticFog = true;
-                    r.lighting = false;
-                    r.coreDestroyClear = true;
-                    r.onlyDepositCore = true;
-                };
-                this.unlockedOnLand.add(Blocks.coreCitadel);
-            }
-        };
+        hielo  = new Planet("hielo", sun, 1.4f, 2){{
+            generator = new ErekirPlanetGenerator();
+            meshLoader = () -> new HexMesh(this, 5);
+            cloudMeshLoader = () -> new MultiMesh(
+                    new HexSkyMesh(this, 2, 0.15f, 0.14f, 5, Color.valueOf("77dde7").a(0.3f), 2, 0.42f, 1f, 0.43f),
+                    new HexSkyMesh(this, 3, 0.6f, 0.15f, 5, Color.valueOf("003153").a(0.3f), 2, 0.42f, 1.2f, 0.45f)
+            );
+            alwaysUnlocked = true;
+            landCloudColor = Color.valueOf("ed6542");
+            atmosphereColor = Color.valueOf("002133").a(0);
+            defaultEnv = Env.scorching | Env.terrestrial;
+            startSector = 10;
+            atmosphereRadIn = 0.02f;
+            atmosphereRadOut = 0.3f;
+            tidalLock = true;
+            orbitSpacing = 2f;
+            totalRadius += 2.6f;
+            lightSrcTo = 0.5f;
+            lightDstFrom = 0.2f;
+            clearSectorOnLose = true;
+            defaultCore = Blocks.coreBastion;
+            iconColor = Color.valueOf("00bbff");
+            hiddenItems.addAll(Items.serpuloItems).removeAll(Items.erekirItems);
+            enemyBuildSpeedMultiplier = 0.4f;
+
+            //TODO SHOULD there be lighting?
+            updateLighting = false;
+
+            defaultAttributes.set(Attribute.heat, 0.8f);
+
+            ruleSetter = r -> {
+                r.waveTeam = Team.malis;
+                r.placeRangeCheck = false;
+                r.showSpawns = true;
+                r.fog = true;
+                r.staticFog = true;
+                r.lighting = false;
+                r.coreDestroyClear = true;
+                r.onlyDepositCore = true;
+            };
+
+            unlockedOnLand.add(Blocks.coreBastion);
+        }};
+
     }
 
 }
