@@ -17,7 +17,7 @@ public class MainSueno extends Mod {
 
         Events.on(ClientLoadEvent.class, e -> {
             Time.runTask(15f, () -> {
-                BaseDialog dialog = new BaseDialog("Welcome to the Sueno v0.1");
+                BaseDialog dialog = new BaseDialog("Welcome to the Sueno 0.1.1");
                 dialog.cont.button("Close", dialog::hide).size(100f, 50f);
                 dialog.show();
             });
