@@ -42,6 +42,7 @@ public class SuenoBlock extends Block  {
 
     @Override
     public void init() {
+        super.init();
         Timer.schedule(
                 () -> attributes.set(SAttributes.temperature, attributes.get(SAttributes.temperature) - 0.1f), 0.2f
         );
