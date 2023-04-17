@@ -31,26 +31,35 @@ public class SuenoBlock extends Block {
     public void setBars() {
         super.setBars();
 
-        addBar("temperature", (SuenoBlockBuild entity) -> new Bar(
+        addBar("temperatureBar", (SuenoBlockBuild entity) -> new Bar(
                 () -> "Temperature " + String.format("%.1f",entity.temperature),
                 () -> Color.cyan,
                 () -> ((entity.temperature - attributes.get(SAttributes.temperatureMin)) / (attributes.get(SAttributes.temperatureMax) - attributes.get(SAttributes.temperatureMin)))
         ));
     }
 
-    public static class SuenoBlockBuild extends Building {
+    public class SuenoBlockBuild extends Building {
 
-        public float temperature = -100;
+        public float temperature = 0;
 
         @Override
         public void update() {
-            temperature -= 2.3f / 60f * Time.delta;
-            /*if (temperature < block.attributes.get(SAttributes.temperatureMin)) {
-                health -= 4.3f / 60f * Time.delta;
-            }
-            if (temperature > block.attributes.get(SAttributes.temperatureMax)) {
-                health -= 4.3f / 60f * Time.delta;
-            }*/
+            if (temperature < attributes.get(SAttributes.temperatureMin)) {
+                temp();
+            } else min();
+            if (temperature > attributes.get(SAttributes.temperatureMax)) {
+                temp();
+            } else min();
+
+        }
+
+        public void temp() {
+            health -= 50f / 60f * Time.delta;
+            if (health < 0) kill();
+            temperature = attributes.get(SAttributes.temperatureMax);
+        }
+        public void min() {
+            temperature -= 3.4f / 60f * Time.delta;
         }
     }
 }
