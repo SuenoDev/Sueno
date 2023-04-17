@@ -8,7 +8,6 @@ import mindustry.ui.Bar;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SAttributes;
 
-import static java.lang.Math.round;
 
 
 public class SuenoBlock extends Block {
@@ -39,7 +38,7 @@ public class SuenoBlock extends Block {
         ));
     }
 
-    public class SuenoBlockBuild extends Building {
+    public static class SuenoBlockBuild extends Building {
 
         public float temperature = -100;
 
