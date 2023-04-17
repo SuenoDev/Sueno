@@ -5,6 +5,7 @@ import arc.graphics.Color;
 import arc.util.Timer;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SAttributes;
 
 
@@ -41,19 +42,22 @@ public class SuenoBlock extends Block  {
     }
 
     @Override
-    public void init() {
+    public void placeBegan(Tile tile, Block block) {
         super.init();
-        Timer.schedule(
-                () -> {
-                    attributes.set(SAttributes.temperature, attributes.get(SAttributes.temperature) - 0.5f);
-                    removeBar("temperature");
-                    addBar("temperature", entity -> new Bar(
-                            () -> "Temperature",
-                            () -> Color.white,
-                            () -> (attributes.get(SAttributes.temperature) + Math.abs(attributes.get(SAttributes.temperatureMin)))/((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin)))/100)/100
-                    ));
-                }, 0.2f
-        );
+        while(true) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            attributes.set(SAttributes.temperature, attributes.get(SAttributes.temperature) - 5.5f);
+            removeBar("temperature");
+            addBar("temperature", entity -> new Bar(
+                    () -> "Temperature",
+                    () -> Color.white,
+                    () -> (attributes.get(SAttributes.temperature) + Math.abs(attributes.get(SAttributes.temperatureMin))) / ((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin))) / 100) / 100
+            ));
+        }
     }
 
 }
