@@ -44,7 +44,13 @@ public class SuenoBlock extends Block {
 
         @Override
         public void update() {
-            temperature -= 1.3f / 60f * Time.delta;
+            temperature -= 2.3f / 60f * Time.delta;
+            /*if (temperature < block.attributes.get(SAttributes.temperatureMin)) {
+                health -= 4.3f / 60f * Time.delta;
+            }
+            if (temperature > block.attributes.get(SAttributes.temperatureMax)) {
+                health -= 4.3f / 60f * Time.delta;
+            }*/
         }
     }
 }
