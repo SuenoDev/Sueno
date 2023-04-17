@@ -2,6 +2,7 @@ package org.durmiendo.sueno.extend;
 
 
 import arc.graphics.Color;
+import mindustry.gen.Building;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 import mindustry.world.Tile;
@@ -29,34 +30,24 @@ public class SuenoBlock extends Block  {
 
 
     @Override
-    public void setBars(){
+    public void setBars() {
         super.setBars();
 
-        addBar("temperature", entity -> new Bar(
+        addBar("uses", (Temperature entity) -> new Bar(
                 () -> "Temperature",
                 () -> Color.white,
-                () -> (attributes.get(SAttributes.temperature) + Math.abs(attributes.get(SAttributes.temperatureMin)))/((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin)))/100)/100
-        ));
-
+                () -> (entity.temperature + Math.abs(attributes.get(SAttributes.temperatureMin)))/((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin)))/100)/100)
+        );
     }
 
-    @Override
-    public void placeBegan(Tile tile, Block block) {
-        super.init();
-        while(true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            attributes.set(SAttributes.temperature, attributes.get(SAttributes.temperature) - 5.5f);
-            removeBar("temperature");
-            addBar("temperature", entity -> new Bar(
-                    () -> "Temperature",
-                    () -> Color.white,
-                    () -> (attributes.get(SAttributes.temperature) + Math.abs(attributes.get(SAttributes.temperatureMin))) / ((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin))) / 100) / 100
-            ));
-        }
+    public class Temperature extends Building {
+        public float temperature = 0f;
     }
-
 }
+/*addBar("uses",
+(TerraformerBuild entity) -> new Bar(
+() -> Core.bundle.format("bar.uses", maxUses - entity.used),
+ () -> Pal.accent,
+  () -> ((float) maxUses - entity.used) / maxUses));
+*/
+//attributes.get(SAttributes.temperature) + Math.abs(attributes.get(SAttributes.temperatureMin)))/((attributes.get(SAttributes.temperatureMax) + Math.abs(attributes.get(SAttributes.temperatureMin)))/100)/100
