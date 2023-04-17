@@ -2,9 +2,12 @@ package org.durmiendo.sueno.extend;
 
 
 import arc.graphics.Color;
+import arc.util.Time;
+import arc.util.Timer;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SAttributes;
+
 
 
 public class SuenoBlock extends Block  {
@@ -37,4 +40,12 @@ public class SuenoBlock extends Block  {
         ));
 
     }
+
+    @Override
+    public void init() {
+        Timer.schedule(
+                () -> attributes.set(SAttributes.temperature, attributes.get(SAttributes.temperature) - 0.1f), 0.2f
+        );
+    }
+
 }
