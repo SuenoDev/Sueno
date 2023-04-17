@@ -5,7 +5,6 @@ import arc.graphics.Color;
 import mindustry.gen.Building;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
-import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SAttributes;
 
 
@@ -40,7 +39,7 @@ public class SuenoBlock extends Block  {
         );
     }
 
-    public class Temperature extends Building {
+    public static class Temperature extends Building {
         public float temperature = 0f;
     }
 }
