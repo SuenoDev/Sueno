@@ -10,7 +10,7 @@ import mindustry.ui.Bar;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SAttributes;
 
-import static java.lang.Math.round;
+
 
 
 public class SuenoBlock extends Block {
@@ -50,7 +50,7 @@ public class SuenoBlock extends Block {
             if ((temperature < attributes.get(SAttributes.temperatureMin)) || (temperature > attributes.get(SAttributes.temperatureMax))) {
 
                 temp();
-                Math.round(temperature);
+                temperature = Math.round(temperature);
             } else min();
 
         }
