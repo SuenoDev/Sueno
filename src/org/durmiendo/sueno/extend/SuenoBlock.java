@@ -3,11 +3,14 @@ package org.durmiendo.sueno.extend;
 
 import arc.graphics.Color;
 import arc.util.Time;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.gen.Building;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SAttributes;
 
+import static java.lang.Math.round;
 
 
 public class SuenoBlock extends Block {
@@ -40,15 +43,14 @@ public class SuenoBlock extends Block {
 
     public class SuenoBlockBuild extends Building {
 
-        public float temperature = 0;
+        public float temperature = -100;
 
         @Override
         public void update() {
-            if (temperature < attributes.get(SAttributes.temperatureMin)) {
+            if ((temperature < attributes.get(SAttributes.temperatureMin)) || (temperature > attributes.get(SAttributes.temperatureMax))) {
+
                 temp();
-            } else min();
-            if (temperature > attributes.get(SAttributes.temperatureMax)) {
-                temp();
+                Math.round(temperature);
             } else min();
 
         }
@@ -56,10 +58,22 @@ public class SuenoBlock extends Block {
         public void temp() {
             health -= 50f / 60f * Time.delta;
             if (health < 0) kill();
-            temperature = attributes.get(SAttributes.temperatureMax);
         }
         public void min() {
+
             temperature -= 3.4f / 60f * Time.delta;
+        }
+
+        @Override
+        public void readBase(Reads read) {
+            this.temperature = read.f();
+            super.readBase(read);
+        }
+
+        @Override
+        public void writeBase(Writes write) {
+            write.f(temperature);
+            super.writeBase(write);
         }
     }
 }
