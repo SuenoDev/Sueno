@@ -7,8 +7,10 @@ import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
 import org.durmiendo.sueno.content.SBlock;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.ui.SUI;
 
 public class MainSueno extends Mod {
+    public SUI sui;
     public MainSueno(){
 
 
@@ -25,6 +27,8 @@ public class MainSueno extends Mod {
     @Override
     public void loadContent(){
 
+        sui = new SUI();
+        sui.init();
         SPlanets.load();
         SBlock.load();
         Log.info("Loading some Sueno content.");
