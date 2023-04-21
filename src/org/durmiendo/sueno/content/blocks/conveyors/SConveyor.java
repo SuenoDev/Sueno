@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.conveyors;
+package org.durmiendo.sueno.content.blocks.conveyors;
 
 import arc.func.Boolf;
 import arc.graphics.g2d.Draw;
@@ -27,7 +27,7 @@ import mindustry.world.blocks.Autotiler;
 import mindustry.world.blocks.distribution.*;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
-import org.durmiendo.sueno.extend.SuenoBlock;
+import org.durmiendo.sueno.mainContents.SuenoBlock;
 
 public class SConveyor extends SuenoBlock implements Autotiler {
     private static final float itemSpace = 0.4F;

@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.ui;
+package org.durmiendo.sueno.content.ui;
 
 import mindustry.core.UI;
 

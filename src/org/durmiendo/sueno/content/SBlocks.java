@@ -5,9 +5,9 @@ import mindustry.type.Category;
 import mindustry.type.ItemStack;
 import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
-import org.durmiendo.sueno.content.distr.Test;
+import org.durmiendo.sueno.content.blocks.Test;
 
-public class SBlock {
+public class SBlocks {
     public static Block test;
     public static void load() {
         test = new Test("test") {

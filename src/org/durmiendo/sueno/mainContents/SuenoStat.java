@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.extend;
+package org.durmiendo.sueno.mainContents;
 
 import arc.struct.Seq;
 import mindustry.world.meta.Stat;

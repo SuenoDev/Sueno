@@ -1,9 +1,8 @@
-package org.durmiendo.sueno.content.distr;
+package org.durmiendo.sueno.content.blocks;
 
 import mindustry.entities.TargetPriority;
 import mindustry.world.meta.BlockGroup;
-import mindustry.world.meta.Env;
-import org.durmiendo.sueno.extend.SuenoBlock;
+import org.durmiendo.sueno.mainContents.SuenoBlock;
 
 public class Test extends SuenoBlock {
     public Test(String name) {
