@@ -6,7 +6,7 @@ import mindustry.world.meta.StatCat;
 
 public class SuenoStat extends Stat {
 
-    public static final Seq<Stat> all = new Seq<>();
+    // public static final Seq<Stat> all = new Seq<>(); not usege
 
     public static final Stat
 
