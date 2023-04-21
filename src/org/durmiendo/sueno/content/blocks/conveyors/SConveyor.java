@@ -173,9 +173,9 @@ public class SConveyor extends SuenoBlock implements Autotiler {
             Object var3 = builds.first();
             if (var3 instanceof Conveyor.ConveyorBuild) {
                 Conveyor.ConveyorBuild build = (Conveyor.ConveyorBuild)var3;
-                this.ids = (Item[])build.ids.clone();
-                this.xs = (float[])build.xs.clone();
-                this.ys = (float[])build.ys.clone();
+                this.ids = build.ids.clone();
+                this.xs = build.xs.clone();
+                this.ys = build.ys.clone();
                 this.len = build.len;
                 this.clogHeat = build.clogHeat;
                 this.lastInserted = build.lastInserted;
