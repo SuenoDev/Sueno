@@ -5,6 +5,7 @@ import arc.util.*;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
+import mma.MMAMod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.ui.SUI;
@@ -27,8 +28,8 @@ public class MainSueno extends Mod {
     @Override
     public void loadContent(){
 
-        sui = new SUI();
-        sui.init();
+        //sui = new SUI();
+        //sui.init();
         SPlanets.load();
         SBlocks.load();
         Log.info("Loading some Sueno content.");

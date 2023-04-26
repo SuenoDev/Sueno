@@ -19,7 +19,7 @@ public class SPlanets extends Planets {
     public static Planet hielo;
 
     public static void load() {
-        hielo  = new Planet("hielo", sun, 1.4f, 2){{
+        hielo  = new Planet("hielo", sun, 4.3f, 2){{
             generator = new ErekirPlanetGenerator();
             meshLoader = () -> new HexMesh(this, 5);
             cloudMeshLoader = () -> new MultiMesh(
@@ -34,8 +34,9 @@ public class SPlanets extends Planets {
             atmosphereRadIn = 0.02f;
             atmosphereRadOut = 0.3f;
             tidalLock = true;
-            orbitSpacing = 2f;
-            totalRadius += 2.6f;
+            orbitSpacing = 12f;
+            totalRadius += 1.3f;
+            //orbitRadius = 170f;
             lightSrcTo = 0.5f;
             lightDstFrom = 0.2f;
             clearSectorOnLose = true;
@@ -44,7 +45,7 @@ public class SPlanets extends Planets {
             hiddenItems.addAll(Items.serpuloItems).removeAll(Items.erekirItems);
             enemyBuildSpeedMultiplier = 0.4f;
 
-            //TODO SHOULD there be lighting?
+
             updateLighting = false;
 
             defaultAttributes.set(Attribute.heat, 0.8f);
