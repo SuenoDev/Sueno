@@ -2,6 +2,7 @@ package org.durmiendo.sueno;
 
 import arc.*;
 import arc.util.*;
+import mindustry.Vars;
 import mindustry.game.EventType.*;
 import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
@@ -10,9 +11,16 @@ import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.ui.SUI;
 
-public class MainSueno extends Mod {
+public class MainSueno extends MMAMod {
     public SUI sui;
     public MainSueno(){
+
+
+        Events.on(ClientLoadEvent.class, e -> {
+            Vars.renderer.planets.projector.setScaling(1f / 1500f);
+            Vars.renderer.planets.cam.fov = 60f;
+            Vars.renderer.planets.cam.far = 1500f;
+        });
 
 
         Events.on(ClientLoadEvent.class, e -> Time.runTask(15f, () -> {
@@ -28,8 +36,8 @@ public class MainSueno extends Mod {
     @Override
     public void loadContent(){
 
-        //sui = new SUI();
-        //sui.init();
+        sui = new SUI();
+        sui.loadAsync();
         SPlanets.load();
         SBlocks.load();
         Log.info("Loading some Sueno content.");

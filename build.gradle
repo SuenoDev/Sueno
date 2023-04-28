@@ -16,6 +16,8 @@ ext{
     //the build number that this mod is made for
     mindustryVersion = 'v142'
     jabelVersion = "93fde537c7"
+    arcLibVersion = 'eef5d8de44'
+    modCoreVersion = '2a3f8a1aa92'
     //sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
@@ -31,7 +33,16 @@ dependencies{
     compileOnly "com.github.Anuken.MindustryJitpack:core:$mindustryVersion"
 
     annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
-    implementation 'com.github.Zelaux.ZelauxModCore:core:v1.0.1'
+    implementation "com.github.Zelaux.ZelauxArcLib:defaults:$arcLibVersion"
+    implementation "com.github.Zelaux.ZelauxArcLib:utils:$arcLibVersion"
+    implementation "com.github.Zelaux.ZelauxArcLib:tooltips:$arcLibVersion"
+    implementation "com.github.Zelaux.ZelauxArcLib:components:$arcLibVersion"
+    implementation "com.github.Zelaux.ZelauxArcLib:listeners:$arcLibVersion"
+    implementation "com.github.Zelaux.ZelauxModCore:core:$modCoreVersion"
+    implementation "com.github.Zelaux.ZelauxModCore:tiledStructures:$modCoreVersion"
+    implementation "com.github.Zelaux.ZelauxModCore:graphics:$modCoreVersion"
+    implementation "com.github.Zelaux.ZelauxModCore:utils:$modCoreVersion"
+    implementation "com.github.Zelaux.ZelauxModCore:customBlockShape:$modCoreVersion"
 }
 
 //force arc version

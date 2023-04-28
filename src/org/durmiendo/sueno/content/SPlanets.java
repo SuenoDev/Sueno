@@ -36,7 +36,7 @@ public class SPlanets extends Planets {
             tidalLock = true;
             orbitSpacing = 12f;
             totalRadius += 1.3f;
-            //orbitRadius = 170f;
+            orbitRadius = 170f;
             lightSrcTo = 0.5f;
             lightDstFrom = 0.2f;
             clearSectorOnLose = true;

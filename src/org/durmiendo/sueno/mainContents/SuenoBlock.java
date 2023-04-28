@@ -8,12 +8,15 @@ import arc.util.io.Writes;
 import mindustry.gen.Building;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
+
+import mma.world.blocks.CustomShapeBlock;
+
 import org.durmiendo.sueno.content.SAttributes;
 
 
 
 
-public class SuenoBlock extends Block {
+public class SuenoBlock extends CustomShapeBlock {
 
 
     public SuenoBlock(String name) {
