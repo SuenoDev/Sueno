@@ -75,7 +75,7 @@ task jarAndroid{
 */
 jar{
     archiveFileName = "${project.archivesBaseName}Desktop.jar"
-
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from{
         configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
     }
@@ -90,6 +90,7 @@ jar{
 }
 
 task deploy(type: Jar){
+
     //dependsOn jarAndroid
     dependsOn jar
     archiveFileName = "${project.archivesBaseName}.jar"

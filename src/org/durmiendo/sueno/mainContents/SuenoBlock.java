@@ -6,6 +6,7 @@ import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
+import mindustry.type.Category;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
 
@@ -17,8 +18,7 @@ import org.durmiendo.sueno.content.SAttributes;
 
 
 public class SuenoBlock extends CustomShapeBlock {
-
-
+    public SuenoCategory category = SuenoCategory.distribution;
     public SuenoBlock(String name) {
         super(name);
         update = true;

@@ -8,6 +8,7 @@ import mindustry.ui.dialogs.*;
 import mma.MMAMod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.content.ui.SPlacementFragment;
 import org.durmiendo.sueno.mainContents.SuenoUI;
 
 public class MainSueno extends MMAMod {
