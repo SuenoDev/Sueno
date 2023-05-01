@@ -4,15 +4,14 @@ import arc.*;
 import arc.util.*;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
-import mindustry.mod.*;
 import mindustry.ui.dialogs.*;
 import mma.MMAMod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SPlanets;
-import org.durmiendo.sueno.content.ui.SUI;
+import org.durmiendo.sueno.mainContents.SuenoUI;
 
 public class MainSueno extends MMAMod {
-    public SUI sui;
+    public SuenoUI sui;
     public MainSueno(){
 
 
@@ -36,7 +35,7 @@ public class MainSueno extends MMAMod {
     @Override
     public void loadContent(){
 
-        sui = new SUI();
+        sui = new SuenoUI();
         sui.loadAsync();
         SPlanets.load();
         SBlocks.load();
