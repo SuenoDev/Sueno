@@ -18,7 +18,7 @@ import org.durmiendo.sueno.content.SAttributes;
 
 
 public class SuenoBlock extends CustomShapeBlock {
-    public SuenoCategory category = SuenoCategory.distribution;
+    public Category category = Category.distribution;
     public SuenoBlock(String name) {
         super(name);
         update = true;

@@ -1,6 +1,6 @@
 package org.durmiendo.sueno.mainContents;
 
-import arc.struct.Seq;
+
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatCat;
 
@@ -17,5 +17,4 @@ public class SuenoStat extends Stat {
     public SuenoStat(String name) {
         super(name);
     }
-
 }
