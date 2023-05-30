@@ -12,6 +12,7 @@ import org.durmiendo.sueno.content.SPlanets;
 
 public class MainSueno extends MMAMod {
 
+
     public MainSueno(){
 
 
@@ -23,7 +24,7 @@ public class MainSueno extends MMAMod {
 
 
         Events.on(ClientLoadEvent.class, e -> Time.runTask(15f, () -> {
-            BaseDialog dialog = new BaseDialog("Welcome to the Sueno v0.1.2-close");
+            BaseDialog dialog = new BaseDialog("Welcome to the Sueno"+SVars.version);
             dialog.cont.button("Close", dialog::hide).size(100f, 50f);
             dialog.show();
         }));
@@ -38,6 +39,5 @@ public class MainSueno extends MMAMod {
         //new SuenoUI().loadAsync();
         SPlanets.load();
         SBlocks.load();
-        Log.info("Loading some Sueno v0.1.2-close content.");
     }
 }
