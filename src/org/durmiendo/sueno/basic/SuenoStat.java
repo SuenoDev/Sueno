@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.mainContents;
+package org.durmiendo.sueno.basic;
 
 
 import mindustry.world.meta.Stat;

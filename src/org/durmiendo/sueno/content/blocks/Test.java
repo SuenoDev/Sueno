@@ -3,7 +3,7 @@ package org.durmiendo.sueno.content.blocks;
 import mindustry.entities.TargetPriority;
 import mindustry.type.Category;
 import mindustry.world.meta.BlockGroup;
-import org.durmiendo.sueno.mainContents.SuenoBlock;
+import org.durmiendo.sueno.basic.SuenoBlock;
 
 
 public class Test extends SuenoBlock {

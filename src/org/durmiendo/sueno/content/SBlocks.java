@@ -15,9 +15,7 @@ public class SBlocks {
                 requirements(Category.defense, new ItemStack[]{new ItemStack(Items.coal, 3575)});
                 this.health = 300;
                 this.size = 1;
-                attributes.set(SAttributes.temperature, 0);
                 attributes.set(SAttributes.temperatureMin, -250);
-                attributes.set(SAttributes.temperatureMax, 300);
             }
         };
     }

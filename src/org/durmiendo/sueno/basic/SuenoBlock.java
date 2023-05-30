@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.mainContents;
+package org.durmiendo.sueno.basic;
 
 
 import arc.graphics.Color;
@@ -9,8 +9,6 @@ import mindustry.gen.Building;
 import mindustry.type.Category;
 import mindustry.ui.Bar;
 import mindustry.world.Block;
-
-import mma.world.blocks.CustomShapeBlock;
 
 import org.durmiendo.sueno.SVars;
 import org.durmiendo.sueno.content.SAttributes;
@@ -30,7 +28,7 @@ public class SuenoBlock extends Block {
     @Override
     public void setStats() {
         super.setStats();
-        this.stats.add(SuenoStat.temperature, " from @ to @", this.attributes.get(SAttributes.temperatureMin), this.attributes.get(SAttributes.temperatureMax));
+        this.stats.add(SuenoStat.temperature, "minimum @", this.attributes.get(SAttributes.temperatureMin));
     }
 
 
@@ -52,7 +50,7 @@ public class SuenoBlock extends Block {
         @Override
         public void update() {
             if ( temperature <= attributes.get(SAttributes.temperatureMin)) {
-                health -= health * SVars.frostDamage / 60f * Time.delta;
+                health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
                 if (health < 0) kill();
             } else {
                 temperature -= 3.4f / 60f * Time.delta;
