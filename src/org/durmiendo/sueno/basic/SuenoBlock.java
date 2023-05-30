@@ -12,8 +12,7 @@ import mindustry.world.Block;
 
 import org.durmiendo.sueno.SVars;
 import org.durmiendo.sueno.content.SAttributes;
-
-
+import org.durmiendo.sueno.content.blocks.Heater;
 
 
 public class SuenoBlock extends Block {
@@ -39,7 +38,7 @@ public class SuenoBlock extends Block {
         addBar("temperatureBar", (SuenoBlockBuild entity) -> new Bar(
                 () -> "Temperature " + String.format("%.1f",entity.temperature),
                 () -> Color.cyan,
-                () -> ((entity.temperature - attributes.get(SAttributes.temperatureMin)) / (attributes.get(SAttributes.temperatureMax) - attributes.get(SAttributes.temperatureMin)))
+                () -> ((entity.temperature - attributes.get(SAttributes.temperatureMin)) / (0 - attributes.get(SAttributes.temperatureMin)))
         ));
     }
 
@@ -47,13 +46,14 @@ public class SuenoBlock extends Block {
 
         public float temperature = -100;
 
+
         @Override
         public void update() {
-            if ( temperature <= attributes.get(SAttributes.temperatureMin)) {
+            if (temperature <= attributes.get(SAttributes.temperatureMin)) {
                 health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
                 if (health < 0) kill();
             } else {
-                temperature -= 3.4f / 60f * Time.delta;
+                temperature -= SVars.freezingPower / 60f * Time.delta;
             }
         }
 

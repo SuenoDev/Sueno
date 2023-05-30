@@ -11,6 +11,7 @@ import org.durmiendo.sueno.content.SPlanets;
 //import org.durmiendo.sueno.mainContents.SuenoUI;
 
 public class MainSueno extends MMAMod {
+
     public MainSueno(){
         Events.on(ClientLoadEvent.class, e -> {
             Vars.renderer.planets.projector.setScaling(1f / 1500f);
