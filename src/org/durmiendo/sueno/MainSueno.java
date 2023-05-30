@@ -8,11 +8,10 @@ import mindustry.ui.dialogs.*;
 import mma.MMAMod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SPlanets;
-import org.durmiendo.sueno.content.ui.SPlacementFragment;
-import org.durmiendo.sueno.mainContents.SuenoUI;
+//import org.durmiendo.sueno.mainContents.SuenoUI;
 
 public class MainSueno extends MMAMod {
-    public SuenoUI sui;
+
     public MainSueno(){
 
 
@@ -24,7 +23,7 @@ public class MainSueno extends MMAMod {
 
 
         Events.on(ClientLoadEvent.class, e -> Time.runTask(15f, () -> {
-            BaseDialog dialog = new BaseDialog("Welcome to the Sueno 0.1.2");
+            BaseDialog dialog = new BaseDialog("Welcome to the Sueno v0.1.2-close");
             dialog.cont.button("Close", dialog::hide).size(100f, 50f);
             dialog.show();
         }));
@@ -36,10 +35,9 @@ public class MainSueno extends MMAMod {
     @Override
     public void loadContent(){
 
-        sui = new SuenoUI();
-        sui.loadAsync();
+        //new SuenoUI().loadAsync();
         SPlanets.load();
         SBlocks.load();
-        Log.info("Loading some Sueno v 0.1.1-close content.");
+        Log.info("Loading some Sueno v0.1.2-close content.");
     }
 }
