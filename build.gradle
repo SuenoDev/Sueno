@@ -104,3 +104,15 @@ task deploy(type: Jar){
         }
     }
 }
+
+task buildJar(type: Jar) {
+    from sourceSets.main.output
+    archiveFileName = "YourJarFileName.jar"
+    destinationDirectory = file("/path/to/directory")
+}
+
+task buildWithOutput(type:Exec){
+    commandLine "gradle", "build", "--destinationDir", "C:\\Users\\Durmiendo\\AppData\\Roaming\\Mindustry\\mods"
+}
+
+build.finalizedBy buildWithOutput

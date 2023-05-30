@@ -24,8 +24,8 @@ public class MainSueno extends MMAMod {
 
 
         Events.on(ClientLoadEvent.class, e -> Time.runTask(15f, () -> {
-            BaseDialog dialog = new BaseDialog("Welcome to the Sueno"+SVars.version);
-            dialog.cont.button("Close", dialog::hide).size(100f, 50f);
+            BaseDialog dialog = new BaseDialog("Welcome to the Sueno" + SVars.version);
+            dialog.cont.button("Close", dialog::hide).size(180f, 80f);
             dialog.show();
         }));
 
