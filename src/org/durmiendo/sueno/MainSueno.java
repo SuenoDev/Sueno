@@ -40,6 +40,6 @@ public class MainSueno extends MMAMod {
         sui.loadAsync();
         SPlanets.load();
         SBlocks.load();
-        Log.info("Loading some Sueno content.");
+        Log.info("Loading some Sueno v 0.1-close content.");
     }
 }
