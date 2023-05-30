@@ -81,7 +81,7 @@ jar{
     }
 
     from(rootDir){
-        include "mod.hjson"
+        include "mod.json"
     }
 
     from("assets/"){
@@ -94,6 +94,7 @@ task deploy(type: Jar){
     //dependsOn jarAndroid
     dependsOn jar
     archiveFileName = "${project.archivesBaseName}.jar"
+    //destinationDirectory = file("C:\\Users\\Durmiendo\\AppData\\Roaming\\Mindustry\\mods")
 
     from{ [zipTree("$buildDir/libs/${project.archivesBaseName}Desktop.jar")/*, zipTree("$buildDir/libs/${project.archivesBaseName}Android.jar")*/] }
 
@@ -105,14 +106,3 @@ task deploy(type: Jar){
     }
 }
 
-task buildJar(type: Jar) {
-    from sourceSets.main.output
-    archiveFileName = "YourJarFileName.jar"
-    destinationDirectory = file("/path/to/directory")
-}
-
-task buildWithOutput(type:Exec){
-    commandLine "gradle", "build", "--destinationDir", "C:\\Users\\Durmiendo\\AppData\\Roaming\\Mindustry\\mods"
-}
-
-build.finalizedBy buildWithOutput

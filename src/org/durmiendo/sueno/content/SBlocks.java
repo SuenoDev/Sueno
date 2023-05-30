@@ -12,8 +12,7 @@ public class SBlocks {
     public static void load() {
         test = new Test("test") {
             {
-                group = BlockGroup.walls;
-                requirements(Category.defense, new ItemStack[]{new ItemStack(Items.coal, 3)});
+                requirements(Category.defense, new ItemStack[]{new ItemStack(Items.coal, 3575)});
                 this.health = 300;
                 this.size = 1;
                 attributes.set(SAttributes.temperature, 0);

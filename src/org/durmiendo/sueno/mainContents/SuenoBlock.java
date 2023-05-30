@@ -12,13 +12,14 @@ import mindustry.world.Block;
 
 import mma.world.blocks.CustomShapeBlock;
 
+import org.durmiendo.sueno.SVars;
 import org.durmiendo.sueno.content.SAttributes;
 
 
 
 
-public class SuenoBlock extends CustomShapeBlock {
-    public Category category = Category.distribution;
+public class SuenoBlock extends Block {
+    public Category category = Category.defense;
     public SuenoBlock(String name) {
         super(name);
         update = true;
@@ -50,22 +51,14 @@ public class SuenoBlock extends CustomShapeBlock {
 
         @Override
         public void update() {
-            if ((temperature < attributes.get(SAttributes.temperatureMin)) || (temperature > attributes.get(SAttributes.temperatureMax))) {
-
-                temp();
-                temperature = Math.round(temperature);
-            } else min();
-
+            if ( temperature <= attributes.get(SAttributes.temperatureMin)) {
+                health -= health * SVars.frostDamage / 60f * Time.delta;
+                if (health < 0) kill();
+            } else {
+                temperature -= 3.4f / 60f * Time.delta;
+            }
         }
 
-        public void temp() {
-            health -= 50f / 60f * Time.delta;
-            if (health < 0) kill();
-        }
-        public void min() {
-
-            temperature -= 3.4f / 60f * Time.delta;
-        }
 
         @Override
         public void readBase(Reads read) {
