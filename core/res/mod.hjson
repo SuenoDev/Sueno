@@ -1,0 +1,12 @@
+main: org.durmiendo.sueno.core.SCore
+name: sueno
+displayName: [yellow]Sueno
+author: // TODO authors
+repo: https://github.com/Durmiendo/Sueno
+subtitle: subtitle
+description: desrtiption
+version: v0.0.1.3-close
+minGameVersion: 144
+java: true
+hidden: false
+hideBrowser: true
