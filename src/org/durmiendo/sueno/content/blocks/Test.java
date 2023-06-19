@@ -2,10 +2,7 @@ package org.durmiendo.sueno.content.blocks;
 
 import arc.graphics.Color;
 import arc.util.Time;
-import arc.util.io.Reads;
-import arc.util.io.Writes;
 import mindustry.entities.TargetPriority;
-import mindustry.gen.Building;
 import mindustry.type.Category;
 import mindustry.ui.Bar;
 import mindustry.world.meta.BlockGroup;
@@ -41,34 +38,37 @@ public class Test extends SuenoBlock {
         addBar("temperatureBar", (SuenoBlockBuild entity) -> new Bar(
                 () -> "Temperature " + String.format("%.1f", entity.temperature),
                 () -> Color.cyan,
-                () -> ((entity.temperature - min) / (30 - min))
+                () -> ((entity.temperature - min) / (max - min))
         ));
     }
 
     public class SuenoBlockBuild extends SBuilding {
-
-
         @Override
         public void update() {
-            if (temperature <= min) {
-                health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
-                if (health < 0) kill();
+
+            if (isHeated) {
+                temperature += SVars.freezingPower / 60f * Time.delta;
             } else {
                 temperature -= SVars.freezingPower / 60f * Time.delta;
             }
+
+            temp();
+
+            isHeated = false;
         }
 
+        public void temp() {
+            //int damage = 0;
+            if (temperature <= min) {
+                health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
+                if (health < 0) kill();
+            }
 
-        @Override
-        public void readBase(Reads read) {
-            this.temperature = read.f();
-            super.readBase(read);
-        }
-
-        @Override
-        public void writeBase(Writes write) {
-            write.f(temperature);
-            super.writeBase(write);
+            if (temperature >= max) {
+                health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
+                if (health < 0) kill();
+            }
+            //return damage;
         }
     }
 }

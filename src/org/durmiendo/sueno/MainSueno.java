@@ -18,7 +18,9 @@ public class MainSueno extends MMAMod {
             Vars.renderer.planets.cam.fov = 60f;
             Vars.renderer.planets.cam.far = 1500f;
         });
+        //Events.on(Ca);
     }
+
     @Override
     public void loadContent(){
         //new SuenoUI().loadAsync();

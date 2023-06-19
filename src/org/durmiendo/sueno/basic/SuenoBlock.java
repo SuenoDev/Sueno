@@ -18,6 +18,7 @@ import org.durmiendo.sueno.content.blocks.Heater;
 public class SuenoBlock extends Block {
 
     public float min = -200;
+    public float max = 300;
     public Category category = Category.defense;
     public SuenoBlock(String name) {
         super(name);

@@ -10,16 +10,18 @@ import mindustry.graphics.g3d.HexMesh;
 import mindustry.graphics.g3d.HexSkyMesh;
 import mindustry.graphics.g3d.MultiMesh;
 import mindustry.maps.planet.ErekirPlanetGenerator;
-import mindustry.maps.planet.SerpuloPlanetGenerator;
 import mindustry.type.Planet;
 import mindustry.world.meta.Attribute;
 import mindustry.world.meta.Env;
+import org.durmiendo.sueno.basic.SatelliteBase;
+import org.durmiendo.sueno.basic.SuenoPlanet;
+import org.durmiendo.sueno.basic.Satellite;
 
 public class SPlanets extends Planets {
     public static Planet hielo;
 
     public static void load() {
-        hielo  = new Planet("hielo", sun, 4.3f, 2){{
+        hielo = new SuenoPlanet("hielo", sun, 4.3f, 2){{
             generator = new ErekirPlanetGenerator();
             meshLoader = () -> new HexMesh(this, 5);
             cloudMeshLoader = () -> new MultiMesh(
@@ -62,6 +64,7 @@ public class SPlanets extends Planets {
             };
 
             unlockedOnLand.add(Blocks.coreBastion);
+            satellites.add(new Satellite(0, this, new SatelliteBase()));
         }};
 
     }

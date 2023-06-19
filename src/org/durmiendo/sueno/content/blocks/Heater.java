@@ -1,20 +1,14 @@
 package org.durmiendo.sueno.content.blocks;
 
-import arc.func.Intc2;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.math.geom.Geometry;
-import arc.math.geom.Vec2;
-import arc.util.Log;
+import arc.graphics.g2d.Fill;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
-import mindustry.core.World;
 import mindustry.entities.TargetPriority;
 import mindustry.gen.Building;
-import mindustry.gen.PayloadUnit;
-import mindustry.graphics.Drawf;
-import mindustry.maps.Map;
+import mindustry.graphics.Layer;
 import mindustry.type.Category;
 import mindustry.ui.Bar;
 import mindustry.world.meta.BlockGroup;
@@ -24,8 +18,6 @@ import org.durmiendo.sueno.basic.SuenoBlock;
 import org.durmiendo.sueno.basic.SuenoStat;
 import org.durmiendo.sueno.content.SAttributes;
 
-import static mindustry.Vars.indexer;
-import static mindustry.Vars.world;
 
 
 public class Heater extends SuenoBlock {
@@ -62,25 +54,43 @@ public class Heater extends SuenoBlock {
         public float temperature = -100;
         public int rad = 60;
 
+
         @Override
         public void update() {
+
+            tile.circle((int) (rad / 7.501f), (b) -> {
+                if(b.build instanceof SBuilding sb){
+                    sb.isHeated = true;
+                }
+            });
+
+            temp();
+        }
+
+        public void temp() {
+            //int damage = 0;
             if (temperature <= min) {
                 health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
                 if (health < 0) kill();
             }
 
-            tile.circle((int) (rad / 7.5f), (b) -> {
-                if(b.build instanceof SBuilding){
-                    SBuilding sb = (SBuilding) b.build;
-                    sb.temperature += SVars.freezingPower / 60f * Time.delta;
-                }
-            });
+            if (temperature >= max) {
+                health -= maxHealth * SVars.frostDamage / 60f * Time.delta;
+                if (health < 0) kill();
+            }
+            //return damage;
         }
 
         @Override
         public void draw() {
             super.draw();
-            Drawf.circles(x, y, rad, new Color(0xffa50027));
+            Draw.z(Layer.end);
+
+            Draw.color(new Color(0xdddd7933));
+
+            Fill.circle(x, y, rad);
+
+            Draw.reset();
         }
 
         @Override
