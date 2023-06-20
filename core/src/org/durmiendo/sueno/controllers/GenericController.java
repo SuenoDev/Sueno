@@ -15,7 +15,7 @@ public abstract class GenericController {
     private final Run run = new Run();
 
     private static final class Run {
-        private boolean v = false;
+        private transient boolean v = false;
     }
 
     public GenericController(long f) {
