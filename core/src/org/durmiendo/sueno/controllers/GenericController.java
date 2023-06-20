@@ -20,7 +20,7 @@ public abstract class GenericController {
 
     public GenericController(long f) {
         frequency = f;
-        delay = Mathf.ceil(1000f / frequency);
+        delay = Mathf.ceil(1000000f / frequency);
 
         updateThread = Threads.daemon(() -> {
             try {
