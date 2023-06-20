@@ -12,11 +12,9 @@ public abstract class GenericController {
     private final long delay;
     private final long frequency;
 
-    private final Run run = new Run();
+    private volatile boolean run = false;
 
-    private static final class Run {
-        private transient boolean v = false;
-    }
+    public volatile float delayDelta;
 
     public GenericController(long f) {
         frequency = f;
@@ -26,12 +24,14 @@ public abstract class GenericController {
             try {
                 prevUpd = Time.nanos();
                 while (true) {
-                    if (!run.v)
-                        run.wait();
+                    while (!run) {
+                        Thread.sleep(delay / 1000, (int) (delay % 1000));
+                    }
                     long delta = Time.nanos() - prevUpd;
                     if (delta < delay) {
                         Thread.sleep(delta / 1000, (int) (delta % 1000));
                     }
+                    delayDelta = (float) delta / (float) delay;
                     prevUpd = Time.nanos();
                     update();
                 }
@@ -44,11 +44,10 @@ public abstract class GenericController {
     public abstract void update();
 
     public void stop() {
-        run.v = false;
+        run = false;
     }
 
     public void start() {
-        run.v = true;
-        run.notifyAll();
+        run = true;
     }
 }

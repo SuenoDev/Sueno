@@ -7,6 +7,7 @@ import mindustry.mod.Mod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.controllers.TemperatureController;
 
 // TODO remove old temperature and write new (on controllers)
 
@@ -25,6 +26,11 @@ public class SCore extends Mod {
         SItems.load();
         SBlocks.load();
         SPlanets.load();
+    }
+
+    @Override
+    public void init() {
+        SVars.temperatureController = new TemperatureController();
 
         SVars.ui.build();
     }

@@ -7,11 +7,11 @@ public class SUI extends UI {
     public SatelliteDialog satelliteDialog;
 
     public SUI() {
-        satelliteDialog = new SatelliteDialog();
+
     }
 
-    /** After content load **/
+    /** On mod init **/
     public void build() {
-
+        satelliteDialog = new SatelliteDialog();
     }
 }

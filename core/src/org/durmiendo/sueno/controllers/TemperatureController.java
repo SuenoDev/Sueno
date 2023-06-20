@@ -1,11 +1,22 @@
 package org.durmiendo.sueno.controllers;
 
+import arc.Events;
 import arc.util.Log;
+import mindustry.Vars;
+import mindustry.content.Blocks;
+import mindustry.game.EventType;
 
 public class TemperatureController extends GenericController{
     public TemperatureController() {
         super(2);
-        start();
+
+        Events.on(EventType.WorldLoadEndEvent.class, e -> {
+            start();
+        });
+        Events.on(EventType.ResetEvent.class, e -> {
+            stop();
+        });
+
     }
 
     @Override
