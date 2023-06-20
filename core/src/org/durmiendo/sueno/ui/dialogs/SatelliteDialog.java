@@ -5,24 +5,20 @@ import arc.scene.ui.layout.Table;
 import mindustry.ui.dialogs.BaseDialog;
 
 public class SatelliteDialog extends BaseDialog {
-    public SatelliteDialog(String title) {
-        super(title);
+    public SatelliteDialog() {
+        super("@stelitedialog");
 
         addCloseButton();
 
-        setup();
-
-        shown(this::setup);
+        hidden(this::destroy);
+        shown(this::build);
     }
-    public void setup() {
+
+    public void build() {
+
+    }
+
+    public void destroy() {
         cont.clear();
-
-
-        Table table = new Table();
-
-        ScrollPane pane = new ScrollPane(table);
-
-
-        cont.add(pane);
     }
 }

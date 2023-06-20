@@ -25,5 +25,7 @@ public class SCore extends Mod {
         SItems.load();
         SBlocks.load();
         SPlanets.load();
+
+        SVars.ui.build();
     }
 }
