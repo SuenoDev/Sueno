@@ -28,7 +28,7 @@ public class Satellite {
 
 
     public void draw() {
-        Mat.;
+
     }
 
     public void remove() {
