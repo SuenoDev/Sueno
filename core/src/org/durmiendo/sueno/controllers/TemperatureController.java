@@ -2,8 +2,6 @@ package org.durmiendo.sueno.controllers;
 
 import arc.Events;
 import arc.util.Log;
-import mindustry.Vars;
-import mindustry.content.Blocks;
 import mindustry.game.EventType;
 
 public class TemperatureController extends GenericController{
