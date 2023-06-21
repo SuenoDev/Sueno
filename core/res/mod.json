@@ -6,8 +6,8 @@
     "repo": "SuenoDev/Sueno",
     "subtitle": "subtitle",
     "description": "descrtiption",
-    "version": "v0.0.1.3-close",
-    "minGameVersion": "144",
+    "version": "v0.0.1.5-close",
+    "minGameVersion": "145",
     "java": true,
     "hidden": false,
     "hideBrowser": false
