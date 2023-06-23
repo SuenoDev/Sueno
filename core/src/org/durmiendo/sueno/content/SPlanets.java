@@ -2,7 +2,6 @@ package org.durmiendo.sueno.content;
 
 
 import arc.graphics.Color;
-import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.content.Planets;
 import mindustry.game.Team;
@@ -11,19 +10,14 @@ import mindustry.graphics.g3d.HexMesh;
 import mindustry.graphics.g3d.HexSkyMesh;
 import mindustry.graphics.g3d.MultiMesh;
 import mindustry.maps.planet.ErekirPlanetGenerator;
-import mindustry.maps.planet.SerpuloPlanetGenerator;
 import mindustry.type.Planet;
-import mindustry.world.meta.Attribute;
-import mindustry.world.meta.Env;
-import org.durmiendo.sueno.sattelites.SatelliteBase;
-import org.durmiendo.sueno.sattelites.SPlanet;
-import org.durmiendo.sueno.sattelites.Satellite;
+
 
 public class SPlanets extends Planets {
-    public static SPlanet hielo;
+    public static Planet hielo;
 
     public static void load() {
-        hielo = new SPlanet("hielo", sun, 4.3f, 2){{
+        hielo = new Planet("hielo", sun, 4.3f, 2){{
             generator = new ErekirPlanetGenerator();
             meshLoader = () -> new HexMesh(this, 5);
             cloudMeshLoader = () -> new MultiMesh(
@@ -38,7 +32,6 @@ public class SPlanets extends Planets {
             allowLaunchSchematics = true;
             enemyCoreSpawnReplace = true;
             allowLaunchLoadout = true;
-            //doesn't play well with configs
             prebuildBase = false;
             ruleSetter = r -> {
                 r.waveTeam = Team.crux;
@@ -51,10 +44,10 @@ public class SPlanets extends Planets {
             atmosphereRadOut = 0.3f;
             startSector = 15;
             alwaysUnlocked = true;
-
+            accessible = true;
+            visible = true;
             landCloudColor = Pal.spore.cpy().a(0.5f);
             hiddenItems.addAll(Items.erekirItems).removeAll(Items.serpuloItems);
-            satellites.add(new Satellite(0, new SatelliteBase(), 30, 30, position));
         }};
     }
 }

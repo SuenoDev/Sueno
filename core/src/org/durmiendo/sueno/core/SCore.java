@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.core;
 
 import arc.*;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
@@ -27,6 +28,8 @@ public class SCore extends Mod {
         SItems.load();
         SBlocks.load();
         SPlanets.load();
+
+        Log.info("Sueno load");
     }
 
     @Override
@@ -35,5 +38,6 @@ public class SCore extends Mod {
         SVars.satelliteController = new SatelliteController();
 
         SVars.ui.build();
+        Log.info("Sueno init");
     }
 }

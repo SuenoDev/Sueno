@@ -13,6 +13,7 @@ import arc.scene.ui.Button;
 import arc.scene.ui.ImageButton;
 import arc.util.Log;
 import mindustry.Vars;
+import mindustry.type.Planet;
 
 
 import static arc.Core.assets;
@@ -20,6 +21,7 @@ import static arc.Core.gl;
 
 
 public class Satellite {
+    private Planet planet;
     public int id;
     public SatelliteBase base;
     private ImageButton button;
@@ -32,12 +34,12 @@ public class Satellite {
     public Vec3 position = new Vec3();
     public Vec3 center;
 
-    public Satellite(int id, SatelliteBase base, float r, float spacing, Vec3 center) {
+    public Satellite(int id, SatelliteBase base, float r, float spacing, Planet planet) {
         this.id = id;
         this.base = base;
         this.spacing = spacing;
         this.orbitRadius = r;
-        this.center = center;
+        this.planet = planet;
 
         init();
     }
@@ -45,6 +47,10 @@ public class Satellite {
 
 
     public void draw() {
+
+        if(planet == null) return;
+
+
 
         position.x = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.cos(Mathf.degRad * distance) + center.x;
         position.y = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.sin(Mathf.degRad * distance) + center.y;
@@ -55,12 +61,15 @@ public class Satellite {
         float butX = butVec.x;
         float butY = butVec.y;
 
+        Log.info("draw at " + position + "and " + butVec);
+
         button.setPosition(butX,butY);
         button.draw();
 
     }
 
     public void init() {
+        position = planet.position;
         button = new ImageButton(Core.atlas.find("sueno-satellite"), new ImageButton.ImageButtonStyle());
         button.clicked(() -> {
 
