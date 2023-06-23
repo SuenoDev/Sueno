@@ -53,7 +53,7 @@ public class SPlanet extends Planet {
     }
 
     public void removeSatellite(Satellite sat) {
-        sat.remove();
+        satellites.remove(sat);
     }
 
     public void draw(PlanetParams params, Mat3D projection, Mat3D transform) {
