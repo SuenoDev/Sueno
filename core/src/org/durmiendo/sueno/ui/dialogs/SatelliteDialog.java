@@ -1,7 +1,5 @@
 package org.durmiendo.sueno.ui.dialogs;
 
-import arc.scene.ui.ScrollPane;
-import arc.scene.ui.layout.Table;
 import mindustry.ui.dialogs.BaseDialog;
 
 public class SatelliteDialog extends BaseDialog {

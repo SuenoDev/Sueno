@@ -4,12 +4,14 @@ import mindustry.core.UI;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
 import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
+import org.durmiendo.sueno.ui.dialogs.SatellitesDialog;
 
 public class SUI extends UI {
-    //public SatelliteDialog satelliteDialog;
+    public SatelliteDialog satellite;
 
-    //public SPausedDialog pause;
-    //public SPlanetDialog planet;
+    public SPausedDialog pause;
+    public SPlanetDialog planet;
+    public SatellitesDialog satellines;
 
     public SUI() {
 
@@ -17,8 +19,9 @@ public class SUI extends UI {
 
     /** On mod init **/
     public void build() {
-        //satelliteDialog = new SatelliteDialog();
-        //pause = new SPausedDialog();
-        //planet = new SPlanetDialog();
+        satellite = new SatelliteDialog();
+        pause = new SPausedDialog();
+        planet = new SPlanetDialog();
+        satellines = new SatellitesDialog();
     }
 }

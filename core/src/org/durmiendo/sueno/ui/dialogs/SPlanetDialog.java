@@ -10,6 +10,7 @@ public class SPlanetDialog extends PlanetDialog {
     public Dialog show() {
         Events.fire(new SEventType.CampainOpen());
         return super.show();
+
     }
 
     @Override
