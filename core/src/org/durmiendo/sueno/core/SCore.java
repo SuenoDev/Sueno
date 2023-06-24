@@ -2,7 +2,9 @@ package org.durmiendo.sueno.core;
 
 import arc.Events;
 import arc.util.Log;
+import arc.util.Time;
 import mindustry.Vars;
+import mindustry.content.Planets;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
 import org.durmiendo.sueno.content.SBlocks;
@@ -10,6 +12,9 @@ import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.controllers.SatelliteController;
 import org.durmiendo.sueno.controllers.TemperatureController;
+import org.durmiendo.sueno.events.CampainOpen;
+import org.durmiendo.sueno.sattelites.Satellite;
+import org.durmiendo.sueno.sattelites.SatelliteBase;
 
 // TODO remove old temperature and write new (on controllers)
 
@@ -21,7 +26,13 @@ public class SCore extends Mod {
             Vars.renderer.planets.cam.fov = 60f;
             Vars.renderer.planets.cam.far = 1500f;
 
-            Log.info("Sueno renser settings load");
+            Log.info("Sueno render settings load");
+
+            SVars.satelliteController.addSatellite(new Satellite(0, new SatelliteBase(), 10, 5, SPlanets.serpulo));
+        });
+
+        Events.on(CampainOpen.class, e -> {
+
         });
     }
 

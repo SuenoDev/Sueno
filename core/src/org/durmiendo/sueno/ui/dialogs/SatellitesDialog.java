@@ -6,7 +6,7 @@ import arc.struct.Seq;
 import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 
-import static org.durmiendo.sueno.controllers.SatelliteController.satellites;
+
 
 public class SatellitesDialog extends BaseDialog {
 
@@ -18,9 +18,6 @@ public class SatellitesDialog extends BaseDialog {
 
     @Override
     public void draw() {
-        satellites.each((satellite -> {
-            satellite.draw();
-        }));
     }
 
     @Override

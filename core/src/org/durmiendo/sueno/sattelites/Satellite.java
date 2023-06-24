@@ -1,7 +1,9 @@
 package org.durmiendo.sueno.sattelites;
 
+import arc.Core;
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
+import arc.scene.ui.ImageButton;
 import arc.util.Log;
 import mindustry.type.Planet;
 
@@ -10,7 +12,7 @@ public class Satellite {
     private Planet planet;
     public int id;
     public SatelliteBase base;
-    //private ImageButton button;
+    public ImageButton button;
 
     private float orbitRadius = 50f;
     private float orbitSpeed = 50f;
@@ -51,19 +53,21 @@ public class Satellite {
 
         Log.info("draw at " + position + "and " + butVec);
 
-        //button.setPosition(butX,butY);
-        //button.draw();
+        button.setPosition(butX,butY);
+        button.draw();
 
     }
 
     public void init() {
         center = planet.position;
         position = new Vec3();
-        //button = new ImageButton(Core.atlas.find("sueno-satellite"), new ImageButton.ImageButtonStyle());
-        //button.clicked(() -> {
+        button = new ImageButton(Core.atlas.find("sueno-satellite"), new ImageButton.ImageButtonStyle());
+        button.clicked(() -> {
 
-            //Log.info("click");
+            Log.info("click");
 
-        //});
+        });
+
+        Log.info("satellite init");
     }
 }

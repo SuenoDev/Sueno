@@ -6,6 +6,8 @@ import arc.math.geom.Mat3D;
 import arc.struct.Seq;
 import mindustry.graphics.g3d.PlanetParams;
 import mindustry.type.Planet;
+import org.durmiendo.sueno.controllers.SatelliteController;
+import org.durmiendo.sueno.core.SVars;
 
 // TODO that's so~ bad (controllers better)
 
@@ -53,13 +55,6 @@ public class SPlanet extends Planet {
     }
 
     public void removeSatellite(Satellite sat) {
-        satellites.remove(sat);
-    }
-
-    public void draw(PlanetParams params, Mat3D projection, Mat3D transform) {
-        super.draw(params, projection, transform);
-        for (Satellite satellite : satellites) {
-            satellite.draw();
-        }
+        SVars.satelliteController.removeSatellite(sat);
     }
 }
