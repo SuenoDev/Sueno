@@ -5,6 +5,7 @@ import arc.math.Mathf;
 import arc.math.geom.Vec3;
 import arc.scene.ui.ImageButton;
 import arc.util.Log;
+import mindustry.Vars;
 import mindustry.type.Planet;
 
 
@@ -38,16 +39,9 @@ public class Satellite {
 
         if(planet == null) return;
 
+        updatePos();
 
-
-
-        position.x = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.cos(Mathf.degRad * distance) + center.x;
-        position.y = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.sin(Mathf.degRad * distance) + center.y;
-        position.z = orbitRadius * Mathf.sin(Mathf.degRad * spacing) + center.z;
-
-
-        //Vec3 butVec = Vars.renderer.planets.cam.project(position);
-        Vec3 butVec = new Vec3(10, 10, 0);
+        Vec3 butVec = updatePos();
         float butX = butVec.x;
         float butY = butVec.y;
 
@@ -61,13 +55,26 @@ public class Satellite {
     public void init() {
         center = planet.position;
         position = new Vec3();
-        button = new ImageButton(Core.atlas.find("sueno-satellite"), new ImageButton.ImageButtonStyle());
+        button = new ImageButton(new ImageButton.ImageButtonStyle());
+        button.image(Core.atlas.find("sueno-satellite"));
         button.clicked(() -> {
 
             Log.info("click");
 
         });
-
+        button.visible = true;
+        button.sizeBy(50);
+        Vec3 e = updatePos();
+        button.setPosition(e.x, e.y);
         Log.info("satellite init");
     }
+
+    public Vec3 updatePos() {
+        position.x = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.cos(Mathf.degRad * distance) + center.x;
+        position.y = orbitRadius * Mathf.cos(Mathf.degRad * spacing) * Mathf.sin(Mathf.degRad * distance) + center.y;
+        position.z = orbitRadius * Mathf.sin(Mathf.degRad * spacing) + center.z;
+
+        return Vars.renderer.planets.cam.project(position);
+    }
+
 }

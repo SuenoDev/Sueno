@@ -28,7 +28,7 @@ public class SCore extends Mod {
 
             Log.info("Sueno render settings load");
 
-            SVars.satelliteController.addSatellite(new Satellite(0, new SatelliteBase(), 10, 5, SPlanets.serpulo));
+            SVars.satelliteController.addSatellite(new Satellite(0, new SatelliteBase(), 5, 5, SPlanets.serpulo));
         });
 
         Events.on(CampainOpen.class, e -> {

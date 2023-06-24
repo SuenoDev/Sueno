@@ -33,8 +33,6 @@ public class SatelliteController extends GenericController {
 
     @Override
     public void update() {
-
-
     }
 
     public Seq<Satellite> getSatellites() {
@@ -47,14 +45,14 @@ public class SatelliteController extends GenericController {
             return;
         }
         satellites.add(s);
-        Vars.ui.planet.addChild(s.button);
-        SVars.ui.planet.sib.add(s.button);
+        SVars.ui.planet.sib.add(s);
+        SVars.ui.planet.st.addChild(s.button);
     }
 
 
     public  void removeSatellite(Satellite s) {
-        Vars.ui.planet.removeChild(s.button);
         satellites.remove(s);
-        SVars.ui.planet.sib.remove(s.button);
+        SVars.ui.planet.sib.remove(s);
+        SVars.ui.planet.st.removeChild(s.button);
     }
 }
