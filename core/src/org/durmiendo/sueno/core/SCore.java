@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.core;
 
+import arc.Core;
 import arc.Events;
 import arc.util.Log;
 import arc.util.Time;

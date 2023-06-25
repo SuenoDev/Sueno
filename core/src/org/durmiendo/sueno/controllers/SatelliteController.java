@@ -33,6 +33,10 @@ public class SatelliteController extends GenericController {
 
     @Override
     public void update() {
+        satellites.forEach(s-> {
+            s.update();
+
+        });
     }
 
     public Seq<Satellite> getSatellites() {
