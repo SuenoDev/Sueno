@@ -1,11 +1,8 @@
 package org.durmiendo.sueno.core;
 
-import arc.Core;
 import arc.Events;
 import arc.util.Log;
-import arc.util.Time;
 import mindustry.Vars;
-import mindustry.content.Planets;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
 import org.durmiendo.sueno.content.SBlocks;
@@ -16,6 +13,7 @@ import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.sattelites.Satellite;
 import org.durmiendo.sueno.sattelites.SatelliteBase;
+
 
 // TODO remove old temperature and write new (on controllers)
 
@@ -29,11 +27,23 @@ public class SCore extends Mod {
 
             Log.info("Sueno render settings load");
 
-            SVars.satelliteController.addSatellite(new Satellite(0, new SatelliteBase(), 5, 5, SPlanets.serpulo));
+
+
+//            for(int i = 0;i < 100; i ++) {
+//                SVars.satelliteController.addSatellite(
+//                        new Satellite(i,
+//                                new SatelliteBase(),
+//                                1 + Float.valueOf(Double.toString((Math.random()) * 2)),
+//                                Float.valueOf(Double.toString((Math.random() - 0.5f) * 256)),
+//                                Float.valueOf(Double.toString((Math.random() - 0.5f) * 256)),
+//                                SPlanets.serpulo
+//                        )
+//                );
+//            }
         });
 
         Events.on(CampainOpen.class, e -> {
-
+            SVars.satelliteController.addSatellite(new Satellite(-1, new SatelliteBase(), 5, 5, 5, SPlanets.serpulo));
         });
     }
 

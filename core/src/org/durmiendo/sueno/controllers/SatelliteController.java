@@ -1,15 +1,9 @@
 package org.durmiendo.sueno.controllers;
 
-import arc.Events;
 import arc.struct.Seq;
 import arc.util.Log;
-import mindustry.Vars;
-import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.events.CampainClose;
-import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.sattelites.Satellite;
-import org.durmiendo.sueno.sattelites.SatelliteBase;
 
 public class SatelliteController extends GenericController {
 
@@ -35,7 +29,7 @@ public class SatelliteController extends GenericController {
     public void update() {
         satellites.forEach(s-> {
             s.update();
-
+            if (s.orbitRadius < 1.5f) removeSatellite(s);
         });
     }
 
@@ -48,6 +42,9 @@ public class SatelliteController extends GenericController {
             Log.info("SVars.ui.planet == " + SVars.ui.planet);
             return;
         }
+
+        s.speed.x = 20;
+
         satellites.add(s);
         SVars.ui.planet.sib.add(s);
         SVars.ui.planet.st.addChild(s.button);

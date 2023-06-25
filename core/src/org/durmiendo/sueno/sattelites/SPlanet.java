@@ -2,11 +2,8 @@ package org.durmiendo.sueno.sattelites;
 
 
 import arc.math.Mathf;
-import arc.math.geom.Mat3D;
 import arc.struct.Seq;
-import mindustry.graphics.g3d.PlanetParams;
 import mindustry.type.Planet;
-import org.durmiendo.sueno.controllers.SatelliteController;
 import org.durmiendo.sueno.core.SVars;
 
 // TODO that's so~ bad (controllers better)

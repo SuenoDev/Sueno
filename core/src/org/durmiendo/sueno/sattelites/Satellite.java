@@ -21,7 +21,7 @@ public class Satellite {
     public SatelliteBase base;
     public ImageButton button;
 
-    private float orbitRadius = 55f;
+    public float orbitRadius = 55f;
     public float distance = 0; // XY
     public float spacing = 0; // ZX
     public Vec2 speed = new Vec2(20,0);
@@ -29,13 +29,17 @@ public class Satellite {
     public Vec3 position = new Vec3();
     public Vec3 center;
 
-    public Satellite(int id, SatelliteBase base, float r, float spacing, Planet planet) {
+    public Satellite(int id, SatelliteBase base, float r, float spacing, float distance, Planet planet) {
         this.id = id;
         this.base = base;
         this.spacing = spacing;
         this.orbitRadius = r;
         this.planet = planet;
+        this.distance = distance;
 
+        center = planet.position;
+        position = new Vec3();
+        Log.info("satellite init");
         init();
     }
 
@@ -45,18 +49,15 @@ public class Satellite {
 
         if(planet == null) return;
 
-        Vec3 butVec = Vars.renderer.planets.cam.project(newPos(new Vec3(), spacing, distance));
-        float butX = butVec.x;
-        float butY = butVec.y;
+        SVars.satelliteController.removeSatellite(this);
+        init();
 
-        button.setPosition(butX,butY);
         renderOrbit(36);
         button.draw();
     }
 
     public void init() {
-        center = planet.position;
-        position = new Vec3();
+        SVars.satelliteController.addSatellite(this);
         button = new ImageButton(new ImageButton.ImageButtonStyle());
         button.image(Core.atlas.find("sueno-satellite"));
         button.clicked(() -> {
@@ -66,8 +67,9 @@ public class Satellite {
         button.visible = true;
         button.sizeBy(50);
         Vec3 e = Vars.renderer.planets.cam.project(newPos(new Vec3(), spacing, distance));
-        button.setPosition(e.x, e.y);
-        Log.info("satellite init");
+        //button.setPosition(e.x, e.y);
+        button.setPosition(1000, 1000);
+
     }
 
     public Vec3 newPos(Vec3 r, float spacing_, float distance_) {
