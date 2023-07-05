@@ -3,14 +3,13 @@ package org.durmiendo.sueno.ui;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.core.UI;
+import mindustry.ui.dialogs.PausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
 import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 
 public class SUI extends UI {
     public SatelliteDialog satellite;
-
-    public SPausedDialog pause;
     public SPlanetDialog planet;
 
     public SUI() {
@@ -20,12 +19,9 @@ public class SUI extends UI {
     /** On mod init **/
     public void build() {
         satellite = new SatelliteDialog();
-
-        paused = new SPausedDialog();
-        Vars.ui.paused = pause;
         planet = new SPlanetDialog();
         Vars.ui.planet = planet;
-
+        Vars.ui.paused = new SPausedDialog();
 
         Log.info("Sueno ui init");
     }

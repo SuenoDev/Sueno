@@ -49,7 +49,7 @@ public class Satellite {
 
         if(planet == null) return;
 
-        SVars.satelliteController.removeSatellite(this);
+        //SVars.satelliteController.removeSatellite(this);
         init();
 
         renderOrbit(36);
@@ -57,18 +57,16 @@ public class Satellite {
     }
 
     public void init() {
-        SVars.satelliteController.addSatellite(this);
+        //SVars.satelliteController.addSatellite(this);
         button = new ImageButton(new ImageButton.ImageButtonStyle());
         button.image(Core.atlas.find("sueno-satellite"));
         button.clicked(() -> {
             Log.info("click");
             SVars.ui.satellite.draw();
         });
-        button.visible = true;
         button.sizeBy(50);
         Vec3 e = Vars.renderer.planets.cam.project(newPos(new Vec3(), spacing, distance));
-        //button.setPosition(e.x, e.y);
-        button.setPosition(1000, 1000);
+        button.setPosition(e.x, e.y);
 
     }
 
@@ -83,18 +81,19 @@ public class Satellite {
     public void renderOrbit(int i) {
         float s = 25;
         float k = 2;
-        float r = 3;
+        float r = k;
         float spac = spacing;
         float dist = distance;
         Vec3 proj = Vars.renderer.planets.cam.project(newPos(new Vec3(), spac, dist));
         Vec3 newproj = new Vec3(proj);
 
         for(int j = 0;i>j;j++){
-            proj = Vars.renderer.planets.cam.project(newPos(proj, spac + r, dist));
-            newproj = Vars.renderer.planets.cam.project(newPos(newproj, spac + speed.x/k - r, dist + speed.y/k));
-            Drawf.line(new Color(0xffffff33), newproj.x + s, newproj.y + s,  proj.x + s, proj.y +s);
+            proj = Vars.renderer.planets.cam.project(newPos(proj, spac + r, dist ));
+            newproj = Vars.renderer.planets.cam.project(newPos(newproj, spac + speed.x/k - r , dist + speed.y/k));
+            Drawf.line(new Color(0xffffff33), newproj.x + s, newproj.y + s ,  proj.x + s, proj.y + s );
             spac += speed.x / k;
             dist += speed.y / k;
+
         }
     }
 

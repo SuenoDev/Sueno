@@ -8,6 +8,7 @@ import mindustry.mod.Mod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.controllers.ResoursesCotroller;
 import org.durmiendo.sueno.controllers.SatelliteController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.events.CampainOpen;
@@ -61,6 +62,7 @@ public class SCore extends Mod {
         Log.info("Sueno init");
         SVars.temperatureController = new TemperatureController();
         SVars.satelliteController = new SatelliteController();
+        SVars.resoursescontroller = new ResoursesCotroller();
 
         SVars.ui.build();
 

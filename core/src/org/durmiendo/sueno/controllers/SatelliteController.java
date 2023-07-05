@@ -1,8 +1,11 @@
 package org.durmiendo.sueno.controllers;
 
+import arc.Events;
 import arc.struct.Seq;
 import arc.util.Log;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.events.CampainClose;
+import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.sattelites.Satellite;
 
 public class SatelliteController extends GenericController {
@@ -11,18 +14,14 @@ public class SatelliteController extends GenericController {
 
     public SatelliteController() {
         super(2);
-        /*Events.on(CampainOpen.class, e -> {
+        Events.on(CampainOpen.class, e -> {
             start();
         });
         Events.on(CampainClose.class, e -> {
             stop();
-        });*/
-        start();
-        Log.info("satellite init");
+        });
+        Log.info("satellite controller init");
         satellites = new Seq<Satellite>();
-
-
-
     }
 
     @Override
@@ -39,7 +38,7 @@ public class SatelliteController extends GenericController {
 
     public void addSatellite(Satellite s) {
         if (SVars.ui.planet == null) {
-            Log.info("SVars.ui.planet == " + SVars.ui.planet);
+            Log.info("[red]SVars.ui.planet == null!");
             return;
         }
 
