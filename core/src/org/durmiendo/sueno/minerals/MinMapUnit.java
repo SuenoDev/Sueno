@@ -1,15 +1,15 @@
-package org.durmiendo.sueno.controllers.resurs;
+package org.durmiendo.sueno.minerals;
 
 import mindustry.type.Item;
 
-public class ResMapUnit {
+public class MinMapUnit {
     public Item[] avail = new Item[7];
     public float[] counts = new float[7];
 
-    public ResMapUnit(Item[] i,float[] c) {
+    public MinMapUnit(Item[] i, float[] c) {
         avail = i;
         counts = c;
     }
 
-    public ResMapUnit() {}
+    public MinMapUnit() {}
 }

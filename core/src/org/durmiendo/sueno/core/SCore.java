@@ -8,9 +8,10 @@ import mindustry.mod.Mod;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
-import org.durmiendo.sueno.controllers.ResoursesCotroller;
+import org.durmiendo.sueno.controllers.MineralController;
 import org.durmiendo.sueno.controllers.SatelliteController;
 import org.durmiendo.sueno.controllers.TemperatureController;
+import org.durmiendo.sueno.minerals.Minerals;
 import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.sattelites.Satellite;
 import org.durmiendo.sueno.sattelites.SatelliteBase;
@@ -60,9 +61,11 @@ public class SCore extends Mod {
     @Override
     public void init() {
         Log.info("Sueno init");
+        SVars.minerals = new Minerals();
+
         SVars.temperatureController = new TemperatureController();
         SVars.satelliteController = new SatelliteController();
-        SVars.resoursescontroller = new ResoursesCotroller();
+        SVars.mineralController = new MineralController();
 
         SVars.ui.build();
 

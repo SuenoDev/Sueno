@@ -7,13 +7,17 @@ public class SDrill extends Block {
 
     public SDrill(String name) {
         super(name);
+        update = true;
     }
 
     public class DrillBuild extends Building {
         public float progress;
-        public float warmup;
-        public float timeDrilled;
-        public float lastDrillSpeed;
 
+
+        @Override
+        public void updateTile() {
+            super.updateTile();
+
+        }
     }
 }

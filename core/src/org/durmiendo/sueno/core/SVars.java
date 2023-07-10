@@ -1,9 +1,10 @@
 package org.durmiendo.sueno.core;
 
 import arc.assets.Loadable;
-import org.durmiendo.sueno.controllers.ResoursesCotroller;
+import org.durmiendo.sueno.controllers.MineralController;
 import org.durmiendo.sueno.controllers.SatelliteController;
 import org.durmiendo.sueno.controllers.TemperatureController;
+import org.durmiendo.sueno.minerals.Minerals;
 import org.durmiendo.sueno.ui.SUI;
 
 public class SVars implements Loadable {
@@ -21,9 +22,13 @@ public class SVars implements Loadable {
     //controllers
     public static TemperatureController temperatureController;
     public static SatelliteController satelliteController;
-    public static ResoursesCotroller resoursescontroller;
+    public static MineralController mineralController;
 
     //status
     public static boolean onCampain;
+
+    //minerals
+
+    public static Minerals minerals;
 
 }
