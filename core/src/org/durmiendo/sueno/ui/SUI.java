@@ -3,7 +3,6 @@ package org.durmiendo.sueno.ui;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.core.UI;
-import mindustry.ui.dialogs.PausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
 import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;

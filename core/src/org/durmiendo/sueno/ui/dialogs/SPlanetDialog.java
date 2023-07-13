@@ -1,9 +1,7 @@
 package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Events;
-import arc.scene.Element;
 import arc.scene.ui.Dialog;
-import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import mindustry.ui.dialogs.PlanetDialog;

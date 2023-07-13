@@ -3,7 +3,6 @@ package org.durmiendo.sueno.content;
 import mindustry.content.Items;
 import mindustry.content.Liquids;
 import mindustry.type.Category;
-import mindustry.type.Item;
 import mindustry.type.ItemStack;
 import mindustry.world.Block;
 import mindustry.world.blocks.production.Drill;

@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.type.Item;
+import org.durmiendo.sueno.type.ContItem;
 
 public class SItems {
 
@@ -12,7 +13,9 @@ public class SItems {
     indiganit,
 
     /* Violet color, composed of titanium silicide, germanium and antimon. It has high hardness, good ductility and excellent corrosion resistance */
-    silitranium;
+    silitranium,
+
+    ice;
 
 
     public static void load() {

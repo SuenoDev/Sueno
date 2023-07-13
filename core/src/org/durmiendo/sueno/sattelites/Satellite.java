@@ -5,14 +5,12 @@ import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.math.geom.Vec3;
-import arc.scene.ui.Button;
 import arc.scene.ui.ImageButton;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 
 
 public class Satellite {
