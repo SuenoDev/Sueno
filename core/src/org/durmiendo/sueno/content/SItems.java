@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.type.Item;
-import org.durmiendo.sueno.type.ContItem;
 
 public class SItems {
 
