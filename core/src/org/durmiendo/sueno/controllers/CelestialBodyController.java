@@ -43,7 +43,7 @@ public class CelestialBodyController extends GenericController {
             return;
         }
 
-        s.speed.x = Mathf.random(50, 100);
+        s.speed = Mathf.random(50, 100);
         //s.speed.y = Mathf.random(3,150);
 
         cbs.add(s);
