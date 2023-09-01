@@ -1,6 +1,4 @@
 import arc.files.Fi
-import arc.struct.ObjectMap
-import arc.struct.Seq
 
 import java.util.function.Consumer
 
@@ -8,6 +6,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://www.jitpack.io" }
+        maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
     }
 
     dependencies {
@@ -22,23 +21,6 @@ allprojects.each { Project project ->
 
     project.version = properties.get("version")
     project.group = properties.get("group")
-
-    tasks.withType(JavaCompile).configureEach {
-        options.fork = true
-        options.forkOptions.jvmArgs += "-Xms256m -Xmx1024m --illegal-access=permit" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED" +
-                "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED" +
-                "--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED"
-    }
 }
 
 wrapper {
@@ -72,8 +54,9 @@ class C extends OutputStream {
         return t
     }
 
-    static void print() {
-        println out
+    @Override
+    String toString() {
+        return out
     }
 }
 
@@ -102,25 +85,74 @@ ext {
     getOutputJar = {Project p ->
         return "${rootProject.name}-${p.name}-${p.version}.jar"
     }
+
+    // WIP
+    getLastestVersion = { String dep ->
+        BufferedReader reader = new BufferedReader(
+                new InputStreamReader(new URL("https://jitpack.io/com/github/$dep/").openStream()))
+        String line, latestVersion
+        println reader.readLine()
+        while ((line = reader.readLine()) != null) {
+            println line
+            if (line.matches(".?[0-9.]+[/]?")) {
+                println line
+                latestVersion = line.substring(0, line.length()-1)
+            }
+        }
+        return latestVersion
+    }
+
+    // key word for natives searching
+    // paste as comment to file that's needs natives
+    nativesTrigger = "nt_gdrl_trigger"
+
+    mindustryDependencyType = rootProject.properties.get("mindustryDependencyType")
+    mindustryVersion = rootProject.properties.get("mindustryVersion")
+    arcVersion = rootProject.properties.get("arcVersion")
+
+    if (mindustryVersion == "-")
+        mindustryVersion = getLastestVersion("Anuken/$mindustryDependencyType")
+    if (arcVersion == "-")
+        arcVersion = getLastestVersion("Anuken/Arc")
 }
 
 subprojects.each { Project project ->
+    // Anuke
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if(details.requested.group == 'com.github.Anuken.Arc'){
+                details.useVersion "$arcVersion"
+            }
+        }
+    }
+
+    // bin folder only for natives
     project.sourceSets.main.java.srcDirs = [
-            "src", "gen"
+            "src", "gen", "bin"
     ]
     project.sourceSets.main.resources.srcDirs = [
             "res",
     ]
 
     project.ext {
+        // setup annotation processors properties
         APArgs = ["ProjectName=${project.name}"]
+        var src = "ProjectSrc=", res = "ProjectRes="
+        project.sourceSets.main.java.srcDirs.each { var str ->
+            src += str.toString() + ";"
+        }
+        project.sourceSets.main.resources.srcDirs.each { var str ->
+            res += str.toString() + ";"
+        }
+        APArgs.add(src.substring(0, src.length()-1))
+        APArgs.add(res.substring(0, res.length()-1))
         var APAProps = new Fi(project.file("APA.properties"))
         var GAPAProps = new Fi(rootProject.file("APA.properties"))
         if (GAPAProps.exists()) {
-            APArgs += Arrays.stream(GAPAProps.readString().split("\n")).toList()
+            APArgs += Arrays.stream(GAPAProps.readString().replaceAll("\n", "").replaceAll("\r", "").split(";")).toList()
         }
         if (APAProps.exists()) {
-            APArgs += Arrays.stream(APAProps.readString().split("\n")).toList()
+            APArgs += Arrays.stream(APAProps.readString().replaceAll("\n", "").replaceAll("\r", "").split(";")).toList()
         }
 
         copyPaths = [
@@ -129,11 +161,12 @@ subprojects.each { Project project ->
         if (rootProject.ext.copyProperties.containsKey(project.name))
             copyPaths += Arrays.stream(rootProject.ext.copyProperties.get(project.name).split(";")).toList()
 
-        mindustryVersion = "v145"
-
         child = { File p, String c ->
             return new File(p, c)
         }
+
+        classesDir = "$project.buildDir/classes/java/main"
+        headersDir = "$project.buildDir/headers"
 
         writeProcessors = {
             var processorPath = child(project.sourceSets.main.resources.srcDirs.getAt(0), "META-INF/services/")
@@ -143,8 +176,7 @@ subprojects.each { Project project ->
             var srcFiles = project.sourceSets.main.java.srcDirs.getAt(0)
             if (srcFiles.exists()) {
                 srcFiles.eachFileRecurse(groovy.io.FileType.FILES) { file ->
-                    if (file.name.endsWith(".java") && ((file.text.contains(" extends AbstractProcessor")
-                            && !file.text.contains("abstract class")))) {
+                    if (file.name.endsWith(".java") && file.text.contains("@AnnotationProcessor")) {
                         text.append(file.path.substring(srcFiles.path.length() + 1)).append("\n")
                     }
                 }
@@ -155,6 +187,7 @@ subprojects.each { Project project ->
 
     project.repositories {
         mavenCentral()
+        maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
         maven { url "https://www.jitpack.io" }
     }
 
@@ -162,43 +195,85 @@ subprojects.each { Project project ->
         annotationProcessor "com.github.Anuken:jabel:93fde537c7"
     }
 
-    project.tasks.withType(JavaCompile).configureEach {
-        targetCompatibility = 8
-        sourceCompatibility = JavaVersion.VERSION_16
-        options.generatedSourceOutputDirectory.set(project.file("gen"))
+    project.tasks.create("compileHeaders") {
+        doLast {
+            def command = ""
+            project.sourceSets.main.java.srcDirs.each { dir ->
+                if (dir.exists()) {
+                    dir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+                        if (file.text.contains("$rootProject.ext.nativesTrigger")) {
+                            def path = file.absolutePath//.substring(dir.absolutePath.length())
+                            //path = "${project.ext.classesDir.substring(rootProject.projectDir.absolutePath.length()+1)}$path"
+                            command += "\"$path\" "
+                        }
+                    }
+                }
+            }
+
+            if (command.length() > 0) {
+                var classpath = (project.configurations.compileClasspath.asList()
+                        + project.configurations.runtimeClasspath.asList()
+                            + project.sourceSets.main.java.srcDirs.asList())
+                var dependencies = String.join(";", classpath.path)
+
+                command = "javac -cp $dependencies -h \"$project.ext.headersDir\" " + command
+                println command
+                rootProject.ext.doExec(command)
+                println C.get()
+            } else {
+                println "No headers founded for project $project."
+            }
+        }
+
+        project.tasks.withType(JavaCompile) {
+            finalizedBy project.tasks.compileHeaders
+        }
+    }
+
+    project.tasks.withType(JavaCompile) {
         rootProject.ext.setIfHasProp("org.gradle.java.home", v -> options.forkOptions.executable = v)
-        options.encoding = "UTF-8"
         var finalAPArgs = []
         project.ext.APArgs.each { String str ->
             if (!str.contains("-A"))
                 finalAPArgs.add("-A" + str)
         }
+
+        options.encoding = "UTF-8"
+        options.compilerArgs += ["-Xlint:none"]
         options.compilerArgs += finalAPArgs
-        if (JavaVersion.current() != JavaVersion.VERSION_1_8) {
-            options.compilerArgs.addAll(['--release', '8'])
-        }
+        options.compilerArgs.addAll(['--release', '8'])
+        options.generatedSourceOutputDirectory.set(project.file("gen"))
+        options.forkOptions.jvmArgs.addAll([
+                '--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+                '--add-opens=jdk.compiler/com.sun.source.util=ALL-UNNAMED',
+                '--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED'
+        ])
+
+        targetCompatibility = 8
+        sourceCompatibility = JavaVersion.VERSION_16
 
         doFirst {
             delete options.generatedSourceOutputDirectory.get().asFile.listFiles()
         }
+
+        //finalizedBy project.tasks.compileHeaders
     }
 
     project.tasks.create("copyJar") {
         doLast {
-            copy {
-                from {
-                    project.tasks.jar.archiveFile.get()
-                }
-                project.ext.copyPaths.each { p ->
-                    into(p)
+            project.ext.copyPaths.each { p ->
+                copy {
+                    from project.tasks.jar
+                    into p
                 }
             }
         }
-    }
-
-    project.tasks.create("cjar") {
-        dependsOn project.tasks.jar
-        finalizedBy rootProject.tasks.cleanBuilds
     }
 
     project.tasks.jar {
@@ -240,14 +315,44 @@ task publishProj {
 
 task deploy {
     dependsOn subprojects.stream().<Task>map(p -> p.tasks.jar).toArray()
-    finalizedBy rootProject.tasks.cleanBuilds
+    // FIXME sucks on Windows
+    //finalizedBy rootProject.tasks.cleanBuilds
 }
 
 task workflowCommit {
     dependsOn deploy
 }
 
-// only for local machine (still in dev)
+// TODO remove useless task
+task buildRelease(type: Jar) {
+    dependsOn deploy
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        zipTree("artifacts/" + rootProject.ext.getOutputJar(project(":android")))
+        zipTree("artifacts/" + rootProject.ext.getOutputJar(project(":desktop")))
+    }
+
+    doLast {
+        def copyPaths = [
+                "$rootProject.projectDir/artifacts",
+        ]
+        if (rootProject.ext.copyProperties.containsKey("release"))
+            copyPaths += Arrays.stream(rootProject.ext.copyProperties.get("release").split(";")).toList()
+
+        copyPaths.each { p ->
+            copy {
+                from {
+                    project.tasks.jar.archiveFile.get()
+                }
+                into(p)
+            }
+        }
+    }
+}
+
+// only for local machine (WIP)
 task createRelease {
     dependsOn deploy
 

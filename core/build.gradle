@@ -1,10 +1,12 @@
 dependencies {
-    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-    compileOnly "com.github.Anuken.Mindustry" +
-            ":core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Arc:arc-core:$rootProject.arcVersion"
+    compileOnly "com.github.Anuken.$rootProject.mindustryDependencyType:core:$rootProject.mindustryVersion"
 
     compileOnly project(":annotations")
     annotationProcessor project(":annotations")
+
+    compileOnly "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT"
+    annotationProcessor "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT"
 }
 
 ext {
