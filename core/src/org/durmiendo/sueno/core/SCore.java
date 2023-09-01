@@ -2,7 +2,6 @@ package org.durmiendo.sueno.core;
 
 import arc.Events;
 import arc.math.Mathf;
-import arc.util.Log;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
@@ -17,8 +16,6 @@ import org.durmiendo.sueno.sattelites.Satellite;
 import org.durmiendo.sueno.sattelites.CelestialBase;
 
 
-// TODO remove old temperature and write new (on controllers)
-
 public class SCore extends Mod {
     public SCore(){
         // TODO that's bad
@@ -26,14 +23,15 @@ public class SCore extends Mod {
             Vars.renderer.planets.projector.setScaling(1f / 1500f);
             Vars.renderer.planets.cam.fov = 60f;
             Vars.renderer.planets.cam.far = 1500f;
-
-            Log.info("Sueno render settings load");
-
+        });
 
 
-            for(int i = 0;i < 500; i ++) {
-                SVars.celestialBodyController.addSatellite(
-                        new Satellite(i,
+
+        Events.on(CampainOpen.class, e -> {
+
+            for(int i = 0;i < 75; i++) {
+                SVars.celestialBodyController.addCB(
+                        new Satellite(
                                 new CelestialBase(),
                                 Mathf.random(1.8f, 4),
                                 Mathf.random(0, 360),
@@ -43,10 +41,6 @@ public class SCore extends Mod {
                 );
             }
         });
-
-        Events.on(CampainOpen.class, e -> {
-            SVars.celestialBodyController.addSatellite(new Satellite(-1, new CelestialBase(), 5, 5, 5, SPlanets.serpulo));
-        });
     }
 
     @Override
@@ -54,13 +48,10 @@ public class SCore extends Mod {
         SItems.load();
         SBlocks.load();
         SPlanets.load();
-
-        Log.info("Sueno content load");
     }
 
     @Override
     public void init() {
-        Log.info("Sueno init");
 
         SVars.temperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();

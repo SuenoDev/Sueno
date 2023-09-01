@@ -1,13 +1,16 @@
 package org.durmiendo.sueno.sattelites;
 
+import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
+import arc.scene.ui.ImageButton;
+import mindustry.Vars;
+import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
 
 public abstract class CelestialBody {
     public Planet planet;
-    public int id;
     public float orbitRadius;
     public float distance;
     public float spacing;
@@ -16,9 +19,10 @@ public abstract class CelestialBody {
     public Vec3 position;
     public Vec3 center;
     public float health;
+    public Color c;
+    public ImageButton button;
 
-    public CelestialBody(int id, float r, float spacing, float distance, Planet planet) {
-        this.id = id;
+    public CelestialBody(float r, float spacing, float distance, Planet planet) {
         this.spacing = spacing;
         this.orbitRadius = r;
         this.planet = planet;
@@ -26,6 +30,7 @@ public abstract class CelestialBody {
 
         center = planet.position;
         position = new Vec3();
+        button = new ImageButton();
     }
 
 
@@ -35,6 +40,11 @@ public abstract class CelestialBody {
         r.z = orbitRadius * Mathf.sin(Mathf.degRad * spacing_) + center.z;
 
         return r;
+    }
+
+    public void draw() {
+        Vec3 e = Vars.renderer.planets.cam.project(position);
+        Drawf.square(e.x, e.y, 15, 0, c);
     }
 
     public void update() {
@@ -56,7 +66,15 @@ public abstract class CelestialBody {
         } else {
             damage(speed - o.speed + 30);
         }
-    };
+    }
+
+    public void collision(CelestialBody o, int s, int a) {
+        if (speed < o.speed) {
+            damage((o.speed - speed + 30) * s * a / SVars.def);
+        } else {
+            damage((speed - o.speed + 30) * s * a / SVars.def);
+        }
+    }
 
     public void destroy() {
         SVars.celestialBodyController.removeCB(this);

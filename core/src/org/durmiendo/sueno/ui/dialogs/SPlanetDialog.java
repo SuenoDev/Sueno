@@ -2,6 +2,7 @@ package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Events;
 import arc.scene.ui.Dialog;
+import arc.scene.ui.layout.Table;
 import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.CampainClose;
@@ -9,6 +10,7 @@ import org.durmiendo.sueno.events.CampainOpen;
 
 
 public class SPlanetDialog extends PlanetDialog {
+
 
     @Override
     public Dialog show() {
@@ -29,7 +31,6 @@ public class SPlanetDialog extends PlanetDialog {
     }
 
     public SPlanetDialog() {
-
         super();
     }
 }

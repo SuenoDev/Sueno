@@ -1,22 +1,20 @@
 package org.durmiendo.sueno.controllers;
 
 import arc.Events;
-import arc.graphics.Color;
 import arc.math.Mathf;
-import arc.math.geom.Vec3;
+import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.Vars;
-import mindustry.graphics.Drawf;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.CampainClose;
 import org.durmiendo.sueno.events.CampainOpen;
-import org.durmiendo.sueno.sattelites.Satellite;
 import org.durmiendo.sueno.sattelites.CelestialBody;
 
 public class CelestialBodyController extends GenericController {
 
     private Seq<CelestialBody> cbs;
+    public Table cdt;
 
     public CelestialBodyController() {
         super(2);
@@ -27,6 +25,8 @@ public class CelestialBodyController extends GenericController {
             stop();
         });
         cbs = new Seq();
+        //cdt = new Table();
+        Vars.ui.planet.add(cdt);
     }
 
     @Override
@@ -37,15 +37,11 @@ public class CelestialBodyController extends GenericController {
         return cbs;
     }
 
-    public void addSatellite(Satellite s) {
-        if (SVars.ui.planet == null) {
-            Log.info("[red]SVars.ui.planet == null!");
-            return;
-        }
-
+    public void addCB(CelestialBody s) {
         s.speed = Mathf.random(50, 100);
 
         cbs.add(s);
+        Vars.ui.planet.add(s.button);
     }
 
 
@@ -55,8 +51,7 @@ public class CelestialBodyController extends GenericController {
 
     public void draw() {
         for (CelestialBody i : cbs) {
-            Vec3 e = Vars.renderer.planets.cam.project(i.position);
-            Drawf.square( e.x, e.y, 15, 0, Color.black);
+            i.draw();
             i.update();
         }
     }

@@ -24,10 +24,13 @@ public class SVars implements Loadable {
     public static WeatherController weathercontroller;
 
     //status
-    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false;
+    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = true;
     public static boolean onCampain;
 
     //minerals
 
+    // celestials body
+
+    public static float def = 30;
 
 }
