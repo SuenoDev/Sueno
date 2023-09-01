@@ -1,8 +1,12 @@
 package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Events;
+import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
 import arc.scene.ui.Dialog;
 import arc.scene.ui.layout.Table;
+import arc.util.Align;
 import mindustry.Vars;
 import mindustry.gen.Icon;
 import mindustry.ui.dialogs.PlanetDialog;
@@ -34,5 +38,26 @@ public class SPlanetDialog extends PlanetDialog {
 
     public SPlanetDialog() {
         super();
+
+        shown(() -> {
+            Table table = new Table();
+            table.setFillParent(true);
+            addChild(table);
+            Vars.ui.planet.fill(hernya1 -> {
+                hernya1.setBackground(Icon.android);
+                hernya1.pane(hernya2 -> {
+                    hernya2.table(hernya3 -> {
+                        hernya3.button(Icon.admin, () -> {
+
+                        }).size(25);
+                    }).growX();
+                }).align(Align.bottomRight).width(200).height(200).grow();
+            });
+
+            Vars.ui.planet.fill((x, y, w, h) -> {
+                Draw.color(Color.red);
+                Fill.rect(x, y, w, h);
+            });
+        });
     }
 }
