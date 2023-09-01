@@ -25,6 +25,7 @@ public class SPlanets extends Planets {
                     new HexSkyMesh(this, 3, 0.6f, 0.15f, 5, Color.valueOf("003153").a(0.3f), 2, 0.42f, 1.2f, 0.45f)
             );
             launchCapacityMultiplier = 0.5f;
+            orbitRadius = 1000;
             sectorSeed = 2;
             allowWaves = true;
             allowWaveSimulation = true;

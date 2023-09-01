@@ -29,11 +29,11 @@ public class SCore extends Mod {
 
         Events.on(CampainOpen.class, e -> {
 
-            for(int i = 0;i < 1000; i++) {
+            for(int i = 0;i < 30000; i++) {
                 SVars.celestialBodyController.addCB(
                         new Satellite(
                                 new CelestialBase(),
-                                Mathf.random(1.8f, 4),
+                                Mathf.random(0.01f, 1),
                                 Mathf.random(0, 360),
                                 Mathf.random(0, 360),
                                 SPlanets.serpulo

@@ -28,6 +28,8 @@ public abstract class CelestialBody {
         this.planet = planet;
         this.distance = distance;
 
+
+
         center = planet.position;
         position = new Vec3();
         button = new ImageButton();
@@ -35,9 +37,9 @@ public abstract class CelestialBody {
 
 
     public Vec3 newPos(Vec3 r, float spacing_, float distance_) {
-        r.x = orbitRadius * Mathf.cos(Mathf.degRad * spacing_) * Mathf.cos(Mathf.degRad * distance_) + center.x;
-        r.y = orbitRadius * Mathf.cos(Mathf.degRad * spacing_) * Mathf.sin(Mathf.degRad * distance_) + center.y;
-        r.z = orbitRadius * Mathf.sin(Mathf.degRad * spacing_) + center.z;
+        r.x = orbitRadius * Mathf.cos(Mathf.degRad * spacing_ ) * Mathf.cos(Mathf.degRad * distance_ ) + center.x;
+        r.y = orbitRadius * Mathf.cos(Mathf.degRad * spacing_ ) * Mathf.sin(Mathf.degRad * distance_ ) + center.y;
+        r.z = orbitRadius * Mathf.sin(Mathf.degRad * spacing_ ) + center.z;
 
         return r;
     }
