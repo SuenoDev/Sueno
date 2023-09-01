@@ -1,8 +1,9 @@
 package org.durmiendo.sueno.core;
 
 import arc.assets.Loadable;
-import org.durmiendo.sueno.controllers.SatelliteController;
+import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
+import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.ui.SUI;
 
 public class SVars implements Loadable {
@@ -19,11 +20,13 @@ public class SVars implements Loadable {
 
     //controllers
     public static TemperatureController temperatureController;
-    public static SatelliteController satelliteController;
+    public static CelestialBodyController celestialBodyController;
+    public static WeatherController weathercontroller;
 
     //status
     public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false;
     public static boolean onCampain;
+
     //minerals
 
 
