@@ -1,24 +1,23 @@
 package org.durmiendo.sueno.sattelites;
 
 import arc.math.Mathf;
-import arc.math.geom.Vec2;
 import arc.math.geom.Vec3;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
 
-public abstract class ÑelestialBody {
+public abstract class CelestialBody {
     public Planet planet;
     public int id;
     public float orbitRadius;
-    public float distance; // XY
-    public float spacing; // ZX
+    public float distance;
+    public float spacing;
     public float speed;
 
-    public Vec3 position = new Vec3();
+    public Vec3 position;
     public Vec3 center;
     public float health;
 
-    public ÑelestialBody(int id, float r, float spacing, float distance, Planet planet) {
+    public CelestialBody(int id, float r, float spacing, float distance, Planet planet) {
         this.id = id;
         this.spacing = spacing;
         this.orbitRadius = r;
@@ -51,7 +50,7 @@ public abstract class ÑelestialBody {
         }
     }
 
-    public void collision(ÑelestialBody o) {
+    public void collision(CelestialBody o) {
         if (speed < o.speed) {
             damage(o.speed - speed + 30);
         } else {

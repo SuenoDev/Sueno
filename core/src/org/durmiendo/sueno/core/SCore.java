@@ -14,7 +14,7 @@ import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.sattelites.Satellite;
-import org.durmiendo.sueno.sattelites.ÑelestialBase;
+import org.durmiendo.sueno.sattelites.CelestialBase;
 
 
 // TODO remove old temperature and write new (on controllers)
@@ -31,10 +31,10 @@ public class SCore extends Mod {
 
 
 
-            for(int i = 0;i < 1000000; i ++) {
+            for(int i = 0;i < 500; i ++) {
                 SVars.celestialBodyController.addSatellite(
                         new Satellite(i,
-                                new ÑelestialBase(),
+                                new CelestialBase(),
                                 Mathf.random(1.8f, 4),
                                 Mathf.random(0, 360),
                                 Mathf.random(0, 360),
@@ -45,7 +45,7 @@ public class SCore extends Mod {
         });
 
         Events.on(CampainOpen.class, e -> {
-            SVars.celestialBodyController.addSatellite(new Satellite(-1, new ÑelestialBase(), 5, 5, 5, SPlanets.serpulo));
+            SVars.celestialBodyController.addSatellite(new Satellite(-1, new CelestialBase(), 5, 5, 5, SPlanets.serpulo));
         });
     }
 
