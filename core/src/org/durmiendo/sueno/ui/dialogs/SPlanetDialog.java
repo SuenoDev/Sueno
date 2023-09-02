@@ -1,10 +1,12 @@
 package org.durmiendo.sueno.ui.dialogs;
 
+import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
 import arc.scene.ui.Dialog;
+import arc.scene.ui.ImageButton;
 import arc.scene.ui.layout.Table;
 import arc.util.Align;
 import mindustry.Vars;
@@ -40,24 +42,30 @@ public class SPlanetDialog extends PlanetDialog {
         super();
 
         shown(() -> {
-            Table table = new Table();
-            table.setFillParent(true);
-            addChild(table);
-            Vars.ui.planet.fill(hernya1 -> {
-                hernya1.setBackground(Icon.android);
-                hernya1.pane(hernya2 -> {
-                    hernya2.table(hernya3 -> {
-                        hernya3.button(Icon.admin, () -> {
+//            Table table = new Table();
+//            table.setFillParent(true);
+//            addChild(table);
+//            Vars.ui.planet.fill(hernya1 -> {
+//                hernya1.setBackground(Icon.android);
+//                hernya1.pane(hernya2 -> {
+//                    hernya2.table(hernya3 -> {
+//                        hernya3.button(Icon.admin, () -> {
+//
+//                        }).size(25);
+//                    }).growX();
+//                }).align(Align.bottomRight).width(200).height(200).grow();
+//            });
+//
+//            Vars.ui.planet.fill((x, y, w, h) -> {
+//                Draw.color(Color.red);
+//                Fill.rect(x, y, w, h);
+//            });
 
-                        }).size(25);
-                    }).growX();
-                }).align(Align.bottomRight).width(200).height(200).grow();
+            ImageButton ib = new ImageButton(Core.atlas.find("sueno-satellite"));
+            ib.clicked(() -> {
+                SVars.cbs.show();
             });
-
-            Vars.ui.planet.fill((x, y, w, h) -> {
-                Draw.color(Color.red);
-                Fill.rect(x, y, w, h);
-            });
+            this.add(ib);
         });
     }
 }

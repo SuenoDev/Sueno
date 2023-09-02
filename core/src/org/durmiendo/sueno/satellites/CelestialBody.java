@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.sattelites;
+package org.durmiendo.sueno.satellites;
 
 import arc.graphics.Color;
 import arc.math.Mathf;

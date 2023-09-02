@@ -12,8 +12,8 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.events.CampainOpen;
-import org.durmiendo.sueno.sattelites.Satellite;
-import org.durmiendo.sueno.sattelites.CelestialBase;
+import org.durmiendo.sueno.satellites.Satellite;
+import org.durmiendo.sueno.satellites.CelestialBase;
 
 
 public class SCore extends Mod {
@@ -27,13 +27,13 @@ public class SCore extends Mod {
 
 
 
-        Events.on(CampainOpen.class, e -> {
+        Events.on(ClientLoadEvent.class, e -> {
 
-            for(int i = 0;i < 30000; i++) {
+            for(int i = 0;i < 5; i++) {
                 SVars.celestialBodyController.addCB(
                         new Satellite(
                                 new CelestialBase(),
-                                Mathf.random(0.01f, 1),
+                                Mathf.random(1.8f, 5),
                                 Mathf.random(0, 360),
                                 Mathf.random(0, 360),
                                 SPlanets.serpulo

@@ -5,6 +5,7 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.ui.SUI;
+import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 
 public class SVars implements Loadable {
 
@@ -17,6 +18,7 @@ public class SVars implements Loadable {
 
     //ui
     public static SUI ui = new SUI();
+    public static SatelliteDialog cbs = new SatelliteDialog();
 
     //controllers
     public static TemperatureController temperatureController;
@@ -29,7 +31,7 @@ public class SVars implements Loadable {
 
     //minerals
 
-    // celestials body
+    //celestials body
 
     public static float def = 30;
 

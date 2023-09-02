@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.wrold;
+package org.durmiendo.sueno.world;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;

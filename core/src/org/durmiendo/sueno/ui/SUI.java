@@ -29,13 +29,8 @@ public class SUI extends UI {
     /** On mod init **/
     public void build() {
         satellite = new SatelliteDialog();
-        /*planet = new SPlanetDialog();
-        Vars.ui.planet = planet;*/
+        planet = new SPlanetDialog();
+        Vars.ui.planet = planet;
         Vars.ui.paused = new SPausedDialog();
-
-        // TODO @nekit508: Бляяяя I maybe fix it.. later
-        TextButton dm = new TextButton("FIXMAN MODE");
-        Vars.ui.settings.addChild(dm);
-        Log.info("Sueno ui init");
     }
 }
