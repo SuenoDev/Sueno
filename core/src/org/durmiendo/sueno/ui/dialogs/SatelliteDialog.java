@@ -1,13 +1,40 @@
 package org.durmiendo.sueno.ui.dialogs;
 
-import arc.scene.ui.ScrollPane;
+import arc.Core;
+import arc.graphics.Color;
+import arc.input.KeyCode;
+import arc.math.Mathf;
+import arc.scene.event.ClickListener;
+import arc.scene.event.HandCursorListener;
+import arc.scene.event.Touchable;
+import arc.scene.ui.Image;
+import arc.scene.ui.Tooltip;
+import arc.scene.ui.layout.Scl;
 import arc.scene.ui.layout.Table;
-import arc.scene.ui.layout.WidgetGroup;
+import arc.struct.Seq;
+import arc.util.Align;
+import arc.util.Scaling;
+import arc.util.Time;
+import mindustry.ctype.ContentType;
+import mindustry.ctype.UnlockableContent;
+import mindustry.gen.Icon;
+import mindustry.gen.Tex;
+import mindustry.graphics.Pal;
+import mindustry.type.UnitType;
+import mindustry.ui.Fonts;
 import mindustry.ui.dialogs.BaseDialog;
+import mindustry.world.Block;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.satellites.E;
+import org.durmiendo.sueno.satellites.CelestialBody;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static arc.Core.settings;
+import static mindustry.Vars.*;
+import static mindustry.Vars.ui;
 
 public class SatelliteDialog extends BaseDialog {
+    private Table all = new Table();
     public SatelliteDialog() {
         super("@stelitedialog");
 
@@ -15,26 +42,31 @@ public class SatelliteDialog extends BaseDialog {
 
         hidden(this::destroy);
         shown(this::build);
+        all.margin(20).marginTop(0f);
+        cont.pane(all).scrollX(false);
     }
 
     public void build() {
 
-        Table ful = new Table();
-        ScrollPane sp = new ScrollPane(null);
-        Table sats = new Table();
 
-        ful.setFillParent(true);
-        cont.addChild(ful);
+        cont.pane(p -> {
+            p.align(Align.bottomRight);
 
-        ful.add(sp);
-        sp.addChild(sats);
+            int i = SVars.celestialBodyController.cbs.size;
+            int m = (int) Core.graphics.getWidth() / 25 - 25;
+            int j = i/m;
+            for(int y = 1; y <= m; y++) {
+                Table ta = new Table();
+                for(int x = 0; x <= j-1;x++) {
+                    ta.add(SVars.celestialBodyController.cbs.get(x).button);
+                }
+                p.add(ta);
+            }
 
-        SVars.celestialBodyController.cbs.forEach(s -> {
-            sats.add(new E());
         });
 
-    }
 
+    }
     public void destroy() {
         cont.clear();
     }

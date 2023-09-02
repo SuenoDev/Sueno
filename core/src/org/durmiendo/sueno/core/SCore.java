@@ -29,7 +29,7 @@ public class SCore extends Mod {
 
         Events.on(ClientLoadEvent.class, e -> {
 
-            for(int i = 0;i < 5; i++) {
+            for(int i = 0;i < 500; i++) {
                 SVars.celestialBodyController.addCB(
                         new Satellite(
                                 new CelestialBase(),
