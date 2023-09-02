@@ -1,6 +1,6 @@
 dependencies {
     implementation "com.github.Anuken.Arc:arc-core:$mindustryVersion"
-    implementation "com.github.Anuken.MindustryJitpack:core:$mindustryVersion"
+    implementation "com.github.Anuken.$mindustryDependencyType:core:$mindustryVersion"
 
     implementation 'com.squareup:javapoet:1.13.0'
 }
