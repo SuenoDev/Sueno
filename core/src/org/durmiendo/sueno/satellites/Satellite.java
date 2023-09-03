@@ -10,7 +10,7 @@ import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 
 public class Satellite extends CelestialBody {
     CelestialBase i;
-    SatelliteDialog sd = new SatelliteDialog(Styles.fullDialog);
+    public SatelliteDialog sd = new SatelliteDialog(Styles.fullDialog);
     public Satellite( CelestialBase b, float r, float spacing, float distance, Planet planet) {
 
         super(r, spacing, distance, planet);

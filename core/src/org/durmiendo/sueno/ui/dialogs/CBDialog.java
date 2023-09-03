@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Core;
+import arc.scene.event.Touchable;
 import arc.scene.style.Style;
 import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
@@ -10,10 +11,10 @@ import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.FullTextDialog;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.satellites.CelestialBody;
 
 public class CBDialog extends BaseDialog {
-    private Table all = new Table();
-    public ScrollPane sp;
+    public Seq t = new Seq<Table>();
     public CBDialog() {
         super("@cbdialog");
 
@@ -28,7 +29,7 @@ public class CBDialog extends BaseDialog {
     public void build() {
 
 
-        sp = cont.pane(p -> {
+        cont.pane(p -> {
             //p.align(Align.bottomRight);
 
 
@@ -49,17 +50,13 @@ public class CBDialog extends BaseDialog {
                 p.row();
 
             }
+            t = ta;
 
-        }).scrollX(false).get();
+        }).scrollX(false);
 
 
     }
     public void destroy() {
         cont.clear();
     }
-
-   public void re() {
-        destroy();
-        build();
-   }
 }

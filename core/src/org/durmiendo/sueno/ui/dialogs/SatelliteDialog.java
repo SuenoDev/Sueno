@@ -54,7 +54,6 @@ public class SatelliteDialog extends BaseDialog {
 
     public void destroy() {
         cont.clear();
-        SVars.ui.satellite.re();
     }
     public void put(Satellite ss) {
         s = ss;
