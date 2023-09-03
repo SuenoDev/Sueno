@@ -1,73 +1,68 @@
 package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Core;
-import arc.graphics.Color;
-import arc.input.KeyCode;
-import arc.math.Mathf;
-import arc.scene.event.ClickListener;
-import arc.scene.event.HandCursorListener;
-import arc.scene.event.Touchable;
-import arc.scene.ui.Image;
-import arc.scene.ui.Tooltip;
-import arc.scene.ui.layout.Scl;
+import arc.Input;
+import arc.scene.ui.*;
 import arc.scene.ui.layout.Table;
-import arc.struct.Seq;
-import arc.util.Align;
-import arc.util.Scaling;
-import arc.util.Time;
-import mindustry.ctype.ContentType;
-import mindustry.ctype.UnlockableContent;
 import mindustry.gen.Icon;
-import mindustry.gen.Tex;
-import mindustry.graphics.Pal;
-import mindustry.type.UnitType;
-import mindustry.ui.Fonts;
 import mindustry.ui.dialogs.BaseDialog;
-import mindustry.world.Block;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.satellites.CelestialBody;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static arc.Core.settings;
-import static mindustry.Vars.*;
-import static mindustry.Vars.ui;
+import org.durmiendo.sueno.satellites.Satellite;
 
 public class SatelliteDialog extends BaseDialog {
-    private Table all = new Table();
-    public SatelliteDialog() {
-        super("@stelitedialog");
+    Satellite s;
+
+    public SatelliteDialog(DialogStyle style) {
+        super("@stellitedialog", style);
 
         addCloseButton();
 
         hidden(this::destroy);
         shown(this::build);
-        all.margin(20).marginTop(0f);
-        cont.pane(all).scrollX(false);
     }
 
-    public void build() {
-
+    public void build()  {
 
         cont.pane(p -> {
-            p.align(Align.bottomRight);
 
-            int i = SVars.celestialBodyController.cbs.size;
-            int m = (int) Core.graphics.getWidth() / 25 - 25;
-            int j = i/m;
-            for(int y = 1; y <= m; y++) {
-                Table ta = new Table();
-                for(int x = 0; x <= j-1;x++) {
-                    ta.add(SVars.celestialBodyController.cbs.get(x).button);
-                }
-                p.add(ta);
-            }
-
+            Table info = new Table();
+            info.add(new Label("Высота: " + s.orbitRadius*15000 + " м\nСкорость: " + s.speed + " ю/кадр\nПрочность: " + s.health));
+            p.add(info);
+            p.row();
+            Table control = new Table();
+            ImageButton up = new ImageButton(Icon.up);
+            up.clicked(() -> {
+               s.up();
+            });
+            ImageButton down = new ImageButton(Icon.down);
+            down.clicked(() -> {
+                s.down();
+            });
+            TextButton d = new TextButton("destroy");
+            d.clicked(() -> {
+                s.destroy();
+            });
+            control.add(up);
+            control.add(down);
+            control.row();
+            control.add(d);
+            p.add(control);
         });
 
-
     }
+
     public void destroy() {
         cont.clear();
+        SVars.ui.satellite.re();
+    }
+    public void put(Satellite ss) {
+        s = ss;
+    }
+
+    public void upd(Satellite s) {
+        destroy();
+        put(s);
+        build();
     }
 }

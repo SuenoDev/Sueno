@@ -61,11 +61,14 @@ public class SPlanetDialog extends PlanetDialog {
 //                Fill.rect(x, y, w, h);
 //            });
 
-            ImageButton ib = new ImageButton(Core.atlas.find("sueno-satellite"));
+
             ib.clicked(() -> {
                 SVars.cbs.show();
             });
             this.add(ib);
         });
     }
+
+    ImageButton ib = new ImageButton(Core.atlas.find("sueno-satellite"));
+
 }
