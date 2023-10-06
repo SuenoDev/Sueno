@@ -14,7 +14,7 @@ public class CelestialBodyController extends GenericController {
     public final Seq<CelestialBody> cbs;
 
     public CelestialBodyController() {
-        super(2);
+        super(100);
         Events.on(CampainOpen.class, e -> {
             start();
         });
@@ -26,6 +26,9 @@ public class CelestialBodyController extends GenericController {
 
     @Override
     public void update() {
+        for (CelestialBody i : cbs) {
+            i.update();
+        }
     }
 
     public void addCB(CelestialBody s) {
@@ -46,7 +49,6 @@ public class CelestialBodyController extends GenericController {
     public void draw() {
         for (CelestialBody i : cbs) {
             i.draw();
-            i.update();
         }
     }
 }
