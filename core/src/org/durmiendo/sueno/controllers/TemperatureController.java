@@ -14,6 +14,7 @@ public class TemperatureController extends GenericController{
     public Map tMap, fMap, cMap;
     public TemperatureController() {
         super(2);
+
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
 
             start();
@@ -27,6 +28,7 @@ public class TemperatureController extends GenericController{
             }
 
         });
+
         Events.on(EventType.ResetEvent.class, e -> {
             stop();
         });
@@ -35,7 +37,6 @@ public class TemperatureController extends GenericController{
             tMap.setValue(e.tile.x, e.tile.y, SVars.startT);
             cMap.setValue(e.tile.x, e.tile.y, SVars.startCeiling);
         });
-
     }
 
     @Override
@@ -53,7 +54,7 @@ public class TemperatureController extends GenericController{
             if (!isNormalFreezingSpeed(fs)) notNormalFreezingSpeed(fs, i);
             if (!isNormalTemperature(t)) notNormalTemperature(t, i);
 
-            temperatureСhange(SVars.freezingPower, i);
+            temperatureChange(SVars.freezingPower, i);
         }
     }
 
@@ -64,6 +65,7 @@ public class TemperatureController extends GenericController{
         tMap = new Map(Vars.world.width(), Vars.world.height());
         fMap = new Map(Vars.world.width(), Vars.world.height());
         cMap = new Map(Vars.world.width(), Vars.world.height());
+
         for (int i = 0; i < tMap.value.size; i++) {
             tMap.value.set(i, SVars.startT);
             cMap.value.set(i, SVars.startCeiling);
@@ -101,10 +103,10 @@ public class TemperatureController extends GenericController{
         return true;
     }
 
-    public void temperatureСhange(float hs, int x, int y) {
+    public void temperatureChange(float hs, int x, int y) {
         tMap.setValue(x, y, tMap.getUnit(x, y)-hs);
     }
-    public void temperatureСhange(float hs, int p) {
+    public void temperatureChange(float hs, int p) {
         tMap.setValue(p, tMap.getUnit(p)-hs);
     }
 

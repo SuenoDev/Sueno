@@ -17,7 +17,7 @@ import static mindustry.Vars.indexer;
 public class Heater extends Block {
 
     public float heatPower = 0.3f;
-    public float range = 60f;
+    public float range = 60;
     public Heater(String name) {
         super(name);
         solid = true;
