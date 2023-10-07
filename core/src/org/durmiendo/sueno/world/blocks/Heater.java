@@ -2,18 +2,12 @@ package org.durmiendo.sueno.world.blocks;
 
 import arc.graphics.Color;
 import arc.math.Mathf;
-import arc.math.geom.Geometry;
-import arc.math.geom.Rect;
-import arc.util.Log;
 import arc.util.Tmp;
-import mindustry.Vars;
-import mindustry.core.World;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.logic.LAccess;
 import mindustry.logic.Ranged;
 import mindustry.world.Block;
-import mindustry.world.blocks.heat.HeatBlock;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
@@ -50,7 +44,7 @@ public class Heater extends Block {
             super.updateTile();
             for(int x = Mathf.round(this.x-range/16); x < this.x + range/16; x++) {
                 for(int y = Mathf.round(this.y-range/16); y < this.y + range/16; x++) {
-                    SVars.temperatureController.freezingСhange(heatPower, x/8, y/8);
+                    SVars.temperatureController.freezingChange(heatPower, x/8, y/8);
                 }
             }
         }

@@ -108,10 +108,10 @@ public class TemperatureController extends GenericController{
         tMap.setValue(p, tMap.getUnit(p)-hs);
     }
 
-    public void freezingСhange(float hs, int x, int y) {
+    public void freezingChange(float hs, int x, int y) {
         fMap.setValue(x, y, tMap.getUnit(x, y)-hs);
     }
-    public void freezingСhange(float hs, int p) {
+    public void freezingChange(float hs, int p) {
         fMap.setValue(p, tMap.getUnit(p)-hs);
     }
 }
