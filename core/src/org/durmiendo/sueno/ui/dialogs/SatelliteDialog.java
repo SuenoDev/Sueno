@@ -1,13 +1,11 @@
 package org.durmiendo.sueno.ui.dialogs;
 
-import arc.Core;
-import arc.Input;
-import arc.scene.ui.*;
+import arc.scene.ui.ImageButton;
+import arc.scene.ui.Label;
+import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Table;
 import mindustry.gen.Icon;
 import mindustry.ui.dialogs.BaseDialog;
-import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.satellites.CelestialBody;
 import org.durmiendo.sueno.satellites.Satellite;
 
 public class SatelliteDialog extends BaseDialog {

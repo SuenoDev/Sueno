@@ -2,15 +2,8 @@ package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Fill;
 import arc.scene.ui.Dialog;
 import arc.scene.ui.ImageButton;
-import arc.scene.ui.layout.Table;
-import arc.util.Align;
-import mindustry.Vars;
-import mindustry.gen.Icon;
 import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.CampainClose;

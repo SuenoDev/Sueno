@@ -3,7 +3,6 @@ package org.durmiendo.sueno.controllers;
 import arc.Events;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.CampainClose;
 import org.durmiendo.sueno.events.CampainOpen;
 import org.durmiendo.sueno.satellites.CelestialBody;

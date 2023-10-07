@@ -4,7 +4,6 @@ import arc.Core;
 import arc.graphics.Color;
 import mindustry.type.Planet;
 import mindustry.ui.Styles;
-import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 
 

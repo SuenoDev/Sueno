@@ -1,17 +1,11 @@
 package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Core;
-import arc.scene.event.Touchable;
-import arc.scene.style.Style;
-import arc.scene.ui.ScrollPane;
 import arc.scene.ui.layout.Table;
 import arc.struct.Seq;
 import arc.util.Log;
-import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
-import mindustry.ui.dialogs.FullTextDialog;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.satellites.CelestialBody;
 
 public class CBDialog extends BaseDialog {
     public Seq t = new Seq<Table>();

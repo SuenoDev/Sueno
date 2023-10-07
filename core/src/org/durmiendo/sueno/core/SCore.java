@@ -1,24 +1,18 @@
 package org.durmiendo.sueno.core;
 
 import arc.Events;
-import arc.graphics.Color;
 import arc.math.Mathf;
-import arc.util.Log;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
-import mindustry.ui.Bar;
-import mindustry.world.Block;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.events.CampainOpen;
-import org.durmiendo.sueno.satellites.Satellite;
 import org.durmiendo.sueno.satellites.CelestialBase;
+import org.durmiendo.sueno.satellites.Satellite;
 
 
 public class SCore extends Mod {

@@ -1,12 +1,10 @@
 package org.durmiendo.sueno.satellites;
 
-import arc.Core;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
 import arc.scene.ui.ImageButton;
 import mindustry.Vars;
-import mindustry.gen.Icon;
 import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;

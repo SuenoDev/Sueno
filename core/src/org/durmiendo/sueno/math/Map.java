@@ -1,8 +1,6 @@
 package org.durmiendo.sueno.math;
 
 import arc.struct.FloatSeq;
-import arc.struct.Seq;
-import arc.util.Log;
 
 public class Map{
     public FloatSeq value;
