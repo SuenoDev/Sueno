@@ -10,11 +10,13 @@ import org.durmiendo.sueno.ui.dialogs.CBDialog;
 public class SVars implements Loadable {
 
     //temperature params
-    public static float frostDamage = 0.35F;
-    public static float frostefficiency = 0.3f;
+    public static float freezingDamage = 0.35f;
+    public static float freezingEfficiency = 0.3f;
+    public static float startT = 230;
 
-    public static float freezingPower = 4.35F;
-    public static float minT = -179.8f;
+    public static float freezingPower = 0.4f;
+    public static float maxFreezingSpeed = 2f;
+    public static float startCeiling = 50;
 
     //ui
     public static SUI ui = new SUI();
@@ -26,7 +28,7 @@ public class SVars implements Loadable {
     public static WeatherController weathercontroller;
 
     //status
-    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = true;
+    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false;
     public static boolean onCampain;
 
     //minerals
@@ -34,5 +36,4 @@ public class SVars implements Loadable {
     //celestials body
 
     public static float def = 30;
-
 }

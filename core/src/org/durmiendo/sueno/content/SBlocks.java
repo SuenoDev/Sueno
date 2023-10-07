@@ -7,30 +7,22 @@ import mindustry.type.ItemStack;
 import mindustry.world.Block;
 import mindustry.world.blocks.production.Drill;
 import mindustry.world.meta.Env;
+import org.durmiendo.sueno.world.blocks.Heater;
+
+import static mindustry.type.ItemStack.with;
 
 public class SBlocks {
 
     public static Block
-    //satellites
-
-    satellitePad, satelliteConstructor, satelliteAssembler, satelliteProgrammer,
-
-    //drills
-    drillo;
+    //heaters
+    heater;
     public static void load() {
-        //satellites
-
-        //drills
-        drillo = new Drill("drillo"){{
-            requirements(Category.production, ItemStack.with(Items.coal, 100000) );
-            tier = 2;
-            drillTime = 600;
+        heater = new Heater("heater") {{
+            requirements(Category.effect, with(Items.lead, 100, Items.titanium, 25, Items.silicon, 40, Items.copper, 50));
+            consumePower(1.5f);
+            range = 80f;
             size = 2;
-            //mechanical drill doesn't work in space
-            envEnabled ^= Env.space;
-            researchCost = ItemStack.with(Items.copper, 10);
-
-            consumeLiquid(Liquids.water, 0.05f).boost();
+            health = 200;
         }};
     }
 }
