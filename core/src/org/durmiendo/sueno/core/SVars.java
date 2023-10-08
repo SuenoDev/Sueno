@@ -12,11 +12,17 @@ public class SVars implements Loadable {
     //temperature params
     public static float freezingDamage = 0.35f;
     public static float freezingEfficiency = 0.3f;
-    public static float startT = 230;
+    public static float startT = 100;
 
-    public static float freezingPower = 0.4f;
+    public static float freezingPower = -0.4f;
     public static float maxFreezingSpeed = 2f;
-    public static float startCeiling = 50;
+    public static float startCeiling = 150;
+    public static float maxSafeT = 120;
+    public static float minEffectivityT = 100;
+    public static float minSafeT = -100;
+    public static float minHeatDamage = 20;
+    public static float maxHeatDamage = 300;
+    public static float maxBoost = 20;
 
     //ui
     public static SUI ui = new SUI();

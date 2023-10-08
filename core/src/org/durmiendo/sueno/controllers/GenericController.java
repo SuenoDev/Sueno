@@ -10,7 +10,7 @@ public abstract class GenericController {
 
     private long prevUpd;
     private final long delay;
-    private final long frequency;
+    public final long frequency;
 
     private volatile boolean run = false;
 

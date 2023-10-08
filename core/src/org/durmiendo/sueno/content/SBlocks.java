@@ -14,9 +14,9 @@ public class SBlocks {
     heater;
     public static void load() {
         heater = new Heater("heater") {{
-            requirements(Category.effect, with(Items.lead, 100, Items.titanium, 25, Items.silicon, 40, Items.copper, 50));
+            requirements(Category.effect, with(Items.scrap, 10000000));
             consumePower(1.5f);
-            range = 80f;
+            range = 160f;
             size = 2;
             health = 200;
         }};

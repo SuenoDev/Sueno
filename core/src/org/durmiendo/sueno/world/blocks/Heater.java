@@ -1,8 +1,12 @@
 package org.durmiendo.sueno.world.blocks;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.math.Mathf;
+import arc.math.geom.Rect;
+import arc.util.Log;
 import arc.util.Tmp;
+import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
 import mindustry.logic.LAccess;
@@ -16,8 +20,9 @@ import static mindustry.Vars.indexer;
 
 public class Heater extends Block {
 
-    public float heatPower = 0.3f;
+    public float heatPower = 0.55f;
     public float range = 60;
+    public float ceiling = 20;
     public Heater(String name) {
         super(name);
         solid = true;
@@ -41,12 +46,20 @@ public class Heater extends Block {
 
         @Override
         public void updateTile() {
-            super.updateTile();
-            for(int x = Mathf.round(this.x-range/16); x < this.x + range/16; x++) {
-                for(int y = Mathf.round(this.y-range/16); y < this.y + range/16; x++) {
-                    SVars.temperatureController.freezingChange(heatPower, x/8, y/8);
+            for(float x = this.x-range/2; x < this.x + range/2; x++) {
+                for(float y = this.y-range/2; y < this.y + range/2; y++) {
+                    if (true) {//(SVars.temperatureController.cMap.getUnit(x, y) > SVars.temperatureController.tMap.getUnit(x, y)) {
+                        SVars.temperatureController.temperatureChange(heatPower / Core.graphics.getFramesPerSecond(), (int) x, (int) y);
+                    }
                 }
             }
+            super.updateTile();
+
+        }
+
+        @Override
+        public void update() {
+            super.update();
         }
 
         @Override
@@ -57,7 +70,7 @@ public class Heater extends Block {
 
         @Override
         public void drawSelect(){
-            indexer.eachBlock(this, range, other -> true, other -> Drawf.selected(other, Tmp.c1.set(Color.orange).a(Mathf.absin(4f, 1f))));
+            indexer.eachBlock(this.team, new Rect(x-range/2, y-range/2, range, range), other -> true, othert -> Drawf.selected(othert, Tmp.c1.set(Color.orange).a(Mathf.absin(4f, 1f))));
             Drawf.dashSquare(Color.orange, x, y, range);
         }
     }
