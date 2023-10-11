@@ -11,8 +11,8 @@ import java.io.IOException;
 public class SChunk implements SaveFileReader.CustomChunk {
     @Override
     public void write(DataOutput stream) throws IOException {
-        for (int p = 0; p < SVars.temperatureController.tMap.value.size; p++) {
-            stream.writeFloat(SVars.temperatureController.tMap.getUnit(p));
+        for (int p = 0; p < SVars.tMap.value.size; p++) {
+            stream.writeFloat(SVars.tMap.getUnit(p));
             stream.writeFloat(SVars.temperatureController.fMap.getUnit(p));
             stream.writeFloat(SVars.temperatureController.cMap.getUnit(p));
         }
@@ -21,8 +21,8 @@ public class SChunk implements SaveFileReader.CustomChunk {
 
     @Override
     public void read(DataInput stream) throws IOException {
-        for (int p = 0; p < SVars.temperatureController.tMap.value.size; p++) {
-            SVars.temperatureController.tMap.setValue(p, stream.readFloat());
+        for (int p = 0; p < SVars.tMap.value.size; p++) {
+            SVars.tMap.setValue(p, stream.readFloat());
             SVars.temperatureController.fMap.setValue(p, stream.readFloat());
             SVars.temperatureController.cMap.setValue(p, stream.readFloat());
         }

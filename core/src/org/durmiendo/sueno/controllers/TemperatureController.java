@@ -3,6 +3,7 @@ package org.durmiendo.sueno.controllers;
 import arc.Events;
 import arc.graphics.Color;
 import arc.math.Interp;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.annotations.Annotations;
 import mindustry.entities.TargetPriority;
@@ -15,9 +16,9 @@ import org.durmiendo.sueno.graphics.Colorated;
 import org.durmiendo.sueno.math.Map;
 
 public class TemperatureController extends GenericController{
-    public volatile Map tMap, fMap, cMap;
+    public volatile Map fMap, cMap;
     public TemperatureController() {
-        super(120);
+        super(1);
 
 
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
@@ -26,9 +27,9 @@ public class TemperatureController extends GenericController{
 
             for (Block block : Vars.content.blocks()) {
                 block.addBar("temperature", entity -> new Bar(
-                        () -> "Температура\n" +  String.format("%8s", Math.round(tMap.getUnit(entity.tileX(), entity.tileY()))) + " / " + String.format("%8s", fMap.getUnit(entity.tileX(), entity.tileY())),
-                        () -> Colorated.gradient(Color.cyan, Color.red, (tMap.getUnit(entity.tileX(), entity.tileY()) + 200) / 400),
-                        () -> (tMap.getUnit(entity.tileX(), entity.tileY()) + 200) / 400
+                        () -> "Температура\n" +  String.format("%8s", Math.round(SVars.tMap.getUnit(entity.tileX(), entity.tileY()))) + " / " + String.format("%8s", fMap.getUnit(entity.tileX(), entity.tileY())),
+                        () -> Colorated.gradient(Color.cyan, Color.red, (SVars.tMap.getUnit(entity.tileX(), entity.tileY()) + 200) / 400),
+                        () -> (SVars.tMap.getUnit(entity.tileX(), entity.tileY()) + 200) / 400
                 ));
             }
 
@@ -39,41 +40,51 @@ public class TemperatureController extends GenericController{
         });
 
         Events.on(EventType.BlockBuildBeginEvent.class, e -> {
-            tMap.setValue(e.tile.x, e.tile.y, SVars.startT);
+            SVars.tMap.setValue(e.tile.x, e.tile.y, SVars.startT);
             cMap.setValue(e.tile.x, e.tile.y, SVars.startCeiling);
         });
     }
 
     @Override
     public void update() {
-        for (int i = 0; i < fMap.value.size; i++) {
-            //freezingChange(SVars.freezingPower / frequency, i);
+        for (int i = 0; i < SVars.tMap.value.size; i++) {
+            if (SVars.tMap.getUnit(i) == 100f) return;
+            Log.info(SVars.tMap.getUnit(i));
         }
 
-        float fs;
-        float t;
-        for (int i = 0; i < tMap.value.size; i++) {
-            fs = fMap.getUnit(i);
-            t = tMap.getUnit(i);
-            fMap.setValue(i, 0);
+        SVars.tMap.setValue(100, 100, 99);
+        SVars.tMap.setValue(101, 101, 99);
+        SVars.tMap.setValue(100, 101, 99);
+        SVars.tMap.setValue(101, 100, 99);
 
-            if (!isNormalFreezingSpeed(fs)) notNormalFreezingSpeed(fs, i);
-            if (!isNormalTemperature(t)) notNormalTemperature(t, i);
-
-            temperatureChange(fs, i);
-        }
+//        for (int i = 0; i < fMap.value.size; i++) {
+//            //freezingChange(SVars.freezingPower / frequency, i);
+//        }
+//
+//        float fs;
+//        float t;
+//        for (int i = 0; i < SVars.tMap.value.size; i++) {
+//            fs = fMap.getUnit(i);
+//            t = SVars.tMap.getUnit(i);
+//            fMap.setValue(i, 0);
+//
+//            if (!isNormalFreezingSpeed(fs)) notNormalFreezingSpeed(fs, i);
+//            if (!isNormalTemperature(t)) notNormalTemperature(t, i);
+//
+//            temperatureChange(fs, i);
+//        }
     }
 
     @Override
     public void start() {
         super.start();
 
-        tMap = new Map(Vars.world.width(), Vars.world.height());
+        SVars.tMap = new Map(Vars.world.width(), Vars.world.height());
         fMap = new Map(Vars.world.width(), Vars.world.height());
         cMap = new Map(Vars.world.width(), Vars.world.height());
 
-        for (int i = 0; i < tMap.value.size; i++) {
-            tMap.value.set(i, SVars.startT);
+        for (int i = 0; i < SVars.tMap.value.size; i++) {
+            SVars.tMap.value.set(i, SVars.startT);
             cMap.value.set(i, SVars.startCeiling);
         }
     }
@@ -114,10 +125,10 @@ public class TemperatureController extends GenericController{
     }
 
     public void temperatureChange(float hs, int x, int y) {
-        tMap.setValue(x, y, tMap.getUnit(x, y) + hs);
+        SVars.tMap.setValue(x, y, SVars.tMap.getUnit(x, y) + hs);
     }
     public void temperatureChange(float hs, int p) {
-        tMap.setValue(p, tMap.getUnit(p) + hs);
+        SVars.tMap.setValue(p, SVars.tMap.getUnit(p) + hs);
     }
 
     public void freezingChange(float hs, int x, int y) {

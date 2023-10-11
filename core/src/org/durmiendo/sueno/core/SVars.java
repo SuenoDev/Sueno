@@ -4,6 +4,7 @@ import arc.assets.Loadable;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
+import org.durmiendo.sueno.math.Map;
 import org.durmiendo.sueno.ui.SUI;
 import org.durmiendo.sueno.ui.dialogs.CBDialog;
 
@@ -23,6 +24,7 @@ public class SVars implements Loadable {
     public static float minHeatDamage = 20;
     public static float maxHeatDamage = 300;
     public static float maxBoost = 20;
+    public static Map tMap;
 
     //ui
     public static SUI ui = new SUI();

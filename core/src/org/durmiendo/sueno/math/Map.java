@@ -1,8 +1,10 @@
 package org.durmiendo.sueno.math;
 
 import arc.struct.FloatSeq;
+import arc.struct.IntFloatMap;
+import arc.struct.Seq;
 
-public class Map{
+public class Map {
     public FloatSeq value;
     public int width, height;
 
@@ -10,15 +12,16 @@ public class Map{
         this.value = value;
         this.width = width;
         this.height = height;
-    }
 
+        value.addAll(new float[width * height]);
+    }
 
     public Map(int width, int height) {
         this.width = width;
         this.height = height;
 
-        value = new FloatSeq(width*height);
-        value.setSize(width*height);
+        value = new FloatSeq();
+        value.addAll(new float[width * height]);
     }
 
     private int getIndex(int x, int y) {
@@ -26,15 +29,14 @@ public class Map{
     }
 
     public float getUnit(int x, int y) {
-        if (x > width || x < 0 || y > height || y < 0) return 0;
+        if (x >= width || x < 0 || y >= height || y < 0) return 0;
         return value.get(getIndex(x, y));
     }
 
     public float getUnit(int p) {
-        if (p < 0 || p > value.size) return 0;
+        if (p < 0 || p >= value.size) return 0;
         return value.get(p);
     }
-
 
     public int getWidth() {
         return width;
@@ -44,14 +46,13 @@ public class Map{
         return height;
     }
 
-
     public void setValue(int x, int y, float t) {
-        if (x > width || x < 0 || y > height || y < 0) return;
+        if (x >= width || x < 0 || y >= height || y < 0) return;
         value.set(getIndex(x, y), t);
     }
 
     public void setValue(int p, float t) {
-        if (p < 0 || p > value.size) return;
+        if (p < 0 || p >= value.size) return;
         value.set(p, t);
     }
 }
