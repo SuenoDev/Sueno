@@ -24,7 +24,6 @@ public class SVars implements Loadable {
     public static float minHeatDamage = 20;
     public static float maxHeatDamage = 300;
     public static float maxBoost = 20;
-    public static Map tMap;
 
     //ui
     public static SUI ui = new SUI();
