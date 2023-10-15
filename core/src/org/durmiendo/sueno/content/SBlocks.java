@@ -4,6 +4,7 @@ import mindustry.content.Items;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import org.durmiendo.sueno.world.blocks.Heater;
+import org.durmiendo.sueno.world.blocks.TemeperatureSource;
 
 import static mindustry.type.ItemStack.with;
 
@@ -11,7 +12,7 @@ public class SBlocks {
 
     public static Block
     //heaters
-    heater;
+    heater, ts;
     public static void load() {
         heater = new Heater("heater") {{
             requirements(Category.effect, with(Items.scrap, 10000000));
@@ -19,6 +20,11 @@ public class SBlocks {
             range = 160f;
             size = 2;
             health = 200;
+        }};
+        ts = new TemeperatureSource("ts") {{
+            requirements(Category.effect, with(Items.scrap, 10000000));
+            size = 1;
+            health = 20;
         }};
     }
 }

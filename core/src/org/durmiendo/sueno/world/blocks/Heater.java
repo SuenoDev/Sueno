@@ -15,6 +15,7 @@ import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.world.blocks.build.Heated;
 
 import static mindustry.Vars.indexer;
 
@@ -37,7 +38,7 @@ public class Heater extends Block {
 
     }
 
-    public class HeatBuild extends Building implements Ranged {
+    public class HeatBuild extends Building implements Ranged, Heated {
 
         @Override
         public float range() {
@@ -54,7 +55,14 @@ public class Heater extends Block {
                 }
             }
             super.updateTile();
+        }
 
+        public void addCeiling(){
+            for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
+                for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
+                    SVars.temperatureController.cMap.add(x, y, ceiling/4);
+                }
+            }
         }
 
         @Override

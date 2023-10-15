@@ -11,13 +11,15 @@ import mindustry.world.Block;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.graphics.Colorated;
 import org.durmiendo.sueno.math.Map;
+import org.durmiendo.sueno.world.blocks.Heater;
+import org.durmiendo.sueno.world.blocks.build.Heated;
 
 
 public class TemperatureController extends GenericController{
-    public volatile Map tMap, fMap, flMap, cMap;
+    public volatile Map tMap, fMap, flMap, cMap, clMap;
     public int size;
     public TemperatureController() {
-        super(1);
+        super(2);
 
 
         Events.on(EventType.WorldLoadEndEvent.class, e -> {
@@ -52,18 +54,24 @@ public class TemperatureController extends GenericController{
 
     @Override
     public void update() {
-        for (int p = 0; p < SVars.temperatureController.size; p++) {
+        for (int p = 0; p < size; p++) {
             fMap.addi(p, Float.valueOf(SVars.freezingPower/100));
             Float fs = fMap.geti(p);
             tMap.addi(p, fs);
-//            if (!isNormalFreezingSpeed(fs)) notNormalFreezingSpeed(fs, p);
+            if (!isNormalFreezingSpeed(fs)) notNormalFreezingSpeed(fs, p);
             flMap.seti(p, fs);
             fMap.seti(p, Float.valueOf(0));
         }
-//        for (int i = 0; i < SVars.temperatureController.size; i++) {
-//            Float t = tMap.geti(i);
-//            if (!isNormalTemperature(t)) notNormalTemperature(t, i);
-//        }
+        for (int i = 0; i < size; i++) {
+            Float t = tMap.geti(i);
+            if (!isNormalTemperature(t)) notNormalTemperature(t, i);
+        }
+        cMap.fill(Float.valueOf(SVars.startCeiling));
+        Vars.world.tiles.eachTile(tile -> {
+            if (Heated.class.isAssignableFrom(tile.build.getClass())) {
+                ((Heated) tile.build).addCeiling();
+            }
+        });
     }
 
     @Override
@@ -74,11 +82,13 @@ public class TemperatureController extends GenericController{
         fMap = new Map(Vars.world.width(), Vars.world.height());
         cMap = new Map(Vars.world.width(), Vars.world.height());
         flMap = new Map(Vars.world.width(), Vars.world.height());
+        clMap = new Map(Vars.world.width(), Vars.world.height());
 
         tMap.fill(Float.valueOf(SVars.startT));
         fMap.fill(Float.valueOf(0f));
         cMap.fill(Float.valueOf(SVars.startCeiling));
         flMap.fill(Float.valueOf(0f));
+        clMap.fill(Float.valueOf(SVars.startCeiling));
     }
 
     @Override
