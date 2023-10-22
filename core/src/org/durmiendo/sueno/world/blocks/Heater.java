@@ -76,5 +76,14 @@ public class Heater extends Block {
             indexer.eachBlock(this.team, new Rect(x-range/2, y-range/2, range, range), other -> true, othert -> Drawf.selected(othert, Tmp.c1.set(Color.orange).a(Mathf.absin(4f, 1f))));
             Drawf.dashSquare(Color.orange, x, y, range);
         }
+
+        @Override
+        public void addCeiling() {
+            for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
+                for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
+                    SVars.temperatureController.cMap.add(x, y, ceiling);
+                }
+            }
+        }
     }
 }

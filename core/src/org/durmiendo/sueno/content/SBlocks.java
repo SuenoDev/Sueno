@@ -3,6 +3,8 @@ package org.durmiendo.sueno.content;
 import mindustry.content.Items;
 import mindustry.type.Category;
 import mindustry.world.Block;
+import mindustry.world.meta.BlockGroup;
+import mindustry.world.meta.Env;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemeperatureSource;
 
@@ -25,6 +27,17 @@ public class SBlocks {
             requirements(Category.effect, with(Items.scrap, 10000000));
             size = 1;
             health = 20;
+        }};
+
+        ts = new TemeperatureSource("ts") {{
+            requirements(Category.effect, with(Items.scrap, 10000000));
+            solid = true;
+            update = true;
+            group = BlockGroup.projectors;
+            emitLight = true;
+            suppressable = true;
+            envEnabled |= Env.space;
+            configurable = true;
         }};
     }
 }

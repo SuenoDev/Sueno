@@ -12,6 +12,7 @@ import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
+import mindustry.gen.Groups;
 import mindustry.graphics.Drawf;
 import mindustry.logic.Ranged;
 import mindustry.ui.Styles;
@@ -47,7 +48,10 @@ public class TemeperatureSource extends Block {
 
     public class HeatBuild extends Building implements Ranged, Heated {
         public float range = 0;
+        public float rangeUn = 0;
         public float te = 0;
+        public float teUn = 0;
+        public boolean unit = false;
 
         @Override
         public float range() {
@@ -64,25 +68,31 @@ public class TemeperatureSource extends Block {
         public void buildConfiguration(Table table) {
             super.buildConfiguration(table);
             table.setBackground(Core.atlas.drawable("space"));
-            Label label = new Label("Источник температуры " + range/16 + "блоков");
+
+            Label label = new Label("Источник температуры (блоки) " + range/16 + " блоков");
             table.add(label);
             table.row();
+
             Slider s = new Slider(0f, 30*16, 16f, false);
             s.setValue(range);
             s.changed(() -> {
                 range = s.getValue();
-                label.setText("Источник температуры " + range/16 + "блоков");
+                label.setText("Источник температуры (блоки) " + range/16 + " блоков");
             });
             table.add(s);
             table.row();
-            TextButton ib = new TextButton("Изменять температуру", Styles.flatTogglet);
+
+            //TextButton ib = new TextButton("Изменять температуру", Styles.flatTogglet);
+
             Slider slider = new Slider(-300, 300, 5, false);
             slider.setValue(te);
+
             Label labels = new Label("Температура " + te + " °C");
             slider.changed(() -> {
                 te = slider.getValue();
                 labels.setText("Температура " + te + " °C");
             });
+
             table.table(t -> {
                 t.add(labels);
                 t.row();
@@ -97,6 +107,8 @@ public class TemeperatureSource extends Block {
                     SVars.temperatureController.tMap.set(x, y, te);
                 }
             }
+
+
             super.updateTile();
         }
 

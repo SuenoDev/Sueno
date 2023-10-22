@@ -36,20 +36,20 @@ public class SCore extends Mod {
 
 
 
-        Events.on(ClientLoadEvent.class, e -> {
-
-            for(int i = 0;i < 500; i++) {
-                SVars.celestialBodyController.addCB(
-                        new Satellite(
-                                new CelestialBase(),
-                                Mathf.random(1.8f, 5),
-                                Mathf.random(0, 360),
-                                Mathf.random(0, 360),
-                                SPlanets.serpulo
-                        )
-                );
-            }
-        });
+//        Events.on(ClientLoadEvent.class, e -> {
+//
+//            for(int i = 0;i < 500; i++) {
+//                SVars.celestialBodyController.addCB(
+//                        new Satellite(
+//                                new CelestialBase(),
+//                                Mathf.random(1.8f, 5),
+//                                Mathf.random(0, 360),
+//                                Mathf.random(0, 360),
+//                                SPlanets.serpulo
+//                        )
+//                );
+//            }
+//        });
 
     }
 
@@ -64,7 +64,7 @@ public class SCore extends Mod {
     public void init() {
 
         SVars.temperatureController = new TemperatureController();
-        SVars.celestialBodyController = new CelestialBodyController();
+        //SVars.celestialBodyController = new CelestialBodyController();
         SVars.weathercontroller = new WeatherController();
 
         SVars.ui.build();

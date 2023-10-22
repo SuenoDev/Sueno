@@ -15,7 +15,7 @@ public class SVars implements Loadable {
     public static float freezingEfficiency = 0.3f;
     public static float startT = 100;
 
-    public static float freezingPower = -0.4f;
+    public static float freezingPower = -1.4f;
     public static float maxFreezingSpeed = 2f;
     public static float startCeiling = 150;
     public static float maxSafeT = 120;
