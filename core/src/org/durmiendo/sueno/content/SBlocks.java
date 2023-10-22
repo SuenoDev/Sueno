@@ -16,6 +16,7 @@ public class SBlocks {
     //heaters
     heater, ts;
     public static void load() {
+        // TODO delete this
         heater = new Heater("heater") {{
             requirements(Category.effect, with(Items.scrap, 10000000));
             consumePower(1.5f);
@@ -23,13 +24,13 @@ public class SBlocks {
             size = 2;
             health = 200;
         }};
-        ts = new TemeperatureSource("ts") {{
+        ts = new TemeperatureSource("ts1") {{
             requirements(Category.effect, with(Items.scrap, 10000000));
             size = 1;
             health = 20;
         }};
 
-        ts = new TemeperatureSource("ts") {{
+        ts = new TemeperatureSource("ts2") {{
             requirements(Category.effect, with(Items.scrap, 10000000));
             solid = true;
             update = true;

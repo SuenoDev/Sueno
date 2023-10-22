@@ -4,7 +4,7 @@ import arc.assets.Loadable;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.math.Map;
+import org.durmiendo.sueno.temperature.Controller;
 import org.durmiendo.sueno.ui.SUI;
 import org.durmiendo.sueno.ui.dialogs.CBDialog;
 
@@ -33,10 +33,11 @@ public class SVars implements Loadable {
     public static TemperatureController temperatureController;
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
+    public static Controller temperatureController$;
 
     //status
-    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false;
-    public static boolean onCampain;
+    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false; // durmiendo moment
+    public static boolean onCampaign;
 
     //minerals
 

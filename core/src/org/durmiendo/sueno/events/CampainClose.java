@@ -5,7 +5,7 @@ import org.durmiendo.sueno.core.SVars;
 
 public class CampainClose {
     public CampainClose() {
-        SVars.onCampain = false;
+        SVars.onCampaign = false;
         Log.info("campain closed");
     }
 }

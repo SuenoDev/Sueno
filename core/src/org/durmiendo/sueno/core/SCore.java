@@ -21,6 +21,7 @@ import org.durmiendo.sueno.graphics.Colorated;
 import org.durmiendo.sueno.io.SChunk;
 import org.durmiendo.sueno.satellites.CelestialBase;
 import org.durmiendo.sueno.satellites.Satellite;
+import org.durmiendo.sueno.temperature.Controller;
 
 
 public class SCore extends Mod {
@@ -32,25 +33,19 @@ public class SCore extends Mod {
             Vars.renderer.planets.cam.far = 1500f;
         });
 
-
-
-
-
-//        Events.on(ClientLoadEvent.class, e -> {
-//
-//            for(int i = 0;i < 500; i++) {
-//                SVars.celestialBodyController.addCB(
-//                        new Satellite(
-//                                new CelestialBase(),
-//                                Mathf.random(1.8f, 5),
-//                                Mathf.random(0, 360),
-//                                Mathf.random(0, 360),
-//                                SPlanets.serpulo
-//                        )
-//                );
-//            }
-//        });
-
+        /*Events.on(ClientLoadEvent.class, e -> {
+            for(int i = 0;i < 500; i++) {
+                SVars.celestialBodyController.addCB(
+                        new Satellite(
+                                new CelestialBase(),
+                                Mathf.random(1.8f, 5),
+                                Mathf.random(0, 360),
+                                Mathf.random(0, 360),
+                               SPlanets.serpulo
+                        )
+                );
+            }
+        });*/
     }
 
     @Override
@@ -62,10 +57,10 @@ public class SCore extends Mod {
 
     @Override
     public void init() {
-
         SVars.temperatureController = new TemperatureController();
         //SVars.celestialBodyController = new CelestialBodyController();
         SVars.weathercontroller = new WeatherController();
+        SVars.temperatureController$ = new Controller();
 
         SVars.ui.build();
         SaveVersion.addCustomChunk("Sueno", new SChunk());

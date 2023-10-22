@@ -5,7 +5,7 @@ import org.durmiendo.sueno.core.SVars;
 
 public class CampainOpen{
     public CampainOpen() {
-        SVars.onCampain = true;
+        SVars.onCampaign = true;
         Log.info("campain open");
     }
 }

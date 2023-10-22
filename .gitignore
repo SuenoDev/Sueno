@@ -1,6 +1,7 @@
 ### Gradle
 /local.properties
-build/
+/build/
+/*/build
 cache/
 /.gradle/
 /artifacts/
