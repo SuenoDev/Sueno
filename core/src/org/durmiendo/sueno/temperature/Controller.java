@@ -62,28 +62,7 @@ public class Controller implements SaveFileReader.CustomChunk {
     }
 
     public void draw() {
-        // TODO not works
-        /*if (!Vars.state.isGame() || Reflect.<Float>get(Vars.renderer, "landTime") > 0) return;
 
-        float z = Draw.z();
-        Draw.z(Layer.flyingUnit+0.2f);
-
-        Rect bounds = Core.camera.bounds(new Rect()).grow(1 / 8f);
-        int cx = (int) bounds.x;
-        int cy = (int) bounds.y;
-        int cw = (int) bounds.width;
-        int ch = (int) bounds.height;
-
-        for (int x = cx; x < cx + cw; x++) {
-            for (int y = cy; y < cy + ch; y++) {
-                float v = at(x, y);
-                v = Mathf.clamp(v / maxTemp);
-                Draw.color(v, 0, 1 - v, 0.2f);
-                Fill.rect(x, y, 1, 1);
-            }
-        }
-
-        Draw.z(z);*/
     }
 
     public void update() {
