@@ -3,6 +3,7 @@ package org.durmiendo.sueno.world.blocks;
 import arc.Core;
 import arc.func.Boolp;
 import arc.graphics.Color;
+import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.scene.ui.*;
@@ -46,14 +47,10 @@ public class TemeperatureSource extends Block {
         configurable = true;
     }
 
-    public class HeatBuild extends Building implements Ranged, Heated {
+    public class HeatBuild extends Building implements Heated {
         public float range = 0;
-        public float rangeUn = 0;
         public float te = 0;
-        public float teUn = 0;
-        public boolean unit = false;
 
-        @Override
         public float range() {
             return range;
         }
@@ -87,10 +84,10 @@ public class TemeperatureSource extends Block {
             Slider slider = new Slider(-300, 300, 5, false);
             slider.setValue(te);
 
-            Label labels = new Label("Температура " + te + " °C");
+            Label labels = new Label("Температура " + (te - 30) + " °C");
             slider.changed(() -> {
                 te = slider.getValue();
-                labels.setText("Температура " + te + " °C");
+                labels.setText("Температура " + (te - 30) + " °C");
             });
 
             table.table(t -> {
@@ -104,7 +101,7 @@ public class TemeperatureSource extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    SVars.temperatureController.tMap.set(x, y, te);
+                    SVars.temperatureController$.temperature[x][y] = te;
                 }
             }
 

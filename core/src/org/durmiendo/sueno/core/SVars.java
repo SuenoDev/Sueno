@@ -2,7 +2,6 @@ package org.durmiendo.sueno.core;
 
 import arc.assets.Loadable;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.temperature.Controller;
 import org.durmiendo.sueno.ui.SUI;
@@ -12,16 +11,16 @@ public class SVars implements Loadable {
 
     //temperature params
     public static float freezingDamage = 0.35f;
-    public static float freezingEfficiency = 0.3f;
-    public static float startT = 100;
-
     public static float freezingPower = -1.4f;
+
+    public static float startTemperature = 0;
+
+    public static float minEffectivityTemperature = 100;
+    public static float minSafeTemperature = -100;
+    public static float minTemperatureDamage = 20;
+
     public static float maxFreezingSpeed = 2f;
-    public static float startCeiling = 150;
-    public static float maxSafeT = 120;
-    public static float minEffectivityT = 100;
-    public static float minSafeT = -100;
-    public static float minHeatDamage = 20;
+    public static float maxSafeTemperature = 120;
     public static float maxHeatDamage = 300;
     public static float maxBoost = 20;
 
@@ -30,7 +29,7 @@ public class SVars implements Loadable {
     public static CBDialog cbs = new CBDialog();
 
     //controllers
-    public static TemperatureController temperatureController;
+    //public static TemperatureController temperatureController;
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
     public static Controller temperatureController$;

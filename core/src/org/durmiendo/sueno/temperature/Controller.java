@@ -8,6 +8,7 @@ import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.ScissorStack;
 import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
+import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
@@ -24,6 +25,8 @@ import mindustry.graphics.Layer;
 import mindustry.io.SaveFileReader;
 import mindustry.io.SaveVersion;
 import mindustry.world.Tile;
+import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.math.SInterp;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -110,10 +113,6 @@ public class Controller implements SaveFileReader.CustomChunk {
                 }
             }
         }
-
-        Tile t = Vars.player.team().core().tileOn();
-        at(t.x, t.y, 3.5f * Time.delta);
-
         time = Time.timeSinceMillis(startTime);
     }
 

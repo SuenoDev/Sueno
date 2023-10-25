@@ -4,17 +4,14 @@ import arc.Core;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
-import arc.util.Log;
 import arc.util.Tmp;
-import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.graphics.Drawf;
-import mindustry.logic.LAccess;
-import mindustry.logic.Ranged;
 import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.math.SInterp;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 import static mindustry.Vars.indexer;
@@ -38,9 +35,8 @@ public class Heater extends Block {
 
     }
 
-    public class HeatBuild extends Building implements Ranged, Heated {
+    public class HeatBuild extends Building implements Heated {
 
-        @Override
         public float range() {
             return range;
         }
@@ -49,20 +45,12 @@ public class Heater extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    if (SVars.temperatureController.tMap.get(x, y) < SVars.temperatureController.cMap.get(x, y)) {
-                        SVars.temperatureController.fMap.add(x, y, heatPower*efficiency);
+                    if (SVars.temperatureController$.at(x, y) < SVars.temperatureController$.at(x, y)) {
+                        SVars.temperatureController$.at(x, y, heatPower/Core.graphics.getFramesPerSecond()*efficiency/100 * SInterp.recession.apply((SVars.temperatureController$.at(x, y)+30f)/60f));
                     }
                 }
             }
             super.updateTile();
-        }
-
-        public void addCeiling(){
-            for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
-                for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    SVars.temperatureController.cMap.add(x, y, ceiling/4);
-                }
-            }
         }
 
         @Override
