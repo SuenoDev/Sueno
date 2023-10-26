@@ -25,3 +25,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           message: Build script update
+          author_name: suenobot
+          author_email: suenobot@users.noreply.github.com
