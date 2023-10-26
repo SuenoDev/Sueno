@@ -19,6 +19,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 16
-      - name: Update build script.
+      - name: Update build script
         run: |
           java -jar simpleupdater.jar -Rnekit508/mindustry-mod-template
+      - name: Update repository
+        uses: EndBug/add-and-commit@v9
+          with:
+            default_author: github_actions
