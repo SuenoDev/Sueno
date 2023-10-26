@@ -3,6 +3,8 @@ name: Build script update
 on:
   schedule:
     - cron:  '30 5 * * *'
+  workflow_dispatch:
+
 jobs:
   update-build-script:
     runs-on: ubuntu-latest
@@ -22,5 +24,4 @@ jobs:
       - name: Update repository
         uses: EndBug/add-and-commit@v9
         with:
-          default_author: github_actions
           message: Build script update
