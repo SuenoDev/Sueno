@@ -21,4 +21,4 @@ jobs:
           java-version: 16
       - name: Update build script.
         run: |
-          java -jar simpleupdater.jar
+          java -jar simpleupdater.jar -Rnekit508/mindustry-mod-template
