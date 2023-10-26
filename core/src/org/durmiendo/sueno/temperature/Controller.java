@@ -57,6 +57,7 @@ public class Controller implements SaveFileReader.CustomChunk {
         Events.run(EventType.Trigger.update, this::update);
         Events.run(EventType.Trigger.draw, this::draw);
         Events.on(EventType.WorldLoadEvent.class, e -> {
+            if(Vars.state.isEditor()) return;
             temperature = new float[Vars.world.width()][Vars.world.height()];
             prev = new float[Vars.world.width()][Vars.world.height()];
             width = Vars.world.width();
@@ -149,9 +150,9 @@ public class Controller implements SaveFileReader.CustomChunk {
         writes.i(width);
         writes.i(height);
 
-        for (int i = 0; i < temperature.length; i++) {
-            for (int j = 0; j < temperature[i].length; j++) {
-                writes.f(temperature[i][j]);
+        for (float[] i : temperature) {
+            for (float j : i) {
+                writes.f(j);
             }
         }
 
