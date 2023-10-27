@@ -1,1 +1,0 @@
-print("Hello from dynamic lua scripts!")
