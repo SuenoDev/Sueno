@@ -4,9 +4,6 @@ dependencies {
 
     compileOnly project(":annotations")
     annotationProcessor project(":annotations")
-
-    compileOnly "com.github.Zelaux.ZelauxModCore:annotations:v1.0.1"
-    annotationProcessor "com.github.Zelaux.ZelauxModCore:annotations:v1.0.1"
 }
 
 ext {
