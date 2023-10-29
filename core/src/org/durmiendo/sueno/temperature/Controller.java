@@ -2,52 +2,38 @@ package org.durmiendo.sueno.temperature;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Fill;
-import arc.graphics.g2d.ScissorStack;
 import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
-import arc.math.Interp;
-import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
-import arc.math.geom.Rect;
-import arc.util.Log;
-import arc.util.Reflect;
 import arc.util.Time;
-import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
 import mindustry.game.EventType;
-import mindustry.graphics.Layer;
+import mindustry.gen.Groups;
+import mindustry.gen.Unit;
 import mindustry.io.SaveFileReader;
 import mindustry.io.SaveVersion;
-import mindustry.world.Tile;
-import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.math.SInterp;
+import org.durmiendo.sueno.content.SPlanets;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Objects;
 
 public class Controller implements SaveFileReader.CustomChunk {
     public static Controller instance;
-
-    // TODO we really need it?
-    public static void addBars() {
-
-    }
-
+    public boolean stop = false;
     public FrameBuffer buffer = new FrameBuffer(Core.graphics.getWidth(), Core.graphics.getHeight());
     public Shader shader = createShader();
 
     public float[][] temperature, prev;
+    public HashMap<Unit, Float> units;
     public float normalTemp = -30f; // absolute
     public float maxTemp = 30f; // relative
     public int width, height;
+    public int unitsAmount = 0;
 
     public long time;
 
@@ -58,11 +44,28 @@ public class Controller implements SaveFileReader.CustomChunk {
         Events.run(EventType.Trigger.draw, this::draw);
         Events.on(EventType.WorldLoadEvent.class, e -> {
             if(Vars.state.isEditor()) return;
-            temperature = new float[Vars.world.width()][Vars.world.height()];
-            prev = new float[Vars.world.width()][Vars.world.height()];
-            width = Vars.world.width();
-            height = Vars.world.height();
+            init();
         });
+
+        Events.on(EventType.UnitSpawnEvent.class, e -> {
+            units.put(e.unit, normalTemp);
+            unitsAmount++;
+        });
+
+        Events.on(EventType.UnitDestroyEvent.class, e -> {
+            units.remove(e.unit);
+            unitsAmount--;
+        });
+    }
+
+    public void init() {
+        temperature = new float[Vars.world.width()][Vars.world.height()];
+        prev = new float[Vars.world.width()][Vars.world.height()];
+        width = Vars.world.width();
+        height = Vars.world.height();
+        Groups.unit.each(u -> units.put(u, normalTemp));
+        Vars.content.units().each(ut -> ut.abilities.add(new Ability()));
+        unitsAmount = Groups.unit.size();
     }
 
     public void draw() {
@@ -92,7 +95,8 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     public void update() {
         if (!Vars.state.isPlaying()) return;
-
+        if (!Objects.equals(Vars.state.rules.planet.name, SPlanets.hielo.name)) return;
+        if (stop) return;
         long startTime = Time.millis();
 
         for (int i = 0; i < width; i++) {
@@ -114,6 +118,23 @@ public class Controller implements SaveFileReader.CustomChunk {
                 }
             }
         }
+        if (unitsAmount > 0) {
+            for (Unit u : units.keySet()) {
+                for (int z = 0; z < 4; z++) {
+                    Point2 offset = Geometry.d4(z);
+                    int xx = u.tileX() + offset.x;
+                    int yy = u.tileY() + offset.y;
+
+                    if (!check(xx, yy)) continue;
+                    if (!check(u.tileX(), u.tileY())) continue;
+
+                    float td = (prev[u.tileX()][u.tileY()] - units.get(u)) * 0.01f * Time.delta;
+                    at(u, -td);
+                    at(xx, yy, td);
+                }
+            }
+        }
+
         time = Time.timeSinceMillis(startTime);
     }
 
@@ -139,6 +160,26 @@ public class Controller implements SaveFileReader.CustomChunk {
         temperature[x][y] += increment;
     }
 
+    public float at(Unit u) {
+        return units.get(u);
+    }
+
+    /** Returns relative temperature. Use it in math. **/
+    public void at(Unit u, float increment) {
+        units.put(u, units.get(u) + increment);
+    }
+
+    /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
+    public float temperatureAt(Unit u) {
+        return units.get(u);
+    }
+
+    /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
+    public void temperatureAt(Unit u, float increment) {
+        units.put(u, units.get(u) + increment);
+    }
+
+
     public boolean check(int x, int y) {
         return x > 0 && x < width && y > 0 && y < height;
     }
@@ -156,6 +197,13 @@ public class Controller implements SaveFileReader.CustomChunk {
             }
         }
 
+        writes.i(unitsAmount);
+        if (unitsAmount > 0) {
+            units.forEach((u, t) -> {
+                writes.i(u.id());
+                writes.f(t);
+            });
+        }
         writes.close();
     }
 
@@ -171,6 +219,14 @@ public class Controller implements SaveFileReader.CustomChunk {
         for (int i = 0; i < w; i++) {
             for (int z = 0; z < h; z++) {
                 temperature[i][z] = reads.f();
+            }
+        }
+
+        unitsAmount = reads.i();
+        if (unitsAmount > 0) {
+            units = new HashMap<>();
+            for (int i = 0; i < unitsAmount; i++) {
+                units.put(Groups.unit.getByID(reads.i()), reads.f());
             }
         }
 

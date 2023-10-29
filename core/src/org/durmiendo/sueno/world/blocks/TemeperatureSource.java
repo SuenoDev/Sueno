@@ -1,30 +1,23 @@
 package org.durmiendo.sueno.world.blocks;
 
 import arc.Core;
-import arc.func.Boolp;
 import arc.graphics.Color;
-import arc.math.Interp;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
-import arc.scene.ui.*;
 import arc.scene.ui.Label;
+import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
-import mindustry.gen.Groups;
 import mindustry.graphics.Drawf;
-import mindustry.logic.Ranged;
-import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.graphics.Colorated;
 import org.durmiendo.sueno.world.blocks.build.Heated;
-
-import java.awt.*;
 
 import static mindustry.Vars.indexer;
 
@@ -84,10 +77,10 @@ public class TemeperatureSource extends Block {
             Slider slider = new Slider(-300, 300, 5, false);
             slider.setValue(te);
 
-            Label labels = new Label("Температура " + (te - 30) + " °C");
+            Label labels = new Label("Температура " + (te - SVars.def) + " °C");
             slider.changed(() -> {
                 te = slider.getValue();
-                labels.setText("Температура " + (te - 30) + " °C");
+                labels.setText("Температура " + (te - SVars.def) + " °C");
             });
 
             table.table(t -> {
