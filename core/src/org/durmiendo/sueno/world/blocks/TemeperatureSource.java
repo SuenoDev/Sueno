@@ -57,7 +57,7 @@ public class TemeperatureSource extends Block {
         @Override
         public void buildConfiguration(Table table) {
             super.buildConfiguration(table);
-            table.setBackground(Core.atlas.drawable("space"));
+            table.setBackground(Core.atlas.drawable("sueno-black75"));
 
             Label label = new Label("Источник температуры (блоки) " + range/16 + " блоков");
             table.add(label);

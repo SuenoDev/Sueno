@@ -15,6 +15,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.io.SaveFileReader;
 import mindustry.io.SaveVersion;
+import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SPlanets;
 
 import java.io.DataInput;
@@ -120,18 +121,12 @@ public class Controller implements SaveFileReader.CustomChunk {
         }
         if (unitsAmount > 0) {
             for (Unit u : units.keySet()) {
-                for (int z = 0; z < 4; z++) {
-                    Point2 offset = Geometry.d4(z);
-                    int xx = u.tileX() + offset.x;
-                    int yy = u.tileY() + offset.y;
-
-                    if (!check(xx, yy)) continue;
-                    if (!check(u.tileX(), u.tileY())) continue;
-
-                    float td = (prev[u.tileX()][u.tileY()] - units.get(u)) * 0.01f * Time.delta;
-                    at(u, -td);
-                    at(xx, yy, td);
-                }
+                float t = at(u);
+                Tile tile = u.tileOn();
+                if (tile == null) continue;
+                float td = (t - at(tile.x, tile.y)) * 0.01f * Time.delta;
+                at(u, td);
+                at(tile.x, tile.y, -td);
             }
         }
 

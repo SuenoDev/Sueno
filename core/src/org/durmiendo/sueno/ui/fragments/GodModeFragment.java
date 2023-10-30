@@ -3,7 +3,6 @@ package org.durmiendo.sueno.ui.fragments;
 import arc.Core;
 import arc.graphics.Color;
 import arc.input.KeyCode;
-import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
@@ -20,8 +19,10 @@ public class GodModeFragment extends Table {
     public GodModeFragment() {
         super();
         background(Core.atlas.drawable("sueno-black75"));
+        label(() -> "     [gold]The God mode     ");
+        row();
         visible(() -> {
-            if (Core.input.keyTap(KeyCode.f7)) {
+            if (Core.input.keyTap(KeyCode.slash)) {
                 show = !show;
                 if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
                 else touchable(() -> Touchable.enabled);
@@ -42,29 +43,18 @@ public class GodModeFragment extends Table {
                 Vec2 pos = Core.input.mouseWorld();
                 return Strings.format("T at:[#@] @",
                         Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController$.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
-                        SVars.temperatureController$.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)));
+                        Strings.fixed(SVars.temperatureController$.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
-                Vec2 pos = Core.input.mouseWorld();
-                if(SVars.temperatureController$.unitsAmount < 1) return "T on U: -";
-                AtomicReference<Unit> uu = null;
-                SVars.temperatureController$.units.forEach((u, f) -> {
-                    if (uu.get() == null) {
-                        uu.set(u);
-                        return;
-                    }
-                    if (uu.get().dst(pos) < u.dst(pos)) {
-                        uu.set(u);
-                    }
-                });
-                return Strings.format("T on U at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, SVars.temperatureController$.at(uu.get())/SVars.maxSafeTemperature),
-                        SVars.temperatureController$.temperatureAt(uu.get())-SVars.def);
+                if (SVars.temperatureController$.unitsAmount < 1) return "T of you at: -";
+                if (Vars.player.dead()) return "T of you at: -";
+                return Strings.format("you T at:[#@] @",
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController$.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
+                        Strings.fixed(SVars.temperatureController$.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
-            row();
         });
         row();
 
