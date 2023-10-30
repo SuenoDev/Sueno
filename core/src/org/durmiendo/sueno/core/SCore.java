@@ -1,26 +1,13 @@
 package org.durmiendo.sueno.core;
 
 import arc.Events;
-import arc.graphics.Color;
-import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
-import mindustry.io.SaveFileReader;
-import mindustry.io.SaveIO;
-import mindustry.io.SaveVersion;
 import mindustry.mod.Mod;
-import mindustry.ui.Bar;
-import mindustry.world.Block;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
-import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.controllers.TemperatureController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.graphics.Colorated;
-import org.durmiendo.sueno.io.SChunk;
-import org.durmiendo.sueno.satellites.CelestialBase;
-import org.durmiendo.sueno.satellites.Satellite;
 import org.durmiendo.sueno.temperature.Controller;
 
 
@@ -57,12 +44,12 @@ public class SCore extends Mod {
 
     @Override
     public void init() {
-        SVars.temperatureController = new TemperatureController();
+        //SVars.temperatureController = new TemperatureController();
         //SVars.celestialBodyController = new CelestialBodyController();
         SVars.weathercontroller = new WeatherController();
         SVars.temperatureController$ = new Controller();
 
         SVars.ui.build();
-        SaveVersion.addCustomChunk("Sueno", new SChunk());
+        //SaveVersion.addCustomChunk("SuenoChunk", new SChunk());
     }
 }

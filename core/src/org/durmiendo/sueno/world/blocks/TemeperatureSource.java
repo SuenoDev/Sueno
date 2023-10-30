@@ -1,29 +1,23 @@
 package org.durmiendo.sueno.world.blocks;
 
 import arc.Core;
-import arc.func.Boolp;
 import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
-import arc.scene.ui.*;
 import arc.scene.ui.Label;
+import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
-import mindustry.gen.Groups;
 import mindustry.graphics.Drawf;
-import mindustry.logic.Ranged;
-import mindustry.ui.Styles;
 import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.graphics.Colorated;
 import org.durmiendo.sueno.world.blocks.build.Heated;
-
-import java.awt.*;
 
 import static mindustry.Vars.indexer;
 
@@ -46,14 +40,10 @@ public class TemeperatureSource extends Block {
         configurable = true;
     }
 
-    public class HeatBuild extends Building implements Ranged, Heated {
+    public class HeatBuild extends Building implements Heated {
         public float range = 0;
-        public float rangeUn = 0;
         public float te = 0;
-        public float teUn = 0;
-        public boolean unit = false;
 
-        @Override
         public float range() {
             return range;
         }
@@ -67,7 +57,7 @@ public class TemeperatureSource extends Block {
         @Override
         public void buildConfiguration(Table table) {
             super.buildConfiguration(table);
-            table.setBackground(Core.atlas.drawable("space"));
+            table.setBackground(Core.atlas.drawable("sueno-black75"));
 
             Label label = new Label("Источник температуры (блоки) " + range/16 + " блоков");
             table.add(label);
@@ -87,10 +77,10 @@ public class TemeperatureSource extends Block {
             Slider slider = new Slider(-300, 300, 5, false);
             slider.setValue(te);
 
-            Label labels = new Label("Температура " + te + " °C");
+            Label labels = new Label("Температура " + (te - SVars.def) + " °C");
             slider.changed(() -> {
                 te = slider.getValue();
-                labels.setText("Температура " + te + " °C");
+                labels.setText("Температура " + (te - SVars.def) + " °C");
             });
 
             table.table(t -> {
@@ -104,7 +94,7 @@ public class TemeperatureSource extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    SVars.temperatureController.tMap.set(x, y, te);
+                    SVars.temperatureController$.temperature[x][y] = te;
                 }
             }
 
