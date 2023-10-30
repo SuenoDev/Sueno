@@ -89,7 +89,7 @@ public class Controller implements SaveFileReader.CustomChunk {
     public void update() {
         if (!Vars.state.isPlaying()) return;
         if (Vars.state.rules.planet == SPlanets.hielo) return;
-        //if (stop) return;
+        if (stop) return;
 
         long startTime = Time.millis();
 
