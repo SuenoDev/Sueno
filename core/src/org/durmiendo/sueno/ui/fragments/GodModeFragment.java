@@ -48,7 +48,6 @@ public class GodModeFragment extends Table {
             }).left();
             row();
             label(() -> {
-                if (SVars.temperatureController$.unitsAmount < 1) return "T of you at: -";
                 if (Vars.player.dead()) return "T of you at: -";
                 return Strings.format("you T at:[#@] @",
                         Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController$.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
