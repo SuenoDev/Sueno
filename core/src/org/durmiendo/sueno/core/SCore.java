@@ -47,7 +47,7 @@ public class SCore extends Mod {
         //SVars.temperatureController = new TemperatureController();
         //SVars.celestialBodyController = new CelestialBodyController();
         SVars.weathercontroller = new WeatherController();
-        SVars.temperatureController$ = new Controller();
+        SVars.tempController = new Controller();
 
         SVars.ui.build();
         //SaveVersion.addCustomChunk("SuenoChunk", new SChunk());

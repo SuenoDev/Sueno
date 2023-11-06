@@ -8,11 +8,8 @@ import arc.scene.event.Touchable;
 import arc.scene.ui.layout.Table;
 import arc.util.Strings;
 import mindustry.Vars;
-import mindustry.gen.Unit;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.graphics.Colorated;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -31,27 +28,28 @@ public class GodModeFragment extends Table {
         });
 
         row();
-        check("T stop", SVars.temperatureController$.stop, b -> {
-            SVars.temperatureController$.stop = !SVars.temperatureController$.stop;
+        check("T stop", SVars.tempController.stop, b -> {
+            SVars.tempController.stop = !SVars.tempController.stop;
         }).left();
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", SVars.temperatureController$.stop ? 0 : SVars.temperatureController$.time)).left();
+            label(() -> Strings.format("T update: @ms", SVars.tempController.stop ? 0 : SVars.tempController.time)).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
+                if (SVars.tempController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] 0";
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController$.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
-                        Strings.fixed(SVars.temperatureController$.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
+                        Strings.fixed(SVars.tempController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
-                if (Vars.player.dead()) return "T of you at: -";
+                if (Vars.player.dead() || SVars.tempController.at(Vars.player.unit())==0f) return "T of you at:[green] 0";
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController$.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
-                        Strings.fixed(SVars.temperatureController$.temperatureAt(Vars.player.unit()), 2));
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempController.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
+                        Strings.fixed(SVars.tempController.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
         });

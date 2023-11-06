@@ -1,26 +1,19 @@
 package org.durmiendo.sueno.world.blocks;
 
 import arc.Core;
-import arc.graphics.Color;
-import arc.math.Mathf;
-import arc.math.geom.Rect;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.Strings;
-import arc.util.Tmp;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.gen.Building;
-import mindustry.graphics.Drawf;
 import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.SInterp;
 import org.durmiendo.sueno.world.blocks.build.Heated;
-
-import static mindustry.Vars.indexer;
 
 public class Heater extends Block {
 
@@ -51,7 +44,7 @@ public class Heater extends Block {
 
         @Override
         public void updateTile() {
-            if (!SVars.temperatureController$.stop) SVars.temperatureController$.at(tileX(), tileY(), heatPower/8f*tpower*efficiency*(SInterp.recession.apply(0+SVars.def, SVars.maxSafeTemperature+SVars.def, SVars.temperatureController$.at(tileX(),tileY()))+1));
+            if (!SVars.tempController.stop) SVars.tempController.at(tileX(), tileY(), heatPower/8f*tpower*efficiency*(SInterp.recession.apply(0+SVars.def, SVars.maxSafeTemperature+SVars.def, SVars.tempController.at(tileX(),tileY()))+1));
             super.updateTile();
         }
 

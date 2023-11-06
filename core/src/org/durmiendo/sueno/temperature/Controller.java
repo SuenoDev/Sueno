@@ -88,7 +88,7 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     public void update() {
         if (!Vars.state.isPlaying()) return;
-        if (Vars.state.rules.planet == SPlanets.hielo) return;
+        if (Vars.state.rules.planet != SPlanets.hielo) return;
         if (stop) return;
 
         long startTime = Time.millis();
@@ -190,6 +190,9 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     @Override
     public void write(DataOutput stream) {
+//        if(Vars.state.isEditor()) {
+//            return;
+//        }
         Writes writes = new Writes(stream);
 
         writes.i(width);
@@ -211,6 +214,9 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     @Override
     public void read(DataInput stream) {
+//        if(Vars.state.isEditor()) {
+//            return;
+//        }
         Reads reads = new Reads(stream);
 
         int w = reads.i();

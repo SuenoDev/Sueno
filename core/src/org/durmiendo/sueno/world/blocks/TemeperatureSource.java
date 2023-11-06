@@ -74,13 +74,13 @@ public class TemeperatureSource extends Block {
 
             //TextButton ib = new TextButton("Изменять температуру", Styles.flatTogglet);
 
-            Slider slider = new Slider(-300, 300, 5, false);
+            Slider slider = new Slider(SVars.tempController.normalTemp, 330-SVars.tempController.normalTemp, 5, false);
             slider.setValue(te);
 
-            Label labels = new Label("Температура " + (te - SVars.def) + " °C");
+            Label labels = new Label("Температура " + te + " °C");
             slider.changed(() -> {
                 te = slider.getValue();
-                labels.setText("Температура " + (te - SVars.def) + " °C");
+                labels.setText("Температура " + te + " °C");
             });
 
             table.table(t -> {
@@ -94,7 +94,7 @@ public class TemeperatureSource extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    SVars.temperatureController$.temperature[x][y] = te;
+                    SVars.tempController.temperature[x][y] = te-SVars.tempController.normalTemp;
                 }
             }
 

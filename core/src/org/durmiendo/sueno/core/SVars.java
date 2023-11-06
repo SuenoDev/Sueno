@@ -32,7 +32,7 @@ public class SVars implements Loadable {
     //public static TemperatureController temperatureController;
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
-    public static Controller temperatureController$;
+    public static Controller tempController;
 
     //status
     public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false; // durmiendo moment
