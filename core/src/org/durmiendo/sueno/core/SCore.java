@@ -4,14 +4,21 @@ import arc.Events;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
+import mma.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.content.SUnits;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.temperature.Controller;
 
-
+@ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
+@ModAnnotations.AnnotationSettings(
+        rootPackage = "org.durmiendo.sueno",
+        modInfoPath = "res/mod.hjson"
+)
 public class SCore extends Mod {
+
     public SCore(){
         // TODO that's bad
         Events.on(ClientLoadEvent.class, e -> {
@@ -38,6 +45,7 @@ public class SCore extends Mod {
     @Override
     public void loadContent(){
         SItems.load();
+        SUnits.load();
         SBlocks.load();
         SPlanets.load();
     }

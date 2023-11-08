@@ -21,6 +21,8 @@ import mindustry.io.SaveVersion;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.math.SInterp;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -106,10 +108,15 @@ public class Controller implements SaveFileReader.CustomChunk {
 
                     if (!check(xx, yy)) continue;
 
-                    float td = (prev[i][j] - prev[xx][yy]) * getTemperatureConductivity(getBlockAt(i, j)) * Time.delta;
+                    float td = (prev[i][j] - prev[xx][yy]) * 0.01f * Time.delta;
                     at(i, j, -td);
                     at(xx, yy, td);
                 }
+            }
+        }
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                at(i,j, SVars.freezingPower*Time.delta*at(i,j)/SVars.maxSafeTemperature/8f);
             }
         }
 
@@ -125,11 +132,11 @@ public class Controller implements SaveFileReader.CustomChunk {
             if (!unitsTemperature.containsKey(unit.id))
                 unitsTemperature.put(unit.id, at(ux, uy));
             else {
-                float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * getTemperatureConductivity(unit) * Time.delta;
+                float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta;
                 at(unit, -td);
                 above(unit, td);
 
-                td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * getTemperatureConductivity(getBlockAt(ux, uy)) * Time.delta;
+                td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta;
                 above(unit, -td);
                 at(unit, td);
             }

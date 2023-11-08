@@ -7,18 +7,21 @@ public class SItems {
     public static Item
     nickel,
     magnetite,
+
     invar,
-    superInvar,
-    cobalt,
-    ice;
+    vanadium,
+    kalite,
+    nitium,
+    realite;
+
 
 
     public static void load() {
         nickel = new Item("nickel");
         magnetite = new Item("magnetite");
         invar = new Item("invar");
-        superInvar = new Item("superInvar");
-        cobalt = new Item("cobalt");
-        ice = new Item("ice");
+        kalite = new Item("kalite");
+        nitium = new Item("nitium");
+        realite = new Item("realite");
     }
 }
