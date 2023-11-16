@@ -1,12 +1,8 @@
 package org.durmiendo.sueno.temperature;
 
-import arc.Core;
 import arc.Events;
-import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Point2;
-import arc.math.geom.QuadTree;
-import arc.math.geom.Rect;
 import arc.struct.ObjectMap;
 import arc.util.Time;
 import arc.util.io.Reads;
@@ -22,7 +18,6 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.math.SInterp;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -132,11 +127,11 @@ public class Controller implements SaveFileReader.CustomChunk {
             if (!unitsTemperature.containsKey(unit.id))
                 unitsTemperature.put(unit.id, at(ux, uy));
             else {
-                float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta;
+                float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta/2f;
                 at(unit, -td);
                 above(unit, td);
 
-                td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta;
+                td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta/2f;
                 above(unit, -td);
                 at(unit, td);
             }

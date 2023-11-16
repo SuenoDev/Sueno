@@ -4,7 +4,6 @@ import arc.Events;
 import mindustry.Vars;
 import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
-import mma.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
@@ -12,11 +11,11 @@ import org.durmiendo.sueno.content.SUnits;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.temperature.Controller;
 
-@ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
-@ModAnnotations.AnnotationSettings(
-        rootPackage = "org.durmiendo.sueno",
-        modInfoPath = "res/mod.hjson"
-)
+//@ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
+//@ModAnnotations.AnnotationSettings(
+//        rootPackage = "org",
+//        modInfoPath = "res/mod.hjson"
+//)
 public class SCore extends Mod {
 
     public SCore(){

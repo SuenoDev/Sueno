@@ -29,13 +29,12 @@ public class SVars implements Loadable {
     public static CBDialog cbs = new CBDialog();
 
     //controllers
-    //public static TemperatureController temperatureController;
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
     public static Controller tempController;
 
     //status
-    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_Mode = false; // durmiendo moment
+    public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_DA_ESHE_i_ZASTAVLAYET_MENYA_DELAT_MOD_Mode = false; // durmiendo moment
     public static boolean onCampaign;
 
     //minerals
