@@ -24,6 +24,8 @@ public class SVars implements Loadable {
     public static float maxHeatDamage = 300;
     public static float maxBoost = 20;
 
+    public static boolean isDevTemperature = true;
+
     //ui
     public static SUI ui = new SUI();
     public static CBDialog cbs = new CBDialog();
@@ -35,6 +37,7 @@ public class SVars implements Loadable {
 
     //status
     public static boolean FIXMAN_BEZVKUSNIY_DUSHNILA_I_OBSERAET_MOI_TEXTURI_DA_ESHE_i_ZASTAVLAYET_MENYA_DELAT_MOD_Mode = false; // durmiendo moment
+                                                                                                                                // Yes, the fix is somehow suffocating :/
     public static boolean onCampaign;
 
     //minerals

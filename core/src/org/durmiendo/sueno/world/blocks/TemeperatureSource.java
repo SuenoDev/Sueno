@@ -51,7 +51,7 @@ public class TemeperatureSource extends Block {
         @Override
         public void draw() {
             super.draw();
-            Drawf.additive(Core.atlas.find("sueno-tst"), Colorated.gradient(Color.cyan, Color.red, (te+300)/600), x, y);
+            Drawf.additive(Core.atlas.find("sueno-tst"), Colorated.gradient(Color.cyan, Color.red, te/300f), x, y);
         }
 
         @Override

@@ -124,16 +124,18 @@ public class Controller implements SaveFileReader.CustomChunk {
 
         Groups.unit.each(unit -> {
             int ux = unit.tileX(), uy = unit.tileY();
-            if (!unitsTemperature.containsKey(unit.id))
-                unitsTemperature.put(unit.id, at(ux, uy));
-            else {
-                float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta/2f;
-                at(unit, -td);
-                above(unit, td);
+            if (check(ux, uy)) {
+                if (!unitsTemperature.containsKey(unit.id))
+                    unitsTemperature.put(unit.id, at(ux, uy));
+                else {
+                    float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta/2f;
+                    at(unit, -td);
+                    above(unit, td);
 
-                td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta/2f;
-                above(unit, -td);
-                at(unit, td);
+                    td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta/2f;
+                    above(unit, -td);
+                    at(unit, td);
+                }
             }
         });
 
@@ -153,6 +155,7 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
     public float temperatureAt(int x, int y) {
+        if(SVars.isDevTemperature) return at(x, y);
         return at(x, y) + normalTemp;
     }
 
@@ -178,11 +181,18 @@ public class Controller implements SaveFileReader.CustomChunk {
 
     /** Returns relative temperature. Use it in math. **/
     public void at(Unit u, float increment) {
-        unitsTemperature.put(u.id, unitsTemperature.get(u.id) + increment);
+        Float t = unitsTemperature.get(u.id);
+        if (t == null) {
+            unitsTemperature.put(u.id, increment);
+            return;
+        }
+        unitsTemperature.put(u.id, t + increment);
     }
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
     public float temperatureAt(Unit u) {
+        if (u == null) return 0;
+        if (SVars.isDevTemperature) return at(u);
         return at(u) + normalTemp;
     }
 
