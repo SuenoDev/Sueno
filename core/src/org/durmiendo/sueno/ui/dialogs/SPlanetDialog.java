@@ -6,8 +6,7 @@ import arc.scene.ui.Dialog;
 import arc.scene.ui.ImageButton;
 import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.events.CampainClose;
-import org.durmiendo.sueno.events.CampainOpen;
+import org.durmiendo.sueno.events.SEvents;
 
 
 public class SPlanetDialog extends PlanetDialog {
@@ -15,13 +14,13 @@ public class SPlanetDialog extends PlanetDialog {
 
     @Override
     public Dialog show() {
-        Events.fire(new CampainOpen());
+        Events.fire(new SEvents.CampaignOpenEvent());
         return super.show();
     }
 
     @Override
     public void closeOnBack(Runnable callback) {
-        Events.fire(new CampainClose());
+        Events.fire(new SEvents.CampaignCloseEvent());
         super.closeOnBack(callback);
     }
 

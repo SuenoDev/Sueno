@@ -9,6 +9,7 @@ import arc.util.Nullable;
 import java.util.Arrays;
 import java.util.Iterator;
 
+// TODO wtf?
 public class Map implements Iterable<Float> {
     public int width, height;
     public int size = width * height;

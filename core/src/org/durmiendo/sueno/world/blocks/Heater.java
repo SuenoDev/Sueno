@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.world.blocks;
 
 import arc.Core;
-import arc.math.geom.Geometry;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
@@ -45,16 +44,16 @@ public class Heater extends Block {
 
         @Override
         public void updateTile() {
-            if (!SVars.tempController.stop) {
+            if (!SVars.tempTemperatureController.stop) {
                 for (int x = tileX(); x < tileX()+size; x++) {
                     for (int y = tileY(); y < tileY()+size; y++) {
-                        SVars.tempController.at(
+                        SVars.tempTemperatureController.at(
                                 x, y,
 
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
                                                 0+SVars.def, SVars.maxSafeTemperature+SVars.def,
-                                                SVars.tempController.at(x,y)
+                                                SVars.tempTemperatureController.at(x,y)
                                         )+1f)
                         );
                     }

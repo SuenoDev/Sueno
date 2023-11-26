@@ -19,7 +19,7 @@ import mindustry.graphics.Drawf;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.graphics.Colorated;
+import org.durmiendo.sueno.math.Colorated;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -40,28 +40,28 @@ public class GodModeFragment extends Table {
         });
 
         row();
-        check("T stop", SVars.tempController.stop, b -> {
-            SVars.tempController.stop = !SVars.tempController.stop;
+        check("T stop", SVars.tempTemperatureController.stop, b -> {
+            SVars.tempTemperatureController.stop = !SVars.tempTemperatureController.stop;
         }).left();
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", SVars.tempController.stop ? 0 : SVars.tempController.time)).left();
+            label(() -> Strings.format("T update: @ms", SVars.tempTemperatureController.stop ? 0 : SVars.tempTemperatureController.time)).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
-                if (SVars.tempController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.tempController.normalTemp;
+                if (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.tempTemperatureController.normalTemp;
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
-                        Strings.fixed(SVars.tempController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
+                        Strings.fixed(SVars.tempTemperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
-                if (Vars.player.dead() || SVars.tempController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.tempController.normalTemp;
+                if (Vars.player.dead() || SVars.tempTemperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.tempTemperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempController.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
-                        Strings.fixed(SVars.tempController.temperatureAt(Vars.player.unit()), 2));
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempTemperatureController.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
+                        Strings.fixed(SVars.tempTemperatureController.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
         });
@@ -97,14 +97,14 @@ public class GodModeFragment extends Table {
                 Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                 if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
                 if (!cb.isChecked()) {
-                    Fonts.def.draw(Strings.fixed(SVars.tempController.temperatureAt(x, y), 2), p.x, p.y,
-                            Colorated.gradient(Color.cyan,Color.red, (SVars.tempController.at(x, y)-SVars.def)/SVars.maxSafeTemperature),
+                    Fonts.def.draw(Strings.fixed(SVars.tempTemperatureController.temperatureAt(x, y), 2), p.x, p.y,
+                            Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)-SVars.def)/SVars.maxSafeTemperature),
                             Vars.renderer.getScale()*0.1f, false, Align.center
                     );
                 } else {
                     TextureAtlas.AtlasRegion t = Core.atlas.find("sueno-white-cub2-50");
                     t.scale=Vars.renderer.getScale()*2f;
-                    Drawf.additive(t, Colorated.gradient(Color.cyan, Color.red, (SVars.tempController.temperatureAt(x,y))/300f), p.x-2, p.y-2);
+                    Drawf.additive(t, Colorated.gradient(Color.cyan, Color.red, (SVars.tempTemperatureController.temperatureAt(x,y))/300f), p.x-2, p.y-2);
                     t.scale=1f;
                 }
             }

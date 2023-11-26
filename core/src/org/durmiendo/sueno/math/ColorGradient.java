@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.graphics;
+package org.durmiendo.sueno.math;
 
 import arc.graphics.Color;
 

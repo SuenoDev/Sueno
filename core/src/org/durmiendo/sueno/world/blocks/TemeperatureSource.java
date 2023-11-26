@@ -16,7 +16,7 @@ import mindustry.world.Block;
 import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.graphics.Colorated;
+import org.durmiendo.sueno.math.Colorated;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 import static mindustry.Vars.indexer;
@@ -74,7 +74,7 @@ public class TemeperatureSource extends Block {
 
             //TextButton ib = new TextButton("Изменять температуру", Styles.flatTogglet);
 
-            Slider slider = new Slider(SVars.tempController.normalTemp, 330-SVars.tempController.normalTemp, 5, false);
+            Slider slider = new Slider(SVars.tempTemperatureController.normalTemp, 330-SVars.tempTemperatureController.normalTemp, 5, false);
             slider.setValue(te);
 
             Label labels = new Label("Температура " + te + " °C");
@@ -94,7 +94,7 @@ public class TemeperatureSource extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2); y++) {
-                    SVars.tempController.temperature[x][y] = te-SVars.tempController.normalTemp;
+                    SVars.tempTemperatureController.temperature[x][y] = te-SVars.tempTemperatureController.normalTemp;
                 }
             }
 

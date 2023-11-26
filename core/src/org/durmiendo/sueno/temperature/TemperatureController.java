@@ -22,10 +22,10 @@ import org.durmiendo.sueno.core.SVars;
 import java.io.DataInput;
 import java.io.DataOutput;
 
-public class Controller implements SaveFileReader.CustomChunk {
+public class TemperatureController implements SaveFileReader.CustomChunk {
     public boolean stop = false;
 
-    public static Controller instance;
+    public static TemperatureController instance;
 
     public float[][] temperature, prev;
     public ObjectMap<Integer, Float> unitsTemperature = new ObjectMap<>();
@@ -60,7 +60,7 @@ public class Controller implements SaveFileReader.CustomChunk {
         return tileAt.build != null ? tileAt.build.block() : tileAt.floor();
     }
 
-    public Controller() {
+    public TemperatureController() {
         instance = this;
         SaveVersion.addCustomChunk("sueno-temperature-chunk", this);
         Events.run(EventType.Trigger.update, this::update);

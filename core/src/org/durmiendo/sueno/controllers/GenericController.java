@@ -5,7 +5,7 @@ import arc.util.Log;
 import arc.util.Threads;
 import arc.util.Time;
 
-
+@Deprecated
 public abstract class GenericController {
     public Thread updateThread;
 

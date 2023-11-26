@@ -3,8 +3,7 @@ package org.durmiendo.sueno.controllers;
 import arc.Events;
 import arc.math.Mathf;
 import arc.struct.Seq;
-import org.durmiendo.sueno.events.CampainClose;
-import org.durmiendo.sueno.events.CampainOpen;
+import org.durmiendo.sueno.events.SEvents;
 import org.durmiendo.sueno.satellites.CelestialBody;
 import org.durmiendo.sueno.satellites.Satellite;
 
@@ -14,10 +13,10 @@ public class CelestialBodyController extends GenericController {
 
     public CelestialBodyController() {
         super(100);
-        Events.on(CampainOpen.class, e -> {
+        Events.on(SEvents.CampaignOpenEvent.class, e -> {
             start();
         });
-        Events.on(CampainClose.class, e -> {
+        Events.on(SEvents.CampaignCloseEvent.class, e -> {
             stop();
         });
         cbs = new Seq();

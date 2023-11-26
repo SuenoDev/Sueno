@@ -9,7 +9,7 @@ import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.SUnits;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.temperature.Controller;
+import org.durmiendo.sueno.temperature.TemperatureController;
 
 //@ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
 //@ModAnnotations.AnnotationSettings(
@@ -54,7 +54,7 @@ public class SCore extends Mod {
         //SVars.temperatureController = new TemperatureController();
         //SVars.celestialBodyController = new CelestialBodyController();
         SVars.weathercontroller = new WeatherController();
-        SVars.tempController = new Controller();
+        SVars.tempTemperatureController = new TemperatureController();
 
         SVars.ui.build();
         //SaveVersion.addCustomChunk("SuenoChunk", new SChunk());
