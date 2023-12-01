@@ -1,8 +1,11 @@
 package org.durmiendo.sueno.content;
 
+import arc.graphics.Color;
 import arc.math.geom.Rect;
+import mindustry.entities.bullet.BasicBulletType;
 import mindustry.gen.UnitEntity;
 import mindustry.type.UnitType;
+import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
@@ -45,14 +48,29 @@ public class SUnits {
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
 
+            weapons.add(new Weapon("singe-weapon"){{
+                layerOffset = 0.0001f;
+                reload = 50f;
+                shootY = 4.5f;
+                recoil = 1f;
+                rotate = true;
+                rotateSpeed = 2.2f;
+                mirror = false;
+                x = 0f;
+                y = -0.75f;
+                heatColor = Color.valueOf("f9350f");
+                cooldownTime = 30f;
+                bullet = new BasicBulletType(){{
+                    shootOnDeath = true;
+                }};
+            }});
+
             abilities.add(new HeatAbility(new HeatData(true){{
                 generateTemperature = 1.5f;
                 capacity = 130f;
-                minSafeTemperature = 70f;
-                damageRange = 7f;
-                dpsOverTemperature = 0.2f;
-                damage = 20f;
-                regeneration = 20f;
+                overArmor = 4f;
+                minSafeTemperature = 100f;
+                overRegeneration = 120f;
             }}));
         }};
     }

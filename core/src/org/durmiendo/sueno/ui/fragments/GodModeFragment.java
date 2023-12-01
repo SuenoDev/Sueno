@@ -2,6 +2,7 @@ package org.durmiendo.sueno.ui.fragments;
 
 import arc.Core;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureAtlas;
 import arc.input.KeyCode;
 import arc.math.Mathf;
@@ -90,24 +91,26 @@ public class GodModeFragment extends Table {
 
     @Override
     public void draw() {
-        super.draw();
-        if (slider.getValue() == 0) return;
-        for (int x = Mathf.ceil(Core.input.mouseWorldX()/8f-slider.getValue()); x < Mathf.ceil(Core.input.mouseWorldX()/8f+slider.getValue()); x+=1) {
-            for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
-                Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
-                if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                if (!cb.isChecked()) {
-                    Fonts.def.draw(Strings.fixed(SVars.tempTemperatureController.temperatureAt(x, y), 2), p.x, p.y,
-                            Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)-SVars.def)/SVars.maxSafeTemperature),
-                            Vars.renderer.getScale()*0.1f, false, Align.center
-                    );
-                } else {
-                    TextureAtlas.AtlasRegion t = Core.atlas.find("sueno-white-cub2-50");
-                    t.scale=Vars.renderer.getScale()*2f;
-                    Drawf.additive(t, Colorated.gradient(Color.cyan, Color.red, (SVars.tempTemperatureController.temperatureAt(x,y))/300f), p.x-2, p.y-2);
-                    t.scale=1f;
+        if (slider.getValue() > 0) {
+            for (int x = Mathf.ceil(Core.input.mouseWorldX()/8f-slider.getValue()); x < Mathf.ceil(Core.input.mouseWorldX()/8f+slider.getValue()); x+=1) {
+                for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
+                    Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
+                    if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
+                    if (!cb.isChecked()) {
+                        Fonts.def.draw(Strings.fixed(SVars.tempTemperatureController.temperatureAt(x, y), 2), p.x, p.y,
+                                Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)-SVars.def)/SVars.maxSafeTemperature),
+                                Vars.renderer.getScale()*0.1f, false, Align.center
+                        );
+                    } else {
+                        TextureAtlas.AtlasRegion t = Core.atlas.find("sueno-white-cub2-50");
+                        t.scale=Vars.renderer.getScale()*2f;
+                        Drawf.additive(t, Colorated.gradient(Color.cyan, Color.red, (SVars.tempTemperatureController.temperatureAt(x,y))/300f), p.x-2, p.y-2);
+                        t.scale=1f;
+                    }
                 }
             }
+            Draw.reset();
         }
+        super.draw();
     }
 }

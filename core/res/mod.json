@@ -6,7 +6,7 @@
     "repo": "SuenoDev/Sueno",
     "subtitle": "subtitle",
     "description": "lol",
-    "version": "v0.0.1.6-devlog",
+    "version": "0.0.1.6-dev",
     "minGameVersion": "145",
     "java": true,
     "hidden": false,
