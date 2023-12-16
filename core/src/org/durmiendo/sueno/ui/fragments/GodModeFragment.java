@@ -110,6 +110,7 @@ public class GodModeFragment extends Table {
                     }
                 }
             }
+            Draw.flush();
             Draw.reset();
         }
         super.draw();
