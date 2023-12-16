@@ -147,7 +147,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
         return check(x, y) ? temperature[x][y] : 0;
     }
 
-    /** Returns relative temperature. Use it in math. **/
+    /** Increments relative temperature. Use it in math. **/
     public void at(int x, int y, float increment) {
         if (!check(x, y)) return;
         temperature[x][y] += increment;
@@ -169,7 +169,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
         return temperatureAt(unit.tileX(), unit.tileY());
     }
 
-    /** Returns relative temperature. Use it in math. **/
+    /** Increments relative temperature. Use it in math. **/
     public void above(Unit unit, float increment) {
         at(unit.tileX(), unit.tileY(), increment);
     }
@@ -179,7 +179,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
         return unitsTemperature.get(u.id, 0f);
     }
 
-    /** Returns relative temperature. Use it in math. **/
+    /** Increments relative temperature. Use it in math. **/
     public void at(Unit u, float increment) {
         Float t = unitsTemperature.get(u.id);
         if (t == null) {
