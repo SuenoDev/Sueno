@@ -8,6 +8,7 @@ import mindustry.Vars;
 import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.temperature.TemperatureController;
 
 public abstract class CelestialBody {
     public Planet planet;
@@ -73,9 +74,9 @@ public abstract class CelestialBody {
 
     public void collision(CelestialBody o, int s, int a) {
         if (speed < o.speed) {
-            damage((o.speed - speed + 30) * s * a / SVars.def);
+            damage((o.speed - speed + 30) * s * a / TemperatureController.def);
         } else {
-            damage((speed - o.speed + 30) * s * a / SVars.def);
+            damage((speed - o.speed + 30) * s * a / TemperatureController.def);
         }
     }
 

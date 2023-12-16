@@ -1,7 +1,6 @@
 ### Gradle
 /local.properties
-/build/
-/*/build
+build/
 cache/
 /.gradle/
 /artifacts/
@@ -13,3 +12,11 @@ cache/
 ### Aseprite
 *.aseprite
 *.ase
+
+### Secret dev-only stuff
+*/tz/*
+
+### Generated files
+gen/
+bin/
+javax.annotation.processing.Processor

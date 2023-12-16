@@ -13,6 +13,7 @@ import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.SInterp;
+import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 public class Heater extends Block {
@@ -52,7 +53,7 @@ public class Heater extends Block {
 
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
-                                                0+SVars.def, SVars.maxSafeTemperature+SVars.def,
+                                                0+ TemperatureController.def, TemperatureController.maxSafeTemperature+ TemperatureController.def,
                                                 SVars.tempTemperatureController.at(x,y)
                                         )+1f)
                         );

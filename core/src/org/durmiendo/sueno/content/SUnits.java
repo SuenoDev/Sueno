@@ -2,19 +2,27 @@ package org.durmiendo.sueno.content;
 
 import arc.graphics.Color;
 import arc.math.geom.Rect;
+import mindustry.annotations.Annotations;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.gen.Legsc;
+import mindustry.gen.Mechc;
 import mindustry.gen.UnitEntity;
+import mindustry.gen.Unitc;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
+import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 
 
 public class SUnits {
+    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType voidStrider;
 
-    public static UnitType spark,singe,sear,sun;
+    public static UnitType spark, singe, sear, sun;
+
     public static void load() {
+
         spark = new TankUnitType("spark"){{
             constructor = UnitEntity::create;
             hitSize = 12f;
@@ -72,6 +80,14 @@ public class SUnits {
                 minSafeTemperature = 100f;
                 overRegeneration = 120f;
             }}));
+        }};
+
+        voidStrider = new UnitType("void-strider"){{
+            hitSize = 32f;
+            speed = 8f;
+            rotateSpeed = .5f;
+            health = 8000f;
+            armor = 80f;
         }};
     }
 }

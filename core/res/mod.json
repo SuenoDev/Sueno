@@ -1,5 +1,5 @@
 {
-    "main": "org.durmiendo.sueno.core.SCore",
+    "main": "org.durmiendo.sueno.core.SCore"
     "name": "sueno",
     "displayName": "Sueno",
     "author": "// TODO authors",

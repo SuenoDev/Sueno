@@ -21,6 +21,7 @@ import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
+import org.durmiendo.sueno.temperature.TemperatureController;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -53,7 +54,7 @@ public class GodModeFragment extends Table {
                 Vec2 pos = Core.input.mouseWorld();
                 if (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.tempTemperatureController.normalTemp;
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))-SVars.def)/SVars.maxSafeTemperature),
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
                         Strings.fixed(SVars.tempTemperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
@@ -61,7 +62,7 @@ public class GodModeFragment extends Table {
             label(() -> {
                 if (Vars.player.dead() || SVars.tempTemperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.tempTemperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempTemperatureController.temperatureAt(Vars.player.unit())-SVars.def)/SVars.maxSafeTemperature)),
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempTemperatureController.temperatureAt(Vars.player.unit())- TemperatureController.def)/ TemperatureController.maxSafeTemperature)),
                         Strings.fixed(SVars.tempTemperatureController.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
@@ -98,7 +99,7 @@ public class GodModeFragment extends Table {
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
                     if (!cb.isChecked()) {
                         Fonts.def.draw(Strings.fixed(SVars.tempTemperatureController.temperatureAt(x, y), 2), p.x, p.y,
-                                Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)-SVars.def)/SVars.maxSafeTemperature),
+                                Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
                                 Vars.renderer.getScale()*0.1f, false, Align.center
                         );
                     } else {

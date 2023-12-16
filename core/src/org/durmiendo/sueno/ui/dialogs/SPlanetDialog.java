@@ -7,6 +7,7 @@ import arc.scene.ui.ImageButton;
 import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.SEvents;
+import org.durmiendo.sueno.ui.SUI;
 
 
 public class SPlanetDialog extends PlanetDialog {
@@ -55,7 +56,7 @@ public class SPlanetDialog extends PlanetDialog {
 
 
             ib.clicked(() -> {
-                SVars.cbs.show();
+                SVars.ui.cbs.show();
             });
             this.add(ib);
         });

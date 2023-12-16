@@ -17,12 +17,25 @@ import mindustry.io.SaveVersion;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SPlanets;
-import org.durmiendo.sueno.core.SVars;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 
 public class TemperatureController implements SaveFileReader.CustomChunk {
+    //temperature params
+    // TODO а чо они статичные???
+    public static float freezingDamage = 0.35f;
+    public static float freezingPower = -1.4f;
+    public static float startTemperature = 0;
+    public static float minEffectivityTemperature = 100;
+    public static float minSafeTemperature = -100;
+    public static float minTemperatureDamage = 20;
+    public static float maxFreezingSpeed = 2f;
+    public static float maxSafeTemperature = 120;
+    public static float maxHeatDamage = 300;
+    public static float maxBoost = 20;
+    public static boolean isDevTemperature = true;
+    public static float def = 30;
     public boolean stop = false;
 
     public static TemperatureController instance;
@@ -111,7 +124,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
         }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                at(i,j, SVars.freezingPower*Time.delta*at(i,j)/SVars.maxSafeTemperature/8f);
+                at(i,j, freezingPower*Time.delta*at(i,j)/ maxSafeTemperature/8f);
             }
         }
 
@@ -155,7 +168,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
     public float temperatureAt(int x, int y) {
-        if(SVars.isDevTemperature) return at(x, y);
+        if(isDevTemperature) return at(x, y);
         return at(x, y) + normalTemp;
     }
 
@@ -192,7 +205,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
     public float temperatureAt(Unit u) {
         if (u == null) return 0;
-        if (SVars.isDevTemperature) return at(u);
+        if (isDevTemperature) return at(u);
         return at(u) + normalTemp;
     }
 

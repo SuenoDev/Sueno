@@ -9,6 +9,7 @@ import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
 import org.durmiendo.sueno.ui.fragments.GodModeFragment;
 
 public class SUI extends UI {
+    public CBDialog cbs;
     public CBDialog satellite;
     public SPlanetDialog planet; // satellites removed, right?
 
