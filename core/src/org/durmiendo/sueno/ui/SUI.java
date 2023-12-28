@@ -19,7 +19,7 @@ public class SUI extends UI {
 
     /** On mod init **/
     public void build() {
-        satellite = new CBDialog();
+        cbs = satellite = new CBDialog();
         planet = new SPlanetDialog();
         Vars.ui.planet = planet;
         Vars.ui.paused = new SPausedDialog(); // right?

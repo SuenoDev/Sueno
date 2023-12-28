@@ -8,6 +8,7 @@ import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
 import mindustry.Vars;
+import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.entities.Mover;
@@ -27,10 +28,10 @@ import org.durmiendo.sueno.temperature.HeatData;
 
 public class SUnits {
 
-    public static UnitType spark,singe,sear,sun;
+    public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
+            spark,singe,sear,sun;
     public static void load() {
         spark = new TankUnitType("spark"){{
-            constructor = UnitEntity::create;
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -52,7 +53,6 @@ public class SUnits {
         }};
 
         singe = new TankUnitType("singe"){{
-            constructor = UnitEntity::create;
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -99,7 +99,6 @@ public class SUnits {
         }};
 
         sear = new TankUnitType("sear"){{
-            constructor = UnitEntity::create;
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -155,7 +154,6 @@ public class SUnits {
         }};
 
         sun = new TankUnitType("sun"){{
-            constructor = UnitEntity::create;
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -184,8 +182,6 @@ public class SUnits {
                     SVars.tempTemperatureController.at(x, y, 10f);
                 });
             }
-
-
             });
 
             abilities.add(new HeatAbility(new HeatData(true){{
