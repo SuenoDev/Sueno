@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.satellites;
 
 import arc.Core;
-import arc.graphics.Color;
 import mindustry.type.Planet;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
@@ -22,7 +21,6 @@ public class Satellite extends CelestialBody {
             sd.show();
         });
         i = b;
-        c = Color.black;
     }
 
     @Override

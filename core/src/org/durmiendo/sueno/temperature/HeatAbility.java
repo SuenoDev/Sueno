@@ -10,7 +10,7 @@ import mindustry.gen.Unit;
 import org.durmiendo.sueno.core.SVars;
 
 public class HeatAbility extends mindustry.entities.abilities.Ability {
-    private final HeatData hd;
+    public final HeatData hd;
     @Override
     public void displayBars(Unit unit, Table bars){
 

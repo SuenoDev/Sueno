@@ -1,14 +1,16 @@
 package org.durmiendo.sueno.satellites;
 
+import arc.Core;
 import arc.graphics.Color;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
 import arc.scene.ui.ImageButton;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.temperature.TemperatureController;
 
 public abstract class CelestialBody {
     public Planet planet;
@@ -20,14 +22,15 @@ public abstract class CelestialBody {
     public Vec3 position;
     public Vec3 center;
     public float health;
-    public Color c;
     public ImageButton button;
+    public TextureRegion r;
 
     public CelestialBody(float r, float spacing, float distance, Planet planet) {
         this.spacing = spacing;
         this.orbitRadius = r;
         this.planet = planet;
         this.distance = distance;
+        this.r = Core.atlas.find("sueno-satellite");
 
 
 
@@ -35,6 +38,7 @@ public abstract class CelestialBody {
         position = new Vec3();
         button = new ImageButton();
         button.setSize(25);
+        this.r.scale=2f;
     }
 
 
@@ -46,14 +50,19 @@ public abstract class CelestialBody {
         return r;
     }
 
+    public boolean speedType=true;
+
     public void draw() {
+        if (speedType) spacing += speed / 200 * Time.delta;
+        else distance += speed / 200 * Time.delta;
+        newPos(position, spacing, distance);
         Vec3 e = Vars.renderer.planets.cam.project(position);
-        Drawf.square(e.x, e.y, 15, 0, c);
+        Drawf.additive(r, Color.lightGray, e.x, e.y);
     }
 
+
     public void update() {
-        spacing += speed / 1000;
-        newPos(position, spacing, distance);
+
     }
 
     public void damage(float d) {
@@ -69,14 +78,6 @@ public abstract class CelestialBody {
             damage(o.speed - speed + 30);
         } else {
             damage(speed - o.speed + 30);
-        }
-    }
-
-    public void collision(CelestialBody o, int s, int a) {
-        if (speed < o.speed) {
-            damage((o.speed - speed + 30) * s * a / TemperatureController.def);
-        } else {
-            damage((speed - o.speed + 30) * s * a / TemperatureController.def);
         }
     }
 

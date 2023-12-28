@@ -1,28 +1,34 @@
 package org.durmiendo.sueno.content;
 
 import arc.graphics.Color;
+import arc.math.Mathf;
+import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
-import mindustry.annotations.Annotations;
+import arc.struct.Seq;
+import arc.util.Nullable;
+import arc.util.Time;
+import mindustry.Vars;
+import mindustry.content.Fx;
+import mindustry.core.World;
+import mindustry.entities.Mover;
+import mindustry.entities.abilities.Ability;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.gen.Legsc;
-import mindustry.gen.Mechc;
-import mindustry.gen.UnitEntity;
-import mindustry.gen.Unitc;
+import mindustry.entities.pattern.ShootPattern;
+import mindustry.entities.units.WeaponMount;
+import mindustry.game.Team;
+import mindustry.gen.*;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
-import org.durmiendo.sueno.gen.VoidStriderc;
+import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 
 
 public class SUnits {
-    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType voidStrider;
 
-    public static UnitType spark, singe, sear, sun;
-
+    public static UnitType spark,singe,sear,sun;
     public static void load() {
-
         spark = new TankUnitType("spark"){{
             constructor = UnitEntity::create;
             hitSize = 12f;
@@ -50,26 +56,36 @@ public class SUnits {
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
-            rotateSpeed = 3.5f;
-            health = 6800f;
+            rotateSpeed = 1.2f;
             armor = 8f;
+            health = 6800f;
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
 
             weapons.add(new Weapon("singe-weapon"){{
                 layerOffset = 0.0001f;
-                reload = 50f;
+                reload = 5f;
                 shootY = 4.5f;
                 recoil = 1f;
                 rotate = true;
-                rotateSpeed = 2.2f;
+                rotateSpeed = 6f;
                 mirror = false;
                 x = 0f;
                 y = -0.75f;
+
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
                 bullet = new BasicBulletType(){{
-                    shootOnDeath = true;
+                    speed=5f;
+                    damage=77f;
+                    fragBullets=4;
+                    fragAngle=8f;
+                    lifetime = 50f;
+                    fragBullet = new BasicBulletType(){{
+                       damage=22f;
+                       speed=1.4f;
+                       drawSize=3f;
+                    }};
                 }};
             }});
 
@@ -82,12 +98,120 @@ public class SUnits {
             }}));
         }};
 
-        voidStrider = new UnitType("void-strider"){{
-            hitSize = 32f;
-            speed = 8f;
-            rotateSpeed = .5f;
-            health = 8000f;
-            armor = 80f;
+        sear = new TankUnitType("sear"){{
+            constructor = UnitEntity::create;
+            hitSize = 12f;
+            treadPullOffset = 3;
+            speed = 0.75f;
+            rotateSpeed = 1.2f;
+            armor = 16f;
+            health = 14000f;
+            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            researchCostMultiplier = 0f;
+            weapons = new Seq<Weapon>().add(new Weapon("sear-gatling"){{
+                name = "sear-gatling";
+                shootY = 4.5f;
+                recoil = 3f;
+                rotate = true;
+                rotateSpeed = 6f;
+                mirror = false;
+                x = 0f;
+                y = -1.25f;
+                shoot = new ShootPattern(){{
+                    reload = 20f;
+                    shotDelay = 2.5f;
+                    shots = 4;
+                    homingDelay = 1.2f;
+                    bullet = new BasicBulletType(){{
+                        speed = 4f;
+                        damage = 77f;
+                        lifetime = 70f;
+                    }
+                        @Override
+                        public void removed(Bullet b) {
+                            super.removed(b);
+                            SVars.tempTemperatureController.at(Mathf.round(b.x), Mathf.round(b.y), 11110.1f);
+                        }
+                    };
+                }};
+                inaccuracy = 7f;
+            }}).add(new Weapon("sear-missile"){{
+                reload = 60f;
+                bullet = new BasicBulletType(){{
+                    speed = 4f;
+                    damage = 77f;
+                    lifetime = 30f;
+                }
+                public @Nullable Bullet create(@Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY){
+                    damage+=(((Unit) owner).maxHealth - ((Unit) owner).health)/1000f;
+                    return super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+                }
+                };
+            }});
+            abilities.add(new HeatAbility(new HeatData(true){{
+                generateTemperature = 2.5f;
+                capacity = 150f;
+            }}));
+        }};
+
+        sun = new TankUnitType("sun"){{
+            constructor = UnitEntity::create;
+            hitSize = 12f;
+            treadPullOffset = 3;
+            speed = 0.75f;
+            rotateSpeed = 1.2f;
+            health = 22000f;
+            armor = 18f;
+            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            researchCostMultiplier = 0f;
+            weapons = new Seq<Weapon>().add(new Weapon("gun"){{
+                rotate = true;
+                reload=50f;
+                y = -5;
+                bullet = new BasicBulletType(){{
+                    speed = 4f;
+                    damage = 77f;
+                    lifetime = 30f;
+                }};
+            }
+                @Override
+                protected void shoot(Unit unit, WeaponMount mount, float shootX, float shootY, float rotation) {
+                if (SVars.tempTemperatureController.at(unit) > 130f) mount.bullet.damage*=1.2f;
+
+                super.shoot(unit, mount, shootX, shootY, rotation);
+                Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));
+                Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> {
+                    SVars.tempTemperatureController.at(x, y, 10f);
+                });
+            }
+
+
+            });
+
+            abilities.add(new HeatAbility(new HeatData(true){{
+                generateTemperature = 4f;
+                capacity = 180f;
+            }
+            }){
+                public void update(Unit unit) {
+                    super.update(unit);
+                    Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> {
+                        Building c = Vars.world.build(x,y);
+                        if (c!=null && c.team!=unit.team) c.health-=70*Time.delta;
+                    });
+                    HeatAbility ha = null;
+                    for (Ability ability : unit.abilities) {
+                        if (ability instanceof HeatAbility) {
+                            ha = (HeatAbility) ability;
+                            break;
+                        }
+                    }
+                    if (ha == null) return;
+                    float ph = (1-unit.health/unit.maxHealth)*10f;
+                    ha.hd.regeneration*=ph*4f;
+                    ha.hd.capacity*=ph*0.5f;
+                }
+                {}});
         }};
     }
 }

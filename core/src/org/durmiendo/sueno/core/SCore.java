@@ -1,19 +1,20 @@
 package org.durmiendo.sueno.core;
 
 import arc.Core;
-import arc.Events;
 import arc.graphics.g2d.TextureRegion;
 import mindustry.Vars;
-import mindustry.game.EventType.ClientLoadEvent;
 import mindustry.mod.Mod;
 import mma.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.SUnits;
+import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
+import org.durmiendo.sueno.satellites.CelestialBase;
+import org.durmiendo.sueno.satellites.Satellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
 @ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
@@ -26,6 +27,7 @@ import org.durmiendo.sueno.temperature.TemperatureController;
 public class SCore extends Mod {
     public SCore(){
         SVars.core = this;
+
     }
 
     @Override
@@ -45,7 +47,34 @@ public class SCore extends Mod {
     public void init() {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
-
+        SVars.celestialBodyController = new CelestialBodyController();
+        for (int i = 0; i < 90; i++) {
+            Satellite s = new Satellite(new CelestialBase(),12, i*4, 60, SPlanets.hielo);
+            s.speed = 40f;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(),12, i*4, -60, SPlanets.hielo);
+            s.speed = -40f;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(),12, i*4, 0, SPlanets.hielo);
+            s.speed = 40f;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(),12, 0, i*4, SPlanets.hielo);
+            s.speed = 40f;
+            s.speedType=false;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(), 12, i*4f, i*4f, SPlanets.hielo);
+            s.speed = 80f;
+            s.speedType=true;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(),12, i*4f+120f, i*4f, SPlanets.hielo);
+            s.speed = 80f;
+            s.speedType=true;
+            SVars.celestialBodyController.addCB(s);
+            s = new Satellite(new CelestialBase(),12, i*4f+240f, i*4f, SPlanets.hielo);
+            s.speed = 80f;
+            s.speedType=true;
+            SVars.celestialBodyController.addCB(s);
+        }
         SVars.ui.build();
     }
 

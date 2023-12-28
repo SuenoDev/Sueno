@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.controllers;
 
 import arc.Events;
-import arc.math.Mathf;
 import arc.struct.Seq;
 import org.durmiendo.sueno.events.SEvents;
 import org.durmiendo.sueno.satellites.CelestialBody;
@@ -30,10 +29,7 @@ public class CelestialBodyController extends GenericController {
     }
 
     public void addCB(CelestialBody s) {
-        s.speed = Mathf.random(50, 100);
-
         cbs.add(s);
-
     }
 
     public  void removeCB(CelestialBody s) {
