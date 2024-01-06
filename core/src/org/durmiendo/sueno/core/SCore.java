@@ -17,6 +17,8 @@ import org.durmiendo.sueno.satellites.CelestialBase;
 import org.durmiendo.sueno.satellites.Satellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
+import static arc.Core.settings;
+
 @ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
 @ModAnnotations.AnnotationSettings(
         rootPackage = "org.durmiendo.sueno",
@@ -27,7 +29,7 @@ import org.durmiendo.sueno.temperature.TemperatureController;
 public class SCore extends Mod {
     public SCore(){
         SVars.core = this;
-
+        settings.put("campaignselect", true);
     }
 
     @Override
@@ -48,6 +50,7 @@ public class SCore extends Mod {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
+        //TODO: убрать куда нибудь с глаз долой
         for (int i = 0; i < 90; i++) {
             Satellite s = new Satellite(new CelestialBase(),12, i*4, 60, SPlanets.hielo);
             s.speed = 40f;
@@ -75,6 +78,7 @@ public class SCore extends Mod {
             s.speedType=true;
             SVars.celestialBodyController.addCB(s);
         }
+
         SVars.ui.build();
     }
 

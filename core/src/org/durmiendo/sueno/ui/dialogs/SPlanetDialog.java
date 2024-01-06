@@ -7,7 +7,8 @@ import arc.scene.ui.ImageButton;
 import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.SEvents;
-import org.durmiendo.sueno.ui.SUI;
+
+import static arc.Core.settings;
 
 
 public class SPlanetDialog extends PlanetDialog {
@@ -15,6 +16,7 @@ public class SPlanetDialog extends PlanetDialog {
 
     @Override
     public Dialog show() {
+        settings.put("campaignselect", true);
         Events.fire(new SEvents.CampaignOpenEvent());
         return super.show();
     }
@@ -30,11 +32,12 @@ public class SPlanetDialog extends PlanetDialog {
         super.draw();
         SVars.celestialBodyController.draw();
     }
-
     public SPlanetDialog() {
         super();
 
-        shown(() -> {
+
+
+//        shown(() -> {
 //            Table table = new Table();
 //            table.setFillParent(true);
 //            addChild(table);
@@ -55,11 +58,11 @@ public class SPlanetDialog extends PlanetDialog {
 //            });
 
 
-            ib.clicked(() -> {
-                SVars.ui.cbs.show();
-            });
-            this.add(ib);
-        });
+//            ib.clicked(() -> {
+//                SVars.ui.cbs.show();
+//            });
+//            this.add(ib);
+//        });
     }
 
     ImageButton ib = new ImageButton(Core.atlas.find("sueno-satellite"));

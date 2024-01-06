@@ -4,7 +4,6 @@ import arc.graphics.Color;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
-import arc.struct.Seq;
 import arc.util.Nullable;
 import arc.util.Time;
 import mindustry.Vars;
@@ -14,7 +13,7 @@ import mindustry.core.World;
 import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.pattern.ShootPattern;
+import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
 import mindustry.game.Team;
 import mindustry.gen.*;
@@ -32,6 +31,7 @@ public class SUnits {
             spark,singe,sear,sun;
     public static void load() {
         spark = new TankUnitType("spark"){{
+            outlineColor=Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -53,6 +53,7 @@ public class SUnits {
         }};
 
         singe = new TankUnitType("singe"){{
+            outlineColor=Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -62,7 +63,8 @@ public class SUnits {
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
 
-            weapons.add(new Weapon("singe-weapon"){{
+            weapons.add(new Weapon("sueno-singe-weapon"){{
+                y=-1.25f;
                 layerOffset = 0.0001f;
                 reload = 5f;
                 shootY = 4.5f;
@@ -71,7 +73,6 @@ public class SUnits {
                 rotateSpeed = 6f;
                 mirror = false;
                 x = 0f;
-                y = -0.75f;
 
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
@@ -99,6 +100,7 @@ public class SUnits {
         }};
 
         sear = new TankUnitType("sear"){{
+            outlineColor=Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -107,8 +109,8 @@ public class SUnits {
             health = 14000f;
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
-            weapons = new Seq<Weapon>().add(new Weapon("sear-gatling"){{
-                name = "sear-gatling";
+            weapons.add(new Weapon("sueno-sear-weapon"){{
+
                 shootY = 4.5f;
                 recoil = 3f;
                 rotate = true;
@@ -116,7 +118,7 @@ public class SUnits {
                 mirror = false;
                 x = 0f;
                 y = -1.25f;
-                shoot = new ShootPattern(){{
+                shoot = new ShootBarrel(){{
                     reload = 20f;
                     shotDelay = 2.5f;
                     shots = 4;
@@ -154,6 +156,7 @@ public class SUnits {
         }};
 
         sun = new TankUnitType("sun"){{
+            outlineColor=Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -162,7 +165,8 @@ public class SUnits {
             armor = 18f;
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
-            weapons = new Seq<Weapon>().add(new Weapon("gun"){{
+            weapons.add(new Weapon("sueno-sun-gun"){{
+                mirror=false;
                 rotate = true;
                 reload=50f;
                 y = -5;
