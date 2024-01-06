@@ -171,7 +171,7 @@ public class SUnits {
                 reload=50f;
                 y = -5;
                 bullet = new BasicBulletType(){{
-                    speed = 4f;
+                    speed = 4.2f;
                     damage = 77f;
                     lifetime = 30f;
                 }};
@@ -182,9 +182,7 @@ public class SUnits {
 
                 super.shoot(unit, mount, shootX, shootY, rotation);
                 Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));
-                Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> {
-                    SVars.tempTemperatureController.at(x, y, 10f);
-                });
+                Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> SVars.tempTemperatureController.at(x, y, 10f));
             }
             });
 
@@ -211,7 +209,7 @@ public class SUnits {
                     ha.hd.regeneration*=ph*4f;
                     ha.hd.capacity*=ph*0.5f;
                 }
-                {}});
+            });
         }};
     }
 }
