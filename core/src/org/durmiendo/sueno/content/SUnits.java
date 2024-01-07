@@ -13,6 +13,7 @@ import mindustry.core.World;
 import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
 import mindustry.game.Team;
@@ -31,14 +32,14 @@ public class SUnits {
             spark,singe,sear,sun;
     public static void load() {
         spark = new TankUnitType("spark"){{
-            outlineColor=Color.valueOf("141414");
+            outlineColor = Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 3.5f;
             health = 1800f;
             armor = 3f;
-            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            treadRects = new Rect[]{new Rect(8f - 32f, 1f - 37f, 14f, 74f - 1f)};
             researchCostMultiplier = 0f;
 
             abilities.add(new HeatAbility(new HeatData(true){{
@@ -53,18 +54,18 @@ public class SUnits {
         }};
 
         singe = new TankUnitType("singe"){{
-            outlineColor=Color.valueOf("141414");
+            outlineColor = Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
             armor = 8f;
             health = 6800f;
-            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            treadRects = new Rect[]{new Rect(12f - 32f, 7f - 32f, 14f, 52f - 1f)};
             researchCostMultiplier = 0f;
 
             weapons.add(new Weapon("sueno-singe-weapon"){{
-                y=-1.25f;
+                y = -1.25f;
                 layerOffset = 0.0001f;
                 reload = 5f;
                 shootY = 4.5f;
@@ -100,7 +101,7 @@ public class SUnits {
         }};
 
         sear = new TankUnitType("sear"){{
-            outlineColor=Color.valueOf("141414");
+            outlineColor = Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -109,20 +110,51 @@ public class SUnits {
             health = 14000f;
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
-            weapons.add(new Weapon("sueno-sear-weapon"){{
+            weapons.add(new Weapon("sueno-sear-gatling"){{
 
                 shootY = 4.5f;
                 recoil = 3f;
-                rotate = true;
-                rotateSpeed = 6f;
-                mirror = false;
+                parts.add(new RegionPart(){{
+                    suffix = "-barrel-l";
+                    progress = PartProgress.recoil;
+                    recoilIndex = 0;
+                    moveY = -1.5f;
+                    under = true;
+                    mirror = false;
+                    outline = true;
+                }}).add(new RegionPart(){{
+                    suffix = "-barrel-center";
+                    progress = PartProgress.recoil;
+                    recoilIndex = 1;
+                    moveY = -1.5f;
+                    under = true;
+                    mirror = false;
+                    outline = true;
+                }}).add(new RegionPart(){{
+                    suffix = "-barrel-r";
+                    progress = PartProgress.recoil;
+                    recoilIndex = 2;
+                    moveY = -1.5f;
+                    under = true;
+                    mirror = false;
+                    outline = true;
+                }});
                 x = 0f;
-                y = -1.25f;
+                y = 0;
+                top = true;
+                layerOffset = 0.1f;
+                shootY = 4f;
+                reload = 3f;
+                rotate = true;
+                shootCone = 12f;
+                rotateSpeed = 3.2f;
+                recoil = 0f;
+                mirror = false;
+
                 shoot = new ShootBarrel(){{
-                    reload = 20f;
-                    shotDelay = 2.5f;
-                    shots = 4;
-                    homingDelay = 1.2f;
+                    barrels = new float[]{
+                            -2f, 0f, 0f, 0f, 0f, 0f, 2f, 0f, 0f
+                    };
                     bullet = new BasicBulletType(){{
                         speed = 4f;
                         damage = 77f;
@@ -156,7 +188,7 @@ public class SUnits {
         }};
 
         sun = new TankUnitType("sun"){{
-            outlineColor=Color.valueOf("141414");
+            outlineColor = Color.valueOf("141414");
             hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
@@ -166,9 +198,9 @@ public class SUnits {
             treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sun-gun"){{
-                mirror=false;
+                mirror = false;
                 rotate = true;
-                reload=50f;
+                reload = 50f;
                 y = -5;
                 bullet = new BasicBulletType(){{
                     speed = 4.2f;
