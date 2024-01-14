@@ -1,13 +1,13 @@
 {
-    "main": "org.durmiendo.sueno.core.SCore"
-    "name": "sueno",
-    "displayName": "Sueno",
+    "main": "org.durmiendo.minedit.core.MCore"
+    "name": "minedit",
+    "displayName": "MinEdit",
     "author": "// TODO authors",
-    "repo": "SuenoDev/Sueno",
+    "repo": "Durmiendo/MinEdit",
     "subtitle": "subtitle",
     "description": "lol",
-    "version": "0.0.1.6-dev",
-    "minGameVersion": "145",
+    "version": "0.1",
+    "minGameVersion": "146",
     "java": true,
     "hidden": false,
     "hideBrowser": false
