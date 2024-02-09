@@ -2,7 +2,6 @@ package org.durmiendo.sueno.controllers;
 
 import arc.Events;
 import arc.struct.Seq;
-import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.SEvents;
 import org.durmiendo.sueno.satellites.CelestialBody;
 import org.durmiendo.sueno.satellites.Satellite;
@@ -42,8 +41,8 @@ public class CelestialBodyController extends GenericController {
     }
 
     public void draw() {
-        for (CelestialBody i : cbs) {
-            if (SVars.ui.planet.state.planet == i.planet) i.draw();
+        for (CelestialBody c : cbs) {
+            c.draw();
         }
     }
 }

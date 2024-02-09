@@ -2,6 +2,7 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
+import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.mod.Mod;
 import mma.annotations.ModAnnotations;
@@ -13,8 +14,7 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
-import org.durmiendo.sueno.satellites.CelestialBase;
-import org.durmiendo.sueno.satellites.Satellite;
+import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
 import static arc.Core.settings;
@@ -50,35 +50,15 @@ public class SCore extends Mod {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
-        //TODO: убрать куда нибудь с глаз долой
-        for (int i = 0; i < 90; i++) {
-            Satellite s = new Satellite(new CelestialBase(),12, i*4, 60, SPlanets.hielo);
-            s.speed = 40f;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(),12, i*4, -60, SPlanets.hielo);
-            s.speed = -40f;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(),12, i*4, 0, SPlanets.hielo);
-            s.speed = 40f;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(),12, 0, i*4, SPlanets.hielo);
-            s.speed = 40f;
-            s.speedType=false;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(), 12, i*4f, i*4f, SPlanets.hielo);
-            s.speed = 80f;
-            s.speedType=true;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(),12, i*4f+120f, i*4f, SPlanets.hielo);
-            s.speed = 80f;
-            s.speedType=true;
-            SVars.celestialBodyController.addCB(s);
-            s = new Satellite(new CelestialBase(),12, i*4f+240f, i*4f, SPlanets.hielo);
-            s.speed = 80f;
-            s.speedType=true;
+
+        char[] c = "Sueno will a live!".toCharArray();
+        float len = c.length*4.3f;
+        for (float i = 0; i < c.length; i++) {
+            CharSatellite s = new CharSatellite(12, 0f, 0.45f*Mathf.pi, SPlanets.hielo, c[c.length-(int)i-1]);
+            s.speed = 1f/120f;
+            s.angle = i/len*Mathf.pi*2f;
             SVars.celestialBodyController.addCB(s);
         }
-
         SVars.ui.build();
     }
 

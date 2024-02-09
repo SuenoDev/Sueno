@@ -39,7 +39,7 @@ public class SUnits {
             rotateSpeed = 3.5f;
             health = 1800f;
             armor = 3f;
-            treadRects = new Rect[]{new Rect(8f - 32f, 1f - 37f, 14f, 74f - 1f)};
+            treadRects = new Rect[]{new Rect(11f - 32f, 4f - 32f, 14f, 54f - 1f)};
             researchCostMultiplier = 0f;
 
             abilities.add(new HeatAbility(new HeatData(true){{
@@ -61,7 +61,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             armor = 8f;
             health = 6800f;
-            treadRects = new Rect[]{new Rect(12f - 32f, 7f - 32f, 14f, 52f - 1f)};
+            treadRects = new Rect[]{new Rect(10f - 44f, 9f - 44f, 19f, 62f - 1f)};
             researchCostMultiplier = 0f;
 
             weapons.add(new Weapon("sueno-singe-weapon"){{
@@ -195,17 +195,18 @@ public class SUnits {
             rotateSpeed = 1.2f;
             health = 22000f;
             armor = 18f;
-            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            treadRects = new Rect[]{new Rect(-4, -4, 8, 8)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sun-gun"){{
                 mirror = false;
                 rotate = true;
                 reload = 50f;
                 y = -5;
+                x = 0;
                 bullet = new BasicBulletType(){{
                     speed = 4.2f;
                     damage = 77f;
-                    lifetime = 30f;
+                    lifetime = 70f;
                 }};
             }
                 @Override

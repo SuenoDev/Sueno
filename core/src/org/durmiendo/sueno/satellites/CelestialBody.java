@@ -14,10 +14,9 @@ import mindustry.type.Planet;
 import org.durmiendo.sueno.core.SVars;
 
 public abstract class CelestialBody {
+    public float angle;
     public Planet planet;
     public float orbitRadius;
-    public float yaw;
-    public float pitch;
     public float speed;
     public Mat rotation;
 
@@ -28,10 +27,8 @@ public abstract class CelestialBody {
     public TextureRegion r;
 
     public CelestialBody(float r, float pitch, float yaw, Planet planet) {
-        this.pitch = pitch;
         this.orbitRadius = r;
         this.planet = planet;
-        this.yaw = yaw;
         this.r = Core.atlas.find("sueno-satellite");
 
 
@@ -41,41 +38,38 @@ public abstract class CelestialBody {
         button = new ImageButton();
         button.setSize(25);
         this.r.scale=2f;
-        rotation = new Mat(){{
-
-        }};
+        rotation = mathRotation(pitch, yaw);
     }
 
-    public Mat mathRotation() {
+    public Mat mathRotation(float pitch, float yaw) {
         Mat o = new Mat(new float[]{
-                Mathf.cos(pitch * Mathf.degRad), 0, -Mathf.sin(pitch * Mathf.degRad),
+                Mathf.cos(pitch), 0, -Mathf.sin(pitch),
                 0, 1, 0,
-                Mathf.sin(pitch * Mathf.degRad), 0, Mathf.cos(pitch * Mathf.degRad)
+                Mathf.sin(pitch), 0, Mathf.cos(pitch)
         });
         Mat t = new Mat(new float[]{
-                Mathf.cos(yaw * Mathf.degRad), Mathf.sin(yaw * Mathf.degRad), 0,
-                Mathf.sin(yaw * Mathf.degRad), Mathf.cos(yaw * Mathf.degRad), 0,
-                0, 0, 1
+                1, 0, 0,
+                0, Mathf.cos(yaw), -Mathf.sin(yaw),
+                0, Mathf.sin(yaw), Mathf.cos(yaw),
+
         });
 
         return t.mul(o);
     }
 
 
-    public Vec3 newPos(Vec3 r, float pitch, float yaw) {
-        r.x = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.cos(Mathf.degRad * yaw ) + center.x;
-        r.y = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.sin(Mathf.degRad * yaw ) + center.y;
-        r.z = orbitRadius * Mathf.sin(Mathf.degRad * pitch ) + center.z;
-
-        return r;
+    public Vec3 newPos() {
+//        r.x = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.cos(Mathf.degRad * yaw ) + center.x;
+//        r.y = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.sin(Mathf.degRad * yaw ) + center.y;
+//        r.z = orbitRadius * Mathf.sin(Mathf.degRad * pitch ) + center.z;
+        return new Vec3(Mathf.sin(angle) * orbitRadius, Mathf.cos(angle) * orbitRadius, 0).mul(rotation).add(center);
     }
 
-    public boolean speedType=true;
-
     public void draw() {
-        if (speedType) pitch += speed / 200 * Time.delta;
-        else yaw += speed / 200 * Time.delta;
-        newPos(position, pitch, yaw);
+        angle += speed * Time.delta;
+        angle %= 2 * Mathf.pi;
+
+        position = newPos();
         Vec3 e = Vars.renderer.planets.cam.project(position);
         Drawf.additive(r, Color.lightGray, e.x, e.y);
     }

@@ -9,9 +9,9 @@ import org.durmiendo.sueno.ui.dialogs.SatelliteDialog;
 public class Satellite extends CelestialBody {
     CelestialBase i;
     public SatelliteDialog sd = new SatelliteDialog(Styles.fullDialog);
-    public Satellite( CelestialBase b, float r, float spacing, float distance, Planet planet) {
+    public Satellite( CelestialBase b, float r,  float pitch, float yaw, Planet planet) {
 
-        super(r, spacing, distance, planet);
+        super(r, pitch, yaw, planet);
         health = 375;
 
 

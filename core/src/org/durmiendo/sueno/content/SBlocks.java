@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
-import mindustry.content.Liquids;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
@@ -9,7 +8,6 @@ import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemeperatureSource;
-import org.durmiendo.sueno.world.blocks.production.WallDrill;
 
 import static mindustry.type.ItemStack.with;
 
@@ -37,17 +35,17 @@ public class SBlocks {
             health = 20;
         }};
 
-        new WallDrill("WaDR-22") {{
-            requirements(Category.effect, with(Items.sporePod, 69));
-            size = 3;
-            rotators = 3;
-            rotatorsSideSpace = 0.8f;
-            health = 96;
-            tier = 5;
-            drillTime = 60 * 2.5f * 2f;
-
-            consumeLiquid(Liquids.water, 0.25f / 60f).boost();
-        }};
+//        new WallDrill("WaDR-22") {{
+//            requirements(Category.effect, with(Items.sporePod, 69));
+//            size = 3;
+//            rotators = 3;
+//            rotatorsSideSpace = 0.8f;
+//            health = 96;
+//            tier = 5;
+//            drillTime = 60 * 2.5f * 2f;
+//
+//            consumeLiquid(Liquids.water, 0.25f / 60f).boost();
+//        }};
 
         new Floor("i") {{
             size = 1;
