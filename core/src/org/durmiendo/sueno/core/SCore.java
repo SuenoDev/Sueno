@@ -51,7 +51,7 @@ public class SCore extends Mod {
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
 
-        char[] c = "Sueno will a live!".toCharArray();
+        char[] c = "Sueno will a live! 2".toCharArray();
         float len = c.length*4.3f;
         for (float i = 0; i < c.length; i++) {
             CharSatellite s = new CharSatellite(12, 0f, 0.45f*Mathf.pi, SPlanets.hielo, c[c.length-(int)i-1]);
