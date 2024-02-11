@@ -39,7 +39,7 @@ public class SUnits {
             rotateSpeed = 3.5f;
             health = 1800f;
             armor = 3f;
-            treadRects = new Rect[]{new Rect(11f - 32f, 4f - 32f, 14f, 54f - 1f)};
+            treadRects = new Rect[]{new Rect(11f - 64f/2f, 4f - 64f/2f, 14f, 55f)};
             researchCostMultiplier = 0f;
 
             abilities.add(new HeatAbility(new HeatData(true){{
@@ -55,13 +55,13 @@ public class SUnits {
 
         singe = new TankUnitType("singe"){{
             outlineColor = Color.valueOf("141414");
-            hitSize = 12f;
+            hitSize = 12f;;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
             armor = 8f;
             health = 6800f;
-            treadRects = new Rect[]{new Rect(10f - 44f, 9f - 44f, 19f, 62f - 1f)};
+            treadRects = new Rect[]{new Rect(10f - 88f/2f, 11f - 88f/2f, 18f, 65f)};
             researchCostMultiplier = 0f;
 
             weapons.add(new Weapon("sueno-singe-weapon"){{
@@ -108,7 +108,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             armor = 16f;
             health = 14000f;
-            treadRects = new Rect[]{new Rect(16-126f/2f, 6f-130f/2f, 25f, 87f-1f)};
+            treadRects = new Rect[]{new Rect(17-126f/2f, 36f-130f/2f, 23f, 91f)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sear-gatling"){{
 
@@ -195,7 +195,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             health = 22000f;
             armor = 18f;
-            treadRects = new Rect[]{new Rect(19f-140f/2f, 9f-160f/2f, 9f, 132f-1f)};
+            treadRects = new Rect[]{new Rect(20f-140f/2f, 15f-160f/2f, 17f, 132f)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sun-gun"){{
                 mirror = false;
