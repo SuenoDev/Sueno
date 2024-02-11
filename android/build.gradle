@@ -7,6 +7,10 @@ ext {
     var ua = project.parent.ext.local?.build?.buildAndroid
     useandroid = ((ua == null) || ua)
     useandroid = (sdkRoot != null && sdkRoot.exists())
+    if (((ua == null) || ua) && !useandroid) {
+        println "ты идиот"
+        throw new GradleException("No Android SDK found.")
+    }
     project.logger.info "build android dex: $project.ext.useandroid"
 }
 

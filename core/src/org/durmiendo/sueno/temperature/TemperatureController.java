@@ -25,6 +25,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     //temperature params
     // TODO а чо они статичные???
     // TODO хз, 1 температура на 1 миндаль
+    // TODO точно я же их из варсов спиздил, и забил хуй на модификаторы
     public static float freezingDamage = 0.35f;
     public static float freezingPower = -1.4f;
     public static float startTemperature = 0;
