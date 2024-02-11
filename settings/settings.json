@@ -1,7 +1,7 @@
 {
   "projectSettings": {
-    "version": "v1.1-dev",
-    "group": "TeamOct/fictional-octo-system"
+    "version": "v0.0.1.6-dev",
+    "group": "SuenoDev/Sueno"
   },
 
   "dependencies": {
@@ -9,14 +9,11 @@
     "mindustryVersion": "v146",
 
     "list": [
-      { "multi-crafter-lib": "com.github.liplum:MultiCrafterLib:v1.7" },
-      { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT" }
+      { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:74a5591c36b" }
     ],
     "projects": {
       "core": {
-        "implementation": [
-          "list:multi-crafter-lib"
-        ],
+        "implementation": [],
         "compileOnly": [
           "list:zelaux-mod-core-anno"
         ],
@@ -27,7 +24,5 @@
     }
   },
 
-  "extensions": [
-    "mindustry-mod", "fos"
-  ]
+  "extensions": []
 }

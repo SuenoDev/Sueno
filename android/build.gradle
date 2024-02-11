@@ -4,9 +4,9 @@ ext {
     sdkRoot = (root == null ? null : new File(root))
 
     dexFile = project.parent.ext.child(project.buildDir, "dex.jar")
-
     var ua = project.parent.ext.local?.build?.buildAndroid
     useandroid = ((ua == null) || ua)
+    useandroid = (sdkRoot != null && sdkRoot.exists())
     project.logger.info "build android dex: $project.ext.useandroid"
 }
 
