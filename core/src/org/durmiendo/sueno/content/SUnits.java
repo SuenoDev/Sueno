@@ -108,7 +108,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             armor = 16f;
             health = 14000f;
-            treadRects = new Rect[]{new Rect( -4, -4, 8, 8)};
+            treadRects = new Rect[]{new Rect(16-126f/2f, 6f-130f/2f, 25f, 87f-1f)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sear-gatling"){{
 
@@ -195,7 +195,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             health = 22000f;
             armor = 18f;
-            treadRects = new Rect[]{new Rect(-4, -4, 8, 8)};
+            treadRects = new Rect[]{new Rect(19f-140f/2f, 9f-160f/2f, 9f, 132f-1f)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sun-gun"){{
                 mirror = false;
