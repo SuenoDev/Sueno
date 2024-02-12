@@ -1,3 +1,10 @@
 {
-  "buildAndroid": false
+  "build": {
+    "buildAndroid": "[should android be built? (true/false)]"
+  },
+  "copy": {
+    "Sueno": [
+      "C:\\Users\\Durmiendo\\AppData\\Roaming\\Mindustry\\mods"
+    ]
+  }
 }

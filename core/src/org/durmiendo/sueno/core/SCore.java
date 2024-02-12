@@ -12,8 +12,6 @@ import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.SUnits;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.gen.SCall;
-import org.durmiendo.sueno.gen.SEntityMapping;
 import org.durmiendo.sueno.graphics.Shaders;
 import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
