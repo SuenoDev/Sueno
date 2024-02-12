@@ -5,14 +5,15 @@ import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.mod.Mod;
-import mma.annotations.ModAnnotations;
+import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.content.SUnits;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.graphics.Shaders;
+import org.durmiendo.sueno.gen.SCall;
+import org.durmiendo.sueno.gen.SEntityMapping;
 import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
@@ -49,7 +50,6 @@ public class SCore extends Mod {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
-        Shaders.init();
 
         char[] c = "Sueno will a live!".toCharArray();
         float len = c.length*4.3f;

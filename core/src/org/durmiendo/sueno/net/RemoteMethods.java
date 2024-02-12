@@ -4,6 +4,7 @@ import mindustry.Vars;
 import mindustry.annotations.Annotations;
 import mindustry.entities.Units;
 import mindustry.world.Tile;
+import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 

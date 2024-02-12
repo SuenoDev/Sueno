@@ -244,7 +244,6 @@ subprojects.each { Project project ->
 project.tasks.buildRelease { Jar jar ->
     jar.dependsOn project.subprojects*.tasks*.jar
 
-
     jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     jar.from {
@@ -261,7 +260,7 @@ project.tasks.buildRelease { Jar jar ->
         }
         project.copy {
             from { project.tasks.jar.archiveFile.get() }
-            into project.file("artifacts")
+            into project.file(local.copy.release[0])
         }
     }
 
