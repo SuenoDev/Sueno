@@ -244,6 +244,7 @@ subprojects.each { Project project ->
 project.tasks.buildRelease { Jar jar ->
     jar.dependsOn project.subprojects*.tasks*.jar
 
+
     jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     jar.from {

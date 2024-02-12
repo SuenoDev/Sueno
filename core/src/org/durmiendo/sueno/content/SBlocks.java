@@ -8,6 +8,7 @@ import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemeperatureSource;
+import org.durmiendo.sueno.world.blocks.environment.Ice;
 
 import static mindustry.type.ItemStack.with;
 
@@ -55,7 +56,7 @@ public class SBlocks {
             size = 1;
             variants = 2;
         }};
-        new Floor("t") {{
+        new Ice("t") {{
             size = 1;
             variants = 3;
         }};

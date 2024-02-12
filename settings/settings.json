@@ -1,11 +1,11 @@
 {
   "projectSettings": {
-    "version": "v0.0.1.6-dev",
+    "version": "0.16",
     "group": "SuenoDev/Sueno"
   },
 
   "dependencies": {
-    "useJitpackForMindustryDependency": false,
+    "useJitpackForMindustryDependency": true,
     "mindustryVersion": "v146",
 
     "list": [

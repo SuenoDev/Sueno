@@ -14,6 +14,7 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
+import org.durmiendo.sueno.graphics.Shaders;
 import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
@@ -50,6 +51,7 @@ public class SCore extends Mod {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
+        Shaders.init();
 
         char[] c = "Sueno will a live!".toCharArray();
         float len = c.length*4.3f;
