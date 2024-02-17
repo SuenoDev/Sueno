@@ -5,7 +5,7 @@ cache/
 /.gradle/
 /artifacts/
 /copy.properties
-
+settings/local.json
 ### IntelliJ IDEA
 /.idea/
 
