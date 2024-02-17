@@ -255,8 +255,12 @@ project.tasks.buildRelease { Jar jar ->
         project.ext.local?.copy?.release?.each { String path ->
             project.copy {
                 from { project.tasks.jar.archiveFile.get() }
-                into path
+                into local.copy.release[0]
             }
+        }
+        project.copy {
+            from { project.tasks.jar.archiveFile.get() }
+            into project.file("artifacts")
         }
     }
 

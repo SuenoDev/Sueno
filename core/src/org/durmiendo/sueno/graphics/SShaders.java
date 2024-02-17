@@ -74,6 +74,7 @@ public class SShaders {
             super.apply();
             setUniformf("u_campos", Core.camera.position.x, Core.camera.position.y);
             setUniformf("u_w", Vars.world.width());
+            setUniformf("u_zoom",  Vars.renderer.getDisplayScale());
             setUniformf("u_time", Time.time);
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
             setUniformf("u_r", (((float) Core.graphics.getWidth()) / ((float)Core.graphics.getHeight())));

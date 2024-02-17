@@ -9,7 +9,7 @@
     "mindustryVersion": "v146",
 
     "list": [
-      { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT" }
+      { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT"}
     ],
     "projects": {
       "core": {
