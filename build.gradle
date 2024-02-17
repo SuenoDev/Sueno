@@ -260,7 +260,7 @@ project.tasks.buildRelease { Jar jar ->
         }
         project.copy {
             from { project.tasks.jar.archiveFile.get() }
-            into project.file(local.copy.release[0])
+            into project.file("artifacts")
         }
     }
 

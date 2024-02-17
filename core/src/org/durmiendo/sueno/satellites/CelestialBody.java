@@ -7,21 +7,22 @@ import arc.math.Mat;
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
 import arc.scene.ui.ImageButton;
+import arc.util.Log;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.graphics.Drawf;
 import mindustry.type.Planet;
+import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
 
 public abstract class CelestialBody {
     public float angle;
-    public Planet planet;
+    public Planet planet = SPlanets.hielo;
     public float orbitRadius;
     public float speed;
     public Mat rotation;
 
     public Vec3 position;
-    public Vec3 center;
     public float health;
     public ImageButton button;
     public TextureRegion r;
@@ -33,7 +34,6 @@ public abstract class CelestialBody {
 
 
 
-        center = planet.position;
         position = new Vec3();
         button = new ImageButton();
         button.setSize(25);
@@ -59,10 +59,7 @@ public abstract class CelestialBody {
 
 
     public Vec3 newPos() {
-//        r.x = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.cos(Mathf.degRad * yaw ) + center.x;
-//        r.y = orbitRadius * Mathf.cos(Mathf.degRad * pitch ) * Mathf.sin(Mathf.degRad * yaw ) + center.y;
-//        r.z = orbitRadius * Mathf.sin(Mathf.degRad * pitch ) + center.z;
-        return new Vec3(Mathf.sin(angle) * orbitRadius, Mathf.cos(angle) * orbitRadius, 0).mul(rotation).add(center);
+        return new Vec3(Mathf.sin(angle) * orbitRadius, Mathf.cos(angle) * orbitRadius, 0).mul(rotation).add(planet.position);
     }
 
     public void draw() {
@@ -70,13 +67,12 @@ public abstract class CelestialBody {
         angle %= 2 * Mathf.pi;
 
         position = newPos();
-        Vec3 e = Vars.renderer.planets.cam.project(position);
+        Vec3 e = Vars.renderer.planets.cam.project(new Vec3(position));
         Drawf.additive(r, Color.lightGray, e.x, e.y);
     }
 
 
     public void update() {
-
     }
 
     public void damage(float d) {

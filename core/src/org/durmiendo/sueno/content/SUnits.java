@@ -55,7 +55,7 @@ public class SUnits {
 
         singe = new TankUnitType("singe"){{
             outlineColor = Color.valueOf("141414");
-            hitSize = 12f;;
+            hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
@@ -78,15 +78,15 @@ public class SUnits {
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
                 bullet = new BasicBulletType(){{
-                    speed=5f;
-                    damage=77f;
-                    fragBullets=4;
-                    fragAngle=8f;
+                    speed = 5f;
+                    damage = 77f;
+                    fragBullets = 4;
+                    fragAngle = 8f;
                     lifetime = 50f;
                     fragBullet = new BasicBulletType(){{
-                       damage=22f;
-                       speed=1.4f;
-                       drawSize=3f;
+                       damage = 22f;
+                       speed = 1.4f;
+                       drawSize = 3f;
                     }};
                 }};
             }});

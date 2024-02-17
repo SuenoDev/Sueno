@@ -51,12 +51,12 @@ public class SCore extends Mod {
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
 
-        char[] c = "Sueno will a live!".toCharArray();
-        float len = c.length*4.3f;
+        char[] c = "Пробная версия Sueno закончилась, пожалуйста купите полную версию всего за 299$".toCharArray();
+        float len = c.length * 1.3f;
         for (float i = 0; i < c.length; i++) {
-            CharSatellite s = new CharSatellite(12, 0f, 0.45f*Mathf.pi, SPlanets.hielo, c[c.length-(int)i-1]);
-            s.speed = 1f/120f;
-            s.angle = i/len*Mathf.pi*2f;
+            CharSatellite s = new CharSatellite(12, 0f, 0.45f * Mathf.pi, SPlanets.hielo, c[c.length - (int) i - 1]);
+            s.speed = 1f / 120f;
+            s.angle = (i / len * Mathf.pi * 2f);
             SVars.celestialBodyController.addCB(s);
         }
         SVars.ui.build();

@@ -2,6 +2,7 @@ package org.durmiendo.sueno.satellites;
 
 import arc.math.Mathf;
 import arc.math.geom.Vec3;
+import arc.util.Log;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.type.Planet;
@@ -21,7 +22,7 @@ public class CharSatellite extends CelestialBody{
         angle %= 2 * Mathf.pi;
 
         position = newPos();
-        Vec3 e = Vars.renderer.planets.cam.project(position);
+        Vec3 e = Vars.renderer.planets.cam.project(new Vec3(position));
         Fonts.def.draw(String.valueOf(name), e.x, e.y);
     }
 }

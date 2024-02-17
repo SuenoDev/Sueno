@@ -4,20 +4,21 @@ import arc.func.Cons;
 import arc.func.Intc2;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
+import arc.struct.Seq;
 import arc.util.Nullable;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
 // TODO wtf?
-public class Map implements Iterable<Float> {
+public class Map<T> implements Iterable<T> {
     public int width, height;
     public int size = width * height;
 
-    final float[] array;
+    public Seq<T> array;
 
-    public Map(int width, int height) {
-        this.array = new float[width * height];
+    public Map(int width, int height){
+        this.array = new Seq<>();
         this.width = width;
         this.height = height;
 
@@ -31,29 +32,23 @@ public class Map implements Iterable<Float> {
     }
 
         /** fills this tile set with empty air tiles. */
-        public void fill(float f) {
-            Arrays.fill(array, f);
+        public void fill(T f) {
+            array.each(v -> v = f);
         }
 
         /**
          * set a tile at a position; does not range-check. use with caution.
          */
-        public void set(int x, int y, float v) {
-            array[y * width + x] = v;
+        public void set(int x, int y, T v) {
+            array.set(y * width + x, v);
         }
 
         /**
          * set a tile at a raw array position; used for fast iteration / 1-D for-loops
          */
-        public void seti(int i, float v) {
-            array[i] = v;
+        public void seti(int i, T v) {
+            array.set(i, v);
         }
-        public void addi(int i, float v) {
-            array[i] += v;
-        }
-    public void add(int x, int y, float v) {
-        array[y * width + x] += v;
-    }
 
         /**
          * @return whether these coordinates are in bounds
@@ -66,45 +61,45 @@ public class Map implements Iterable<Float> {
          * @return a tile at coordinates, or null if out of bounds
          */
         @Nullable
-        public float get(int x, int y) {
-            if (x < 0 || x >= width || y < 0 || y >= height) return 0;
-            else return array[y * width + x];
+        public T get(int x, int y) {
+            if (x < 0 || x >= width || y < 0 || y >= height) return null;
+            else return array.get(y * width + x);
         }
 
         /**
          * @return a tile at coordinates; throws an exception if out of bounds
          */
-        public float getn(int x, int y) {
+        public T getn(int x, int y) {
             if (x < 0 || x >= width || y < 0 || y >= height)
                 throw new IllegalArgumentException(x + ", " + y + " out of bounds: width=" + width + ", height=" + height);
-            return array[y * width + x];
+            return array.get(y * width + x);
         }
 
         /**
          * @return a tile at coordinates, clamped.
          */
-        public float getc(int x, int y) {
+        public T getc(int x, int y) {
             x = Mathf.clamp(x, 0, width - 1);
             y = Mathf.clamp(y, 0, height - 1);
-            return array[y * width + x];
+            return array.get(y * width + x);
         }
 
         /**
          * @return a tile at an iteration index [0, width * height]
          */
-        public float geti(int idx) {
-            return array[idx];
+        public T geti(int idx) {
+            return array.get(idx);
         }
 
         /**
          * @return a tile at an int position (not equivalent to geti)
          */
-        public @Nullable float getp(int pos) {
+        public @Nullable T getp(int pos) {
             return get(Point2.x(pos), Point2.y(pos));
         }
 
-        public void eachTile(Cons<Float> cons) {
-            for (float tile : array) {
+        public void eachTile(Cons<T> cons) {
+            for (T tile : array) {
                 cons.get(tile);
             }
         }
@@ -115,7 +110,7 @@ public class Map implements Iterable<Float> {
             return new IteratorFloats();
         }
 
-        private class IteratorFloats implements Iterator<Float> {
+        private class IteratorFloats implements Iterator<T> {
             int index = 0;
 
             IteratorFloats() {
@@ -123,12 +118,12 @@ public class Map implements Iterable<Float> {
 
             @Override
             public boolean hasNext() {
-                return index < array.length;
+                return index < array.size;
             }
 
             @Override
-            public Float next() {
-                return array[index++];
+            public T next() {
+                return array.get(index++);
             }
         }
     }
