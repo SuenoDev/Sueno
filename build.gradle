@@ -258,10 +258,6 @@ project.tasks.buildRelease { Jar jar ->
                 into path
             }
         }
-        project.copy {
-            from { project.tasks.jar.archiveFile.get() }
-            into project.file("artifacts")
-        }
     }
 
     jar.finalizedBy project.tasks.cleanBuilds
