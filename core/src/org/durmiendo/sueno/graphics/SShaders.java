@@ -10,10 +10,11 @@ import arc.util.ArcRuntimeException;
 import arc.util.Log;
 import arc.util.Time;
 import mindustry.Vars;
+import org.durmiendo.sueno.core.SVars;
 import mindustry.content.Planets;
 import mindustry.game.EventType;
 import mindustry.type.Planet;
-import org.durmiendo.sueno.core.SVars;
+
 
 public class SShaders {
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
@@ -73,11 +74,9 @@ public class SShaders {
         public void apply() {
             super.apply();
             setUniformf("u_campos", Core.camera.position.x, Core.camera.position.y);
-            setUniformf("u_w", Vars.world.width());
             setUniformf("u_zoom",  Vars.renderer.getDisplayScale());
             setUniformf("u_time", Time.time);
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
-            setUniformf("u_r", (((float) Core.graphics.getWidth()) / ((float)Core.graphics.getHeight())));
             texture.bind(1);
         }
     }
