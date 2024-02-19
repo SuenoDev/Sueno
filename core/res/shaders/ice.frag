@@ -6,7 +6,7 @@ uniform float u_time;
 uniform float u_zoom;
 uniform vec2 u_campos;
 
-varying vec4 v_position;
+varying vec2 v_position;
 varying vec2 v_texCoords;
 
 vec2 random2(vec2 p) {
