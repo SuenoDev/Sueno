@@ -121,7 +121,6 @@ public class SUnits {
 
                     shootEffect = new Effect(10, e -> {
                         color(e.color);
-                        float w = 1.2f + 7 * e.fout();
                     });
 
                     lineEffect = new Effect(20f, e -> {
