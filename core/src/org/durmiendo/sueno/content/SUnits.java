@@ -1,29 +1,56 @@
 package org.durmiendo.sueno.content;
 
 import arc.graphics.Color;
+import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
+import arc.math.geom.Vec2;
 import arc.util.Nullable;
 import arc.util.Time;
 import mindustry.Vars;
-import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
 import mindustry.core.World;
+import mindustry.entities.Effect;
 import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.RailBulletType;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
 import mindustry.game.Team;
 import mindustry.gen.*;
+import mindustry.graphics.Drawf;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
+import mindustry.annotations.Annotations;
+import mindustry.content.Fx;
+import mindustry.core.World;
+import mindustry.entities.Effect;
+import mindustry.entities.Mover;
+import mindustry.entities.abilities.Ability;
+import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.RailBulletType;
+import mindustry.entities.part.RegionPart;
+import mindustry.entities.pattern.ShootBarrel;
+import mindustry.entities.units.WeaponMount;
+import mindustry.game.Team;
+import mindustry.gen.*;
+import mindustry.graphics.Drawf;
+import mindustry.type.UnitType;
+import mindustry.type.Weapon;
+import mindustry.type.unit.TankUnitType;
+import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.temperature.HeatAbility;
+import org.durmiendo.sueno.temperature.HeatData;
+
+import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Lines.stroke;
 
 
 public class SUnits {
@@ -67,7 +94,7 @@ public class SUnits {
             weapons.add(new Weapon("sueno-singe-weapon"){{
                 y = -1.25f;
                 layerOffset = 0.0001f;
-                reload = 5f;
+                reload = 3f;
                 shootY = 4.5f;
                 recoil = 1f;
                 rotate = true;
@@ -77,18 +104,59 @@ public class SUnits {
 
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
-                bullet = new BasicBulletType(){{
-                    speed = 5f;
+                bullet = new RailBulletType(){{
+                    length = 160f;
                     damage = 77f;
-                    fragBullets = 4;
-                    fragAngle = 8f;
-                    lifetime = 50f;
-                    fragBullet = new BasicBulletType(){{
-                       damage = 22f;
-                       speed = 1.4f;
-                       drawSize = 3f;
-                    }};
-                }};
+                    hitColor = Color.valueOf("feb380");
+                    intervalRandomSpread=344;
+                    pierceDamageFactor = 0.8f;
+                    smokeEffect = Fx.colorSpark;
+
+                    endEffect = new Effect(14f, e -> {
+                        color(e.color);
+                        Drawf.tri(e.x, e.y, e.fout() * 1.5f, 5f, e.rotation);
+                    });
+
+                    hitEffect = endEffect;
+
+                    shootEffect = new Effect(10, e -> {
+                        color(e.color);
+                        float w = 1.2f + 7 * e.fout();
+                    });
+
+                    lineEffect = new Effect(20f, e -> {
+                        if(!(e.data instanceof Vec2 v)) return;
+
+                        color(e.color);
+                        stroke(e.fout() * 0.9f + 0.6f);
+
+                        Fx.rand.setSeed(e.id);
+                        for(int i = 0; i < 7; i++){
+                            Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
+                            Lines.lineAngleCenter(e.x + Fx.v.x, e.y + Fx.v.y, e.rotation + e.finpow(), e.foutpowdown() * 20f * Fx.rand.random(0.5f, 1f) + 0.3f);
+                        }
+
+                        e.scaled(14f, b -> {
+                            stroke(b.fout() * 1.5f);
+                            color(e.color);
+                            Lines.line(e.x, e.y, v.x, v.y);
+                        });
+                    });
+//                    fragBullets = 4;
+//                    fragAngle = 8f;
+//                    fragBullet = new BasicBulletType(){{
+//                       damage = 22f;
+//                       speed = 1.4f;
+//                       drawSize = 3f;
+//                    }};
+                }
+
+                    @Override
+                    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+                        length=Mathf.random(120, 300);
+                        return super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+                    }
+                };
             }});
 
             abilities.add(new HeatAbility(new HeatData(true){{
@@ -155,7 +223,7 @@ public class SUnits {
                     barrels = new float[]{
                             -2f, 0f, 0f, 0f, 0f, 0f, 2f, 0f, 0f
                     };
-                    bullet = new BasicBulletType(){{
+                    bullet = new RailBulletType(){{
                         speed = 4f;
                         damage = 77f;
                         lifetime = 70f;

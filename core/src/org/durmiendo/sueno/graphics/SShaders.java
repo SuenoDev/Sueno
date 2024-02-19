@@ -38,25 +38,8 @@ public class SShaders {
     public static class IceShader extends Shader {
         Texture texture;
 
-        protected String preprocess(String source, boolean fragment) {
-            if (source.contains("#ifdef GL_ES")) {
-                throw new ArcRuntimeException("Shader contains GL_ES specific code; this should be handled by the preprocessor. Code: \n```\n" + source + "\n```");
-            } else if (source.contains("#version")) {
-                throw new ArcRuntimeException("Shader contains explicit version requirement; this should be handled by the preprocessor. Code: \n```\n" + source + "\n```");
-            } else {
-                if (fragment) {
-                    source = "#ifdef GL_ES\nprecision " + (source.contains("#define HIGHP") && !source.contains("//#define HIGHP") ? "highp" : "mediump") + " float;\nprecision mediump int;\n#else\n#define lowp  \n#define mediump \n#define highp \n#endif\n" + source;
-                } else {
-                    source = "#ifndef GL_ES\n#define lowp  \n#define mediump \n#define highp \n#endif\n" + source;
-                }
-                source = "#version 400\n" + source;
-                if (Core.gl30 != null) {
-                    return (fragment ? "out lowp vec4 fragColor;\n" : "") + source.replace("varying", fragment ? "in" : "out").replace("attribute", fragment ? "???" : "in").replace("texture2D(", "texture(").replace("textureCube(", "texture(").replace("gl_FragColor", "fragColor");
-                } else {
-                    return source;
-                }
-            }
-        }
+
+
         public IceShader() {
             super(
                     SVars.internalFileTree.child("shaders/ice.vert").readString(),
