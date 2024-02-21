@@ -8,24 +8,26 @@ import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.util.Nullable;
 import arc.util.Time;
+import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.entities.Effect;
 import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
-import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.RailBulletType;
+import mindustry.entities.bullet.*;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
 import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.entities.bullet.SRailBulletType;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 import mindustry.annotations.Annotations;
@@ -51,7 +53,8 @@ import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 
 import static arc.graphics.g2d.Draw.color;
-import static arc.graphics.g2d.Lines.stroke;
+import static arc.graphics.g2d.Lines.*;
+import static arc.math.Angles.randLenVectors;
 
 
 public class SUnits {
@@ -81,7 +84,15 @@ public class SUnits {
                 damage = 20f;
                 regeneration = 20f;
             }}));
-        }};
+        }
+
+            @Override
+            public void draw(Unit unit) {
+                super.draw(unit);
+
+
+            }
+        };
 
         singe = new TankUnitType("singe"){{
             outlineColor = Color.valueOf("141414");
@@ -97,66 +108,82 @@ public class SUnits {
             weapons.add(new Weapon("sueno-singe-weapon"){{
                 y = -1.25f;
                 layerOffset = 0.0001f;
-                reload = 3f;
+                reload = 6.4f;
                 shootY = 4.5f;
                 recoil = 1f;
                 rotate = true;
-                rotateSpeed = 6f;
+                rotateSpeed = 4f;
                 mirror = false;
                 x = 0f;
 
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
-                bullet = new RailBulletType(){{
-                    length = 160f;
-                    damage = 77f;
+                bullet = new SRailBulletType(){{
+                    length = 210f;
+                    instability = 80f;
+                    damage = 12f;
                     hitColor = Color.valueOf("feb380");
-                    intervalRandomSpread=344;
                     pierceDamageFactor = 0.8f;
-                    smokeEffect = Fx.colorSpark;
-
-                    endEffect = new Effect(14f, e -> {
+                    spread = 4f;
+//                    shootSound = Sounds.laserblast;
+                    smokeEffect = Fx.none;
+                    endEffect = hitEffect = new Effect(30, e -> {
                         color(e.color);
-                        Drawf.tri(e.x, e.y, e.fout() * 1.5f, 5f, e.rotation);
+                        stroke(1.2f * e.fout());
+                        randLenVectors(e.id + 1, 18, 1f + 23f * e.finpow(), (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                        });
+                        color(Color.white, e.color, e.fin());
+                        stroke(1.5f * e.fout());
+                        randLenVectors(e.id, 5, 34f * e.fin(), e.rotation+Mathf.random(-3f, 3f), 9f, (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                        });
                     });
-
-                    hitEffect = endEffect;
 
                     shootEffect = new Effect(10, e -> {
                         color(e.color);
                     });
 
-                    lineEffect = new Effect(20f, e -> {
+                    lineEffect = new Effect(23f, e -> {
                         if(!(e.data instanceof Vec2 v)) return;
-
-                        color(e.color);
-                        stroke(e.fout() * 0.9f + 0.6f);
-
                         Fx.rand.setSeed(e.id);
-                        for(int i = 0; i < 7; i++){
+                        Color c = Color.valueOf("f9350f");
+                        c.a = 0.5f;
+                        for(int i = 0; i < 18; i++){
                             Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
-                            Lines.lineAngleCenter(e.x + Fx.v.x, e.y + Fx.v.y, e.rotation + e.finpow(), e.foutpowdown() * 20f * Fx.rand.random(0.5f, 1f) + 0.3f);
+                            stroke(e.fout() * 1.6f + 0.6f);
+                            color(c);
+                            Lines.lineAngleCenter(e.x + Fx.v.x, e.y + Fx.v.y, e.rotation + e.finpow(), e.foutpowdown() * 12f * Fx.rand.random(0.5f, 1f) + 0.3f);
+                            stroke(e.fout() * 1.2f + 0.2f);
+                            color(e.color);
+                            Lines.lineAngleCenter(e.x + Fx.v.x, e.y + Fx.v.y, e.rotation + e.finpow(), e.foutpowdown() * 12f * Fx.rand.random(0.5f, 1f) + 0.3f);
                         }
-
+                        stroke(e.fout() * 1.2f + 0.6f);
                         e.scaled(14f, b -> {
-                            stroke(b.fout() * 1.5f);
+                            stroke(b.fout() * 1.8f);
+                            color(c);
+                            Lines.line(e.x, e.y, v.x, v.y);
+                            stroke(e.fout() * 0.9f);
                             color(e.color);
                             Lines.line(e.x, e.y, v.x, v.y);
                         });
                     });
-//                    fragBullets = 4;
-//                    fragAngle = 8f;
-//                    fragBullet = new BasicBulletType(){{
-//                       damage = 22f;
-//                       speed = 1.4f;
-//                       drawSize = 3f;
-//                    }};
                 }
 
+                public BulletType ffragBullet;
+
                     @Override
-                    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
-                        length=Mathf.random(120, 300);
-                        return super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+                    public void removed(Bullet b) {
+                        Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
+                        SVars.tempTemperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 100f);
+                        super.removed(b);
+//                        if (ffragBullet!=null) {
+//                            Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
+//                            for (int i = -fragBullets/2; i < fragBullets/2; i++) {
+//                                ffragBullet.create(b.owner, b.team, b.x + nor.x * b.fdata, b.y + nor.y * b.fdata, b.rotation()+i*fragAngle+Mathf.random(-fragSpread, fragSpread));
+//                            }
+//                        }
+
                     }
                 };
             }});

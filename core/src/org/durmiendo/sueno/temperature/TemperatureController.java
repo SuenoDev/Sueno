@@ -38,6 +38,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     public static float maxBoost = 20;
     public static boolean isDevTemperature = true;
     public static float def = 30;
+    public static float dddd = 0.005f;
     public boolean stop = false;
 
     public static TemperatureController instance;
@@ -118,7 +119,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
 
                     if (!check(xx, yy)) continue;
 
-                    float td = (prev[i][j] - prev[xx][yy]) * 0.01f * Time.delta;
+                    float td = (prev[i][j] - prev[xx][yy]) * dddd * Time.delta;
                     at(i, j, -td);
                     at(xx, yy, td);
                 }
@@ -126,7 +127,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
         }
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                at(i,j, freezingPower*Time.delta*at(i,j)/ maxSafeTemperature/8f);
+                at(i,j, freezingPower*Time.delta*at(i,j) / maxSafeTemperature/8f);
             }
         }
 
@@ -143,11 +144,11 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
                 if (!unitsTemperature.containsKey(unit.id))
                     unitsTemperature.put(unit.id, at(ux, uy));
                 else {
-                    float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * 0.01f * Time.delta/2f;
+                    float td = (unitsTemperature.get(unit.id) - prev[ux][uy]) * dddd * Time.delta/2f;
                     at(unit, -td);
                     above(unit, td);
 
-                    td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * 0.01f * Time.delta/2f;
+                    td = (prev[ux][uy] - unitsTemperature.get(unit.id)) * dddd * Time.delta/2f;
                     above(unit, -td);
                     at(unit, td);
                 }

@@ -1,14 +1,17 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
+import mindustry.gen.Building;
 import mindustry.type.Category;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemeperatureSource;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
+import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
 
 import static mindustry.type.ItemStack.with;
 
@@ -16,7 +19,9 @@ public class SBlocks {
 
     public static Block
     //heaters
-    heater, ts;
+    heater,
+    //test
+    ts, undestroyable;
     public static void load() {
         // TODO delete this
         heater = new Heater("heater") {{
@@ -35,6 +40,12 @@ public class SBlocks {
             size = 1;
             health = 20;
         }};
+
+        undestroyable = new UnDestroyable("undestroyable") {{
+
+        }};
+
+
 
 //        new WallDrill("WaDR-22") {{
 //            requirements(Category.effect, with(Items.sporePod, 69));

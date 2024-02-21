@@ -54,8 +54,8 @@ public class SCore extends Mod {
 
         VoidStriderCollapseEffectController.init();
 
-        char[] c = "Пробная версия Sueno закончилась, пожалуйста купите полную версию всего за 299$".toCharArray();
-        float len = c.length * 1.3f;
+        char[] c = "Sueno в разработке!".toCharArray();
+        float len = c.length * 5.3f;
         for (float i = 0; i < c.length; i++) {
             CharSatellite s = new CharSatellite(12, 0f, 0.45f * Mathf.pi, SPlanets.hielo, c[c.length - (int) i - 1]);
             s.speed = 1f / 120f;
