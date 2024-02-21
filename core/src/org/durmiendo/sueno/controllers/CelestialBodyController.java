@@ -7,6 +7,7 @@ import arc.util.Log;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.type.Planet;
+import mindustry.ui.dialogs.PlanetDialog;
 import org.durmiendo.sueno.events.SEvents;
 import org.durmiendo.sueno.satellites.CelestialBody;
 import org.durmiendo.sueno.satellites.Satellite;
@@ -58,7 +59,7 @@ public class CelestialBodyController extends GenericController {
 //        transformedVector.y = normVector.y * distanceToPos1;
 //        transformedVector.z = normVector.z * distanceToPos1;
 //        float distanceToCenter = transformedVector.dst(Vec3.Zero);
-        return true;
+        return (s.planet == Vars.ui.planet.state.planet) || (Vars.ui.planet.mode == PlanetDialog.Mode.look);
     }
 
 

@@ -27,7 +27,7 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
         if (hd.isHeat) {
             unit.heal(hd.regeneration / 8f * Time.delta);
             if (SVars.tempTemperatureController.at(unit) > hd.minSafeTemperature) {
-                unit.heal(hd.overRegeneration /*(SVars.tempTemperatureController.at(unit) - hd.minSafeTemperature)*/ * Time.delta);
+                unit.heal(hd.overRegeneration/ 8f /*(SVars.tempTemperatureController.at(unit) - hd.minSafeTemperature)*/ * Time.delta);
             }
 
             if (SVars.tempTemperatureController.at(unit) > hd.minSafeTemperature) {
@@ -54,7 +54,7 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
             }
 
 
-            if (SVars.tempTemperatureController.at(unit) < hd.capacity) {
+            if ((SVars.tempTemperatureController.at(unit) < hd.capacity) && !SVars.tempTemperatureController.stop) {
                 SVars.tempTemperatureController.at(unit, hd.generateTemperature * Time.delta);
             } else {
                 SVars.tempTemperatureController.at(unit, -hd.generateTemperature * Time.delta);
