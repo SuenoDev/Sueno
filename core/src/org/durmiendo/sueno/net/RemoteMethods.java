@@ -12,7 +12,8 @@ public class RemoteMethods {
     @Annotations.Remote(targets = Annotations.Loc.server, called = Annotations.Loc.both)
     public static void voidStriderCollapse(VoidStriderc voidStriderc) {
         float x = voidStriderc.x(), y = voidStriderc.y(), range = voidStriderc.range();
-        VoidStriderCollapseEffectController.at(x, y, 600f, range);
+        // TODO collapse effect
+        //VoidStriderCollapseEffectController.at(x, y, 600f, range);
 
         Vars.indexer.allBuildings(x, y, range, building -> {
             Tile.buildDestroyed(building);

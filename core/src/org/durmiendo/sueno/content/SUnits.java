@@ -46,6 +46,7 @@ import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 
@@ -55,8 +56,10 @@ import static arc.graphics.g2d.Lines.stroke;
 
 public class SUnits {
 
+    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class}) UnitType voidStrider;
+
     public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
-            spark,singe,sear,sun;
+            spark, singe, sear, sun;
     public static void load() {
         spark = new TankUnitType("spark"){{
             outlineColor = Color.valueOf("141414");
@@ -310,6 +313,18 @@ public class SUnits {
                     ha.hd.capacity*=ph*0.5f;
                 }
             });
+        }};
+
+        voidStrider = new UnitType("void-strider"){{
+            speed = 0.5f;
+            health = 150;
+            outlineColor = Color.valueOf("141414");
+            hitSize = 64f;
+            treadPullOffset = 3;
+            speed = 0.75f;
+            rotateSpeed = 1.2f;
+            health = 22000f;
+            armor = 18f;
         }};
     }
 }

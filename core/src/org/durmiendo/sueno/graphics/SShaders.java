@@ -2,6 +2,7 @@ package org.durmiendo.sueno.graphics;
 
 import arc.Core;
 import arc.Events;
+import arc.graphics.Gl;
 import arc.graphics.Texture;
 import arc.graphics.gl.Shader;
 import arc.math.geom.Vec2;
@@ -31,14 +32,20 @@ public class SShaders {
         @Override
         public void apply() {
             super.apply();
-            setUniformi("u_screen", 1);
+            Gl.activeTexture(Gl.texture0);
+            VoidStriderCollapseEffectController.effectsBuffer.getTexture().bind();
+            Gl.activeTexture(Gl.texture1);
+            VoidStriderCollapseEffectController.screenBuffer.getTexture().bind();
+
+            SShaders.voidStriderCollapseEffectShader.setUniformi("u_effects", 0);
+            SShaders.voidStriderCollapseEffectShader.setUniformi("u_screen", 1);
+
+            Gl.activeTexture(Gl.texture0);
         }
     }
 
     public static class IceShader extends Shader {
         Texture texture;
-
-
 
         public IceShader() {
             super(

@@ -14,6 +14,7 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
+import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 
@@ -50,6 +51,8 @@ public class SCore extends Mod {
         SVars.weathercontroller = new WeatherController();
         SVars.tempTemperatureController = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
+
+        VoidStriderCollapseEffectController.init();
 
         char[] c = "Пробная версия Sueno закончилась, пожалуйста купите полную версию всего за 299$".toCharArray();
         float len = c.length * 1.3f;

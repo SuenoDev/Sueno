@@ -6,10 +6,6 @@ ext {
     dexFile = project.parent.ext.child(project.buildDir, "dex.jar")
     var ua = project.parent.ext.local?.build?.buildAndroid
     useandroid = ((ua == null) || ua)
-    if (project.ext.sdkRoot == null || !project.ext.sdkRoot.exists()) {
-        useandroid = false
-        project.logger.info "no android sdk found, use android was set to false"
-    }
     project.logger.info "build android dex: $project.ext.useandroid"
 }
 
