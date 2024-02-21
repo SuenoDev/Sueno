@@ -10,5 +10,5 @@
   "minGameVersion": "145",
   "java": true,
   "hidden": false,
-  "hideBrowser": false
+  "hideBrowser": true
 }
