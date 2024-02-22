@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.core;
 
-import arc.assets.Loadable;
 import mindustry.mod.Mods;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
@@ -21,7 +20,7 @@ public class SVars {
     //controllers
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
-    public static TemperatureController tempTemperatureController;
+    public static TemperatureController TemperatureСontroller;
 
     /** Useless **/
     public static boolean onCampaign;

@@ -25,39 +25,39 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
         super.update(unit);
 
         if (hd.isHeat) {
-            unit.heal(hd.regeneration / 8f * Time.delta);
-            if (SVars.tempTemperatureController.at(unit) > hd.minSafeTemperature) {
-                unit.heal(hd.overRegeneration/ 8f /*(SVars.tempTemperatureController.at(unit) - hd.minSafeTemperature)*/ * Time.delta);
+            unit.heal(hd.regeneration / 8f / 3.5f * Time.delta);
+            if (SVars.TemperatureСontroller.at(unit) > hd.minSafeTemperature) {
+                unit.heal(hd.overRegeneration / 8f / 3.5f /*(SVars.tempTemperatureController.at(unit) - hd.minSafeTemperature)*/ * Time.delta);
             }
 
-            if (SVars.tempTemperatureController.at(unit) > hd.minSafeTemperature) {
+            if (SVars.TemperatureСontroller.at(unit) > hd.minSafeTemperature) {
                 Groups.unit.each(u -> {
                     if (unit.dst(u.x, u.y) < hd.damageRange*8 && u.team != unit.team) {
                         //TODO: Fix this
-                        u.damage((hd.damage / 8f + hd.overDamage * (SVars.tempTemperatureController.at(u) - hd.minSafeTemperature)) * Time.delta);
+                        u.damage((hd.damage / 8f + hd.overDamage * (SVars.TemperatureСontroller.at(u) - hd.minSafeTemperature)) * Time.delta);
                     }
                 });
 
                 Geometry.circle(unit.tileX(), unit.tileY(), Math.round(hd.damageRange), (x, y) -> {
                     Building b = Vars.world.build(x, y);
                     if (b != null && b.team != unit.team) {
-                        b.damage((hd.damage / 8f + hd.overDamage * (SVars.tempTemperatureController.at(x, y) - hd.minSafeTemperature)) * Time.delta);
+                        b.damage((hd.damage / 8f + hd.overDamage * (SVars.TemperatureСontroller.at(x, y) - hd.minSafeTemperature)) * Time.delta);
                     }
                 });
             }
 
 
-            if (hd.overArmor > 0 && SVars.tempTemperatureController.at(unit) > hd.minSafeTemperature) {
+            if (hd.overArmor > 0 && SVars.TemperatureСontroller.at(unit) > hd.minSafeTemperature) {
                 unit.armor = unit.type.armor + hd.overArmor;
             } else {
                 unit.armor = unit.type.armor - hd.overArmor;
             }
 
 
-            if ((SVars.tempTemperatureController.at(unit) < hd.capacity) && !SVars.tempTemperatureController.stop) {
-                SVars.tempTemperatureController.at(unit, hd.generateTemperature * Time.delta);
+            if ((SVars.TemperatureСontroller.at(unit) < hd.capacity) && !SVars.TemperatureСontroller.stop) {
+                SVars.TemperatureСontroller.at(unit, hd.generateTemperature * Time.delta);
             } else {
-                SVars.tempTemperatureController.at(unit, -hd.generateTemperature * Time.delta);
+                SVars.TemperatureСontroller.at(unit, -hd.generateTemperature * Time.delta);
             }
         }
     }

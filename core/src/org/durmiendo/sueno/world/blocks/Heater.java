@@ -45,16 +45,16 @@ public class Heater extends Block {
 
         @Override
         public void updateTile() {
-            if (!SVars.tempTemperatureController.stop) {
+            if (!SVars.TemperatureСontroller.stop) {
                 for (int x = tileX(); x < tileX()+size; x++) {
                     for (int y = tileY(); y < tileY()+size; y++) {
-                        SVars.tempTemperatureController.at(
+                        SVars.TemperatureСontroller.at(
                                 x, y,
 
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
                                                 0+ TemperatureController.def, TemperatureController.maxSafeTemperature+ TemperatureController.def,
-                                                SVars.tempTemperatureController.at(x,y)
+                                                SVars.TemperatureСontroller.at(x,y)
                                         )+1f)
                         );
                     }

@@ -2,13 +2,10 @@ package org.durmiendo.sueno.ui.fragments;
 
 import arc.Core;
 import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureAtlas;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.scene.event.Touchable;
-import arc.scene.ui.CheckBox;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
 import arc.scene.ui.TextButton;
@@ -16,7 +13,6 @@ import arc.scene.ui.layout.Table;
 import arc.util.Align;
 import arc.util.Strings;
 import mindustry.Vars;
-import mindustry.graphics.Drawf;
 import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
@@ -26,7 +22,6 @@ import org.durmiendo.sueno.temperature.TemperatureController;
 public class GodModeFragment extends Table {
     public boolean show = false;
     public Slider slider;
-    public CheckBox cb;
     public GodModeFragment() {
         super();
         background(Core.atlas.drawable("sueno-black75"));
@@ -42,28 +37,28 @@ public class GodModeFragment extends Table {
         });
 
         row();
-        check("T stop", SVars.tempTemperatureController.stop, b -> {
-            SVars.tempTemperatureController.stop = !SVars.tempTemperatureController.stop;
+        check("T stop", SVars.TemperatureСontroller.stop, b -> {
+            SVars.TemperatureСontroller.stop = !SVars.TemperatureСontroller.stop;
         }).left();
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", SVars.tempTemperatureController.stop ? 0 : SVars.tempTemperatureController.time)).left();
+            label(() -> Strings.format("T update: @ms", SVars.TemperatureСontroller.stop ? 0 : SVars.TemperatureСontroller.time)).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
-                if (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.tempTemperatureController.normalTemp;
+                if (SVars.TemperatureСontroller.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.TemperatureСontroller.normalTemp;
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
-                        Strings.fixed(SVars.tempTemperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.TemperatureСontroller.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
+                        Strings.fixed(SVars.TemperatureСontroller.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
-                if (Vars.player.dead() || SVars.tempTemperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.tempTemperatureController.normalTemp;
+                if (Vars.player.dead() || SVars.TemperatureСontroller.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.TemperatureСontroller.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.tempTemperatureController.temperatureAt(Vars.player.unit())- TemperatureController.def)/ TemperatureController.maxSafeTemperature)),
-                        Strings.fixed(SVars.tempTemperatureController.temperatureAt(Vars.player.unit()), 2));
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.TemperatureСontroller.temperatureAt(Vars.player.unit())- TemperatureController.def)/ TemperatureController.maxSafeTemperature)),
+                        Strings.fixed(SVars.TemperatureСontroller.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
         });
@@ -74,19 +69,9 @@ public class GodModeFragment extends Table {
         slider.changed(() -> {
             lb.setText("Кисть T: " + slider.getValue());
         });
-        cb = new CheckBox("показ \"Цифра\"");
-        cb.changed(() -> {
-            if (cb.isChecked()) {
-                cb.setText("показ \"Плитка\"");
-            } else {
-                cb.setText("показ \"Цифра\"");
-            }
-        });
         add(lb).left();
         row();
         add(slider).left();
-        row();
-        add(cb).left();
 
     }
 
@@ -97,21 +82,14 @@ public class GodModeFragment extends Table {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                    if (!cb.isChecked()) {
-                        Fonts.def.draw(Strings.fixed(SVars.tempTemperatureController.temperatureAt(x, y), 2), p.x, p.y,
-                                Colorated.gradient(Color.cyan,Color.red, (SVars.tempTemperatureController.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
-                                Vars.renderer.getScale()*0.1f, false, Align.center
-                        );
-                    } else {
-                        TextureAtlas.AtlasRegion t = Core.atlas.find("sueno-white-cub2-50");
-                        t.scale=Vars.renderer.getScale()*2f;
-                        Drawf.additive(t, Colorated.gradient(Color.cyan, Color.red, (SVars.tempTemperatureController.temperatureAt(x,y))/300f), p.x-2, p.y-2);
-                        t.scale=1f;
-                    }
+                    Fonts.def.draw(
+                            Strings.fixed(SVars.TemperatureСontroller.temperatureAt(x, y), 2),
+                            p.x, p.y, Colorated.gradient(Color.cyan,Color.red,
+                                    (SVars.TemperatureСontroller.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
+                            Vars.renderer.getDisplayScale()*0.1f, false, Align.center
+                    );
                 }
             }
-            Draw.flush();
-            Draw.reset();
         }
         super.draw();
     }

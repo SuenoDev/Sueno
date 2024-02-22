@@ -49,7 +49,7 @@ public class SCore extends Mod {
     @Override
     public void init() {
         SVars.weathercontroller = new WeatherController();
-        SVars.tempTemperatureController = new TemperatureController();
+        SVars.TemperatureСontroller = new TemperatureController();
         SVars.celestialBodyController = new CelestialBodyController();
 
         VoidStriderCollapseEffectController.init();
