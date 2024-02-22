@@ -23,8 +23,8 @@ void main() {
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);
     float m_dist = 1.;
-    for (float y = -1; y <= 1; y++) {
-        for (float x = -1; x <= 1; x++) {
+    for (float y = -1; y <= 1; y+=1.0) {
+        for (float x = -1; x <= 1; x+=1.0) {
 
             vec2 neighbor = vec2(x, y);
             vec2 a = i_st + neighbor;
