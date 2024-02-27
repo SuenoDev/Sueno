@@ -24,7 +24,6 @@ public class VoidStriderCollapseEffectController {
         });
         Events.run(EventType.Trigger.postDraw, () -> {
             screenBuffer.end();
-
             draw();
         });
     }
@@ -38,7 +37,8 @@ public class VoidStriderCollapseEffectController {
         Draw.proj(Core.camera);
 
         effectsBuffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-        uiDrawable.bufferSizeChanged();
+        if (uiDrawable != null)
+            uiDrawable.bufferSizeChanged();
         effectsBuffer.begin(Color.clear);
 
         for (int i = 0; i < containers.size; i++) {

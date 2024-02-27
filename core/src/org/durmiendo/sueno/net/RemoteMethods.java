@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.net;
 
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.annotations.Annotations;
 import mindustry.entities.Units;
@@ -7,21 +8,27 @@ import mindustry.world.Tile;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
+import org.durmiendo.sueno.world.units.types.VoidStriderUnitType;
 
 public class RemoteMethods {
     @Annotations.Remote(targets = Annotations.Loc.server, called = Annotations.Loc.both)
     public static void voidStriderCollapse(VoidStriderc voidStriderc) {
-        float x = voidStriderc.x(), y = voidStriderc.y(), range = voidStriderc.range();
-        // TODO collapse effect
-        //VoidStriderCollapseEffectController.at(x, y, 600f, range);
+        float x = voidStriderc.x();
+        float y = voidStriderc.y();
+        float radius = 0;
 
-        Vars.indexer.allBuildings(x, y, range, building -> {
-            Tile.buildDestroyed(building);
-        });
-        Units.nearby(x - range, y - range, range * 2f, range * 2f, u -> {
-            if (u != voidStriderc && u.within(x, y, range + u.hitSize/2f)){
+        if (voidStriderc.type() instanceof VoidStriderUnitType voidStriderUnitType) {
+            radius = voidStriderUnitType.collapseRadius;
+            VoidStriderCollapseEffectController.at(x, y, voidStriderUnitType.collapseEffect);
+        } else
+            Log.err("Type of @ must be VoidStriderUnitType (not @) for correct collapsing effects.\nCollapses with this unitType will be incorrect.",
+                    voidStriderc, voidStriderc.type());
+
+        Vars.indexer.allBuildings(x, y, radius, Tile::buildDestroyed);
+        final float finalRange = radius;
+        Units.nearby(x - radius, y - radius, radius * 2f, radius * 2f, u -> {
+            if (u != voidStriderc && u.within(x, y, finalRange + u.hitSize/2f))
                 u.destroy();
-            }
         });
     }
 }

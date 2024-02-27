@@ -28,6 +28,7 @@ import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
+import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.math.ColorGradient;
 import org.durmiendo.sueno.math.Colorated;
 import org.durmiendo.sueno.temperature.HeatAbility;
@@ -36,6 +37,7 @@ import mindustry.annotations.Annotations;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.RailBulletType;
 import org.durmiendo.sueno.gen.VoidStriderc;
+import org.durmiendo.sueno.world.units.types.VoidStriderUnitType;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.*;
@@ -44,7 +46,7 @@ import static arc.math.Angles.randLenVectors;
 
 public class SUnits {
 
-    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class}) UnitType voidStrider;
+    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType voidStrider;
 
     public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
             spark, singe, sear, sun;
@@ -331,7 +333,7 @@ public class SUnits {
             });
         }};
 
-        voidStrider = new UnitType("void-strider"){{
+        voidStrider = new VoidStriderUnitType("void-strider"){{
             speed = 0.5f;
             health = 150;
             outlineColor = Color.valueOf("141414");
@@ -341,6 +343,9 @@ public class SUnits {
             rotateSpeed = 1.2f;
             health = 22000f;
             armor = 18f;
+
+            collapseEffect = SFx.voidStriderCollapseEffect;
+            collapseRadius = 80;
         }};
     }
 }
