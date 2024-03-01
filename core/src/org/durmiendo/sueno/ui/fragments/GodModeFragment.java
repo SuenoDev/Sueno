@@ -65,7 +65,7 @@ public class GodModeFragment extends Table {
         row();
         Label lb = new Label("Кисть T: 0");
         TextButton tb = new TextButton("Режим кисти T", Styles.flatTogglet);
-        slider = new Slider(0, 20, 1, false);
+        slider = new Slider(0, 100, 1, false);
         slider.changed(() -> {
             lb.setText("Кисть T: " + slider.getValue());
         });
@@ -82,12 +82,13 @@ public class GodModeFragment extends Table {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                    Fonts.def.draw(
-                            Strings.fixed(SVars.TemperatureСontroller.temperatureAt(x, y), 2),
-                            p.x, p.y, Colorated.gradient(Color.cyan,Color.red,
-                                    (SVars.TemperatureСontroller.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
-                            Vars.renderer.getDisplayScale()*0.1f, false, Align.center
-                    );
+                    float t = SVars.TemperatureСontroller.temperatureAt(x, y);
+                    String s;
+                    s = Strings.fixed(t, 2);
+                    Color c;
+                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.TemperatureСontroller.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature);
+
+                    Fonts.def.draw(s, p.x, p.y, c, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);
                 }
             }
         }

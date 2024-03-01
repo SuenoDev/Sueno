@@ -1,12 +1,14 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
+import mindustry.content.UnitTypes;
 import mindustry.gen.Building;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.StaticWall;
+import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemeperatureSource;
@@ -18,12 +20,22 @@ import static mindustry.type.ItemStack.with;
 public class SBlocks {
 
     public static Block
+    //cores
+    demand,
     //heaters
     heater,
     //test
     ts, undestroyable;
     public static void load() {
-        // TODO delete this
+        demand = new CoreBlock("demand") {{
+            requirements(Category.effect, with(Items.scrap, 10));
+            size = 5;
+            health = 16000;
+            armor = 8f;
+            unitType = UnitTypes.gamma;
+        }
+
+        };
         heater = new Heater("heater") {{
             requirements(Category.effect, with(Items.scrap, 10));
             consumePower(1.5f);
@@ -31,6 +43,8 @@ public class SBlocks {
             size = 2;
             health = 200;
         }};
+
+        //test blocks
         ts = new TemeperatureSource("ts1") {{
             category = Category.effect;
             buildVisibility = BuildVisibility.sandboxOnly;
@@ -41,9 +55,7 @@ public class SBlocks {
             health = 20;
         }};
 
-        undestroyable = new UnDestroyable("undestroyable") {{
-
-        }};
+        undestroyable = new UnDestroyable("undestroyable");
 
 
 

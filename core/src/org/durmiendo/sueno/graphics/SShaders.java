@@ -19,7 +19,7 @@ import mindustry.type.Planet;
 
 public class SShaders {
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
-    public static IceShader ice;// = new IceShader();
+    public static IceShader ice = new IceShader();
 
     public static class VoidStriderCollapseEffectShader extends Shader {
         public VoidStriderCollapseEffectShader() {

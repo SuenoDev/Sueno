@@ -33,7 +33,6 @@ public class Heater extends Block {
         suppressable = true;
         envEnabled |= Env.space;
         configurable = true;
-
     }
 
     public class HeatBuild extends Building implements Heated {
@@ -50,10 +49,9 @@ public class Heater extends Block {
                     for (int y = tileY(); y < tileY()+size; y++) {
                         SVars.TemperatureСontroller.at(
                                 x, y,
-
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
-                                                0+ TemperatureController.def, TemperatureController.maxSafeTemperature+ TemperatureController.def,
+                                                0+ TemperatureController.def, TemperatureController.maxSafeTemperature + TemperatureController.def,
                                                 SVars.TemperatureСontroller.at(x,y)
                                         )+1f)
                         );

@@ -7,6 +7,7 @@ import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
+import arc.util.Log;
 import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
@@ -98,7 +99,7 @@ public class SUnits {
             weapons.add(new Weapon("sueno-singe-weapon"){{
                 y = -1.25f;
                 layerOffset = 0.0001f;
-                reload = 0.4f;
+                reload = 6.4f;
                 shootY = 4.5f;
                 recoil = 1f;
                 rotate = true;
@@ -114,7 +115,7 @@ public class SUnits {
                     damage = 12f;
                     hitColor = Color.valueOf("feb380");
                     pierceDamageFactor = 0.8f;
-                    spread = 180f;
+                    spread = 4f;
 //                    shootSound = Sounds.laserblast;
                     smokeEffect = Fx.none;
                     endEffect = hitEffect = new Effect(30, e -> {
@@ -160,20 +161,17 @@ public class SUnits {
                     });
                 }
 
-                public BulletType ffragBullet;
+                    @Override
+                    public void handlePierce(Bullet b, float initialHealth, float x, float y) {
+                        SVars.TemperatureСontroller.at(Mathf.round(x)/8,Mathf.round(y)/8, 100f);
+                        super.handlePierce(b, initialHealth, x, y);
+                    }
 
                     @Override
-                    public void removed(Bullet b) {
+                    public void despawned(Bullet b) {
+                        super.despawned(b);
                         Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
                         SVars.TemperatureСontroller.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 100f);
-                        super.removed(b);
-//                        if (ffragBullet!=null) {
-//                            Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
-//                            for (int i = -fragBullets/2; i < fragBullets/2; i++) {
-//                                ffragBullet.create(b.owner, b.team, b.x + nor.x * b.fdata, b.y + nor.y * b.fdata, b.rotation()+i*fragAngle+Mathf.random(-fragSpread, fragSpread));
-//                            }
-//                        }
-
                     }
                 };
             }});

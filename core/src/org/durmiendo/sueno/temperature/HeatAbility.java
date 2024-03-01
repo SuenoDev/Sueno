@@ -34,7 +34,7 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
                 Groups.unit.each(u -> {
                     if (unit.dst(u.x, u.y) < hd.damageRange*8 && u.team != unit.team) {
                         //TODO: Fix this
-                        u.damage((hd.damage / 8f + hd.overDamage * (SVars.TemperatureСontroller.at(u) - hd.minSafeTemperature)) * Time.delta);
+                        u.damage((hd.damage / 8f + hd.overDamage * (SVars.TemperatureСontroller.at(u) - hd.minSafeTemperature) / 8f) / 3.5f * Time.delta);
                     }
                 });
 

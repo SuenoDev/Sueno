@@ -23,12 +23,11 @@ import java.io.DataOutput;
 
 public class TemperatureController implements SaveFileReader.CustomChunk {
     //temperature params
-    // TODO а чо они статичные???
-    // TODO хз, 1 температура на 1 миндаль
-    // TODO точно я же их из варсов спиздил, и забил хуй на модификаторы
     public static float freezingDamage = 0.35f;
-    public static float freezingPower = -1.4f;
-    public static float startTemperature = 0;
+    public static float freezingPower = -0.75f;
+    public static float absoluteZero = -200;
+    public static float absoluteMaximum = -200;
+    public static float startTemperature = -100;
     public static float minEffectivityTemperature = 100;
     public static float minSafeTemperature = -100;
     public static float minTemperatureDamage = 20;
@@ -38,6 +37,8 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     public static float maxBoost = 20;
     public static boolean isDevTemperature = true;
     public static float def = 30;
+
+    // Теплопередача, TODO: костыль убрать
     public static float dddd = 0.005f;
     public boolean stop = false;
 
@@ -90,6 +91,11 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     public void init() {
         unitsTemperature.clear();
         temperature = new float[Vars.world.width()][Vars.world.height()];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                temperature[i][j] = startTemperature;
+            }
+        }
         prev = new float[Vars.world.width()][Vars.world.height()];
         width = Vars.world.width();
         height = Vars.world.height();
@@ -123,11 +129,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
                     at(i, j, -td);
                     at(xx, yy, td);
                 }
-            }
-        }
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                at(i,j, freezingPower*Time.delta*at(i,j) / maxSafeTemperature/8f);
+//                at(i,j, freezingPower*Time.delta/3.5f);
             }
         }
 
@@ -171,7 +173,8 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
     public float temperatureAt(int x, int y) {
-        if(isDevTemperature) return at(x, y);
+        //if (!check(x, y)) return absoluteZero;
+        if (isDevTemperature) return at(x, y);
         return at(x, y) + normalTemp;
     }
 
@@ -213,7 +216,7 @@ public class TemperatureController implements SaveFileReader.CustomChunk {
     }
 
     public boolean check(int x, int y) {
-        return x > 0 && x < width && y > 0 && y < height;
+        return x > 0 && x < width && y > 0 && y < height; //&& temperature[x][y] > absoluteZero;
     }
 
     @Override

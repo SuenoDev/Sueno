@@ -17,9 +17,9 @@ public class Ice extends Floor {
 
     public Ice(String name) {
         super(name);
-//        iceShader = SShaders.ice;
-//        layer = new CacheLayer.ShaderLayer(iceShader);
-//        CacheLayer.add(0, layer);
-//        cacheLayer = layer;
+        iceShader = SShaders.ice;
+        layer = new CacheLayer.ShaderLayer(iceShader);
+        CacheLayer.add(0, layer);
+        cacheLayer = layer;
     }
 }
