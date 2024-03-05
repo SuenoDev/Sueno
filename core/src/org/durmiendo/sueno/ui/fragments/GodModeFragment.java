@@ -23,7 +23,7 @@ public class GodModeFragment extends Table {
     public GodModeFragment() {
         super();
         background(Core.atlas.drawable("sueno-black75"));
-        label(() -> "       [gold]The God mode       ");
+        label(() -> "        [gold]The God mode        ");
         row();
         visible(() -> {
             if (Core.input.keyTap(KeyCode.slash)) {

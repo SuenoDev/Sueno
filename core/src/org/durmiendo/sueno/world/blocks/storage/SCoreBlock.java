@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.world.blocks.storage;
 
 import arc.math.Mathf;
+import arc.util.Time;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
@@ -25,7 +26,7 @@ public class SCoreBlock extends CoreBlock {
             if (!SVars.temperatureController.stop) {
                 for (int x = tileX()-Mathf.floor(size/2f); x < tileX()-Mathf.floor(size/2f)+size; x++) {
                     for (int y = tileY()-Mathf.floor(size/2f); y < tileY()-Mathf.floor(size/2f)+size; y++) {
-                        SVars.temperatureController.at(x, y, heatPower);
+                        SVars.temperatureController.at(x, y, heatPower * Time.delta);
                     }
                 }
             }

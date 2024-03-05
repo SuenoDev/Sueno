@@ -19,10 +19,9 @@ public class TemperatureController {
     /**
      *  main indicator of temperature
      *  all actions with temperature must be carried out taking it into account
-     *  standard value 1
-     *  always not negative
+     *  standard value 1 and always > 0
      */
-    public final float tk = 1;
+    public final float tk = 2f;
     public final float freezingDamage = 0.35f;
 
     /**
@@ -45,7 +44,7 @@ public class TemperatureController {
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
-    public final float dddd = 0.005f;
+    public final float dddd = 0.05f;
 
     /**
      * responsible for the temperature operating status
@@ -181,8 +180,9 @@ public class TemperatureController {
     /** Increments relative temperature. Use it in math. **/
     public void at(int x, int y, float increment) {
         if (!check(x, y)) return;
-        increment*=tk;
-        temperature[x][y] += increment;
+        float t = temperature[x][y] + increment * tk;
+        if (t <= -tk || t >= tk) return;
+        temperature[x][y] = t;
     }
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/
@@ -216,11 +216,11 @@ public class TemperatureController {
         Float t = unitsTemperature.get(u.id);
         increment*=tk;
         if (t == null) {
-            if (increment > tk) return;
+            if (increment >= -tk && increment <= tk) return;
             unitsTemperature.put(u.id, increment);
             return;
         }
-        if (increment + t > tk) return;
+        if (increment + t >= -tk && increment + t <= tk) return;
         unitsTemperature.put(u.id, t + increment);
     }
 
