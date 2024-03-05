@@ -13,14 +13,10 @@ import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.SInterp;
-import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 public class Heater extends Block {
-
     public float heatPower = 0.55f;
-    public float range = 60;
-    public float ceiling = 20;
     public Heater(String name) {
         super(name);
         solid = true;
@@ -29,7 +25,6 @@ public class Heater extends Block {
         hasPower = true;
         hasItems = true;
         emitLight = true;
-        lightRadius = range / 4 * heatPower;
         suppressable = true;
         envEnabled |= Env.space;
         configurable = true;
@@ -37,48 +32,29 @@ public class Heater extends Block {
 
     public class HeatBuild extends Building implements Heated {
         public float tpower = 1;
-
-        public float range() {
-            return range;
-        }
-
         @Override
         public void updateTile() {
-            if (!SVars.TemperatureСontroller.stop) {
+            if (!SVars.temperatureController.stop) {
                 for (int x = tileX(); x < tileX()+size; x++) {
                     for (int y = tileY(); y < tileY()+size; y++) {
-                        SVars.TemperatureСontroller.at(
+                        SVars.temperatureController.at(
                                 x, y,
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
-                                                0+ TemperatureController.def, TemperatureController.maxSafeTemperature + TemperatureController.def,
-                                                SVars.TemperatureСontroller.at(x,y)
+                                                0+ SVars.temperatureController.def, SVars.temperatureController.maxSafeTemperature + SVars.temperatureController.def,
+                                                SVars.temperatureController.at(x,y)
                                         )+1f)
                         );
                     }
                 }
             }
-
             super.updateTile();
-        }
-
-        @Override
-        public void update() {
-            super.update();
-        }
-
-
-        @Override
-        public void drawSelect(){
-            //indexer.eachBlock(this.team, new Rect(x-range/2, y-range/2, range, range), other -> true, othert -> Drawf.selected(othert, Tmp.c1.set(Color.orange).a(Mathf.absin(4f, 1f))));
-            //Drawf.dashSquare(Color.orange, x, y, range);
         }
 
         @Override
         public void buildConfiguration(Table table) {
             super.buildConfiguration(table);
             table.setBackground(Core.atlas.drawable("sueno-black75"));
-
 
             Label label = new Label("Сила нагревателя " + Strings.fixed(tpower, 2) + "%");
             Slider slider = new Slider(0, 1, 0.01f, false);
