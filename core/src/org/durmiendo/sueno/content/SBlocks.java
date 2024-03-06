@@ -2,17 +2,15 @@ package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
 import mindustry.content.UnitTypes;
-import mindustry.gen.Building;
 import mindustry.type.Category;
 import mindustry.world.Block;
-import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.StaticWall;
-import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
-import org.durmiendo.sueno.world.blocks.TemeperatureSource;
+import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
+import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
 
 import static mindustry.type.ItemStack.with;
@@ -27,7 +25,7 @@ public class SBlocks {
     //test
     ts, undestroyable;
     public static void load() {
-        demand = new CoreBlock("demand") {{
+        demand = new SCoreBlock("demand") {{
             requirements(Category.effect, with(Items.scrap, 10));
             size = 5;
             health = 16000;
@@ -39,13 +37,12 @@ public class SBlocks {
         heater = new Heater("heater") {{
             requirements(Category.effect, with(Items.scrap, 10));
             consumePower(1.5f);
-            range = 160f;
             size = 2;
             health = 200;
         }};
 
         //test blocks
-        ts = new TemeperatureSource("ts1") {{
+        ts = new TemperatureSource("ts1") {{
             category = Category.effect;
             buildVisibility = BuildVisibility.sandboxOnly;
             hasPower = false;

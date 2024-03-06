@@ -6,18 +6,17 @@ import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.scene.event.Touchable;
+import arc.scene.ui.CheckBox;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
-import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Table;
 import arc.util.Align;
+import arc.util.Log;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.ui.Fonts;
-import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
-import org.durmiendo.sueno.temperature.TemperatureController;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -25,7 +24,7 @@ public class GodModeFragment extends Table {
     public GodModeFragment() {
         super();
         background(Core.atlas.drawable("sueno-black75"));
-        label(() -> "       [gold]The God mode       ");
+        label(() -> "        [gold]The God mode        ");
         row();
         visible(() -> {
             if (Core.input.keyTap(KeyCode.slash)) {
@@ -37,34 +36,41 @@ public class GodModeFragment extends Table {
         });
 
         row();
-        check("T stop", SVars.TemperatureСontroller.stop, b -> {
-            SVars.TemperatureСontroller.stop = !SVars.TemperatureСontroller.stop;
+        check("T stop", SVars.temperatureController.stop, b -> {
+            SVars.temperatureController.stop = !SVars.temperatureController.stop;
         }).left();
+        row();
+        CheckBox tfu = new CheckBox("T forced update");
+        tfu.changed(() -> {
+            tfu.setChecked(false);
+            Log.info("T forced updated");
+            SVars.TC.temperatureCalculate();
+        });
+        add(tfu).left();
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", SVars.TemperatureСontroller.stop ? 0 : SVars.TemperatureСontroller.time)).left();
+            label(() -> Strings.format("T update: @ms", SVars.temperatureController.stop ? 0 : SVars.temperatureController.time)).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
-                if (SVars.TemperatureСontroller.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + SVars.TemperatureСontroller.normalTemp;
+                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-SVars.temperatureController.tk);
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.TemperatureСontroller.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))- TemperatureController.def)/ TemperatureController.maxSafeTemperature),
-                        Strings.fixed(SVars.TemperatureСontroller.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+SVars.temperatureController.tk) / (SVars.temperatureController.tk*2f)),
+                        Strings.fixed(SVars.temperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
-                if (Vars.player.dead() || SVars.TemperatureСontroller.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.TemperatureСontroller.normalTemp;
+                if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.TemperatureСontroller.temperatureAt(Vars.player.unit())- TemperatureController.def)/ TemperatureController.maxSafeTemperature)),
-                        Strings.fixed(SVars.TemperatureСontroller.temperatureAt(Vars.player.unit()), 2));
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.temperatureAt(Vars.player.unit())+SVars.temperatureController.tk) / (SVars.temperatureController.tk*2f))),
+                        Strings.fixed(SVars.temperatureController.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
         });
         row();
         Label lb = new Label("Кисть T: 0");
-        TextButton tb = new TextButton("Режим кисти T", Styles.flatTogglet);
         slider = new Slider(0, 100, 1, false);
         slider.changed(() -> {
             lb.setText("Кисть T: " + slider.getValue());
@@ -72,7 +78,26 @@ public class GodModeFragment extends Table {
         add(lb).left();
         row();
         add(slider).left();
-
+        row();
+        Slider s = new Slider(-SVars.temperatureController.tk, SVars.temperatureController.tk, SVars.temperatureController.tk/100f, false);
+        label(() -> "Установить T: " + Strings.fixed(s.getValue(),2)).left();
+        CheckBox ch = new CheckBox("");
+        add(ch).left();
+        ch.setChecked(false);
+        ch.changed(() -> {
+            ch.setChecked(false);
+            if (slider.getValue() > 0) {
+                for (int x = Mathf.ceil(Core.input.mouseWorldX() / 8f - slider.getValue()); x < Mathf.ceil(Core.input.mouseWorldX() / 8f + slider.getValue()); x += 1) {
+                    for (int y = Mathf.ceil(Core.input.mouseWorldY() / 8f - slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY() / 8f + slider.getValue()); y += 1) {
+                        if (SVars.temperatureController.check(x,y)) SVars.temperatureController.temperature[x][y] = s.getValue();
+                    }
+                }
+            } else {
+                if (SVars.temperatureController.check(Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f))) SVars.temperatureController.temperature[Mathf.ceil(Core.input.mouseWorldX() / 8f)][Mathf.ceil(Core.input.mouseWorldY() / 8f)] = s.getValue();
+            }
+        });
+        row();
+        add(s).left();
     }
 
     @Override
@@ -82,11 +107,11 @@ public class GodModeFragment extends Table {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                    float t = SVars.TemperatureСontroller.temperatureAt(x, y);
+                    float t = SVars.temperatureController.temperatureAt(x, y);
                     String s;
                     s = Strings.fixed(t, 2);
                     Color c;
-                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.TemperatureСontroller.at(x, y)- TemperatureController.def)/ TemperatureController.maxSafeTemperature);
+                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at(x, y)+SVars.temperatureController.tk)/(SVars.temperatureController.tk*2));
 
                     Fonts.def.draw(s, p.x, p.y, c, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);
                 }

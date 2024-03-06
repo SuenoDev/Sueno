@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import mindustry.Vars;
+import mindustry.io.SaveVersion;
 import mindustry.mod.Mod;
 import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
@@ -17,6 +18,7 @@ import org.durmiendo.sueno.gen.SEntityMapping;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
+import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 
 import static arc.Core.settings;
 
@@ -49,9 +51,10 @@ public class SCore extends Mod {
     @Override
     public void init() {
         SVars.weathercontroller = new WeatherController();
-        SVars.TemperatureСontroller = new TemperatureController();
+        SVars.temperatureController = new TemperatureController();
+        SVars.TC = SVars.temperatureController;
         SVars.celestialBodyController = new CelestialBodyController();
-
+        SaveVersion.addCustomChunk("sueno-temperature-chunk", new TemperatureCustomChunk());
         VoidStriderCollapseEffectController.init();
 
         char[] c = "Sueno в разработке!".toCharArray();
