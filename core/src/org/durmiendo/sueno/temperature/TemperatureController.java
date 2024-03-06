@@ -17,12 +17,21 @@ import org.durmiendo.sueno.content.SPlanets;
 public class TemperatureController {
 
     /**
-     *  main indicator of temperature
+     *  zone
+     *
+     *  main indicators of temperature
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    public final float tk = 100f;
-    public final float tc = 10f;
+    public final float tk = 200f;
+    /**
+     *  coefficient
+     *
+     *  main indicators of temperature
+     *  all actions with temperature must be carried out taking it into account
+     *  standard value 1 and always > 0
+     */
+    public final float tc = 200f;
     public final float freezingDamage = 0.35f;
 
     /**
@@ -45,13 +54,13 @@ public class TemperatureController {
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
-    public final float dddd = 0.005f;
+    public float dddd = 0.005f; //при большоих значениях tc, tk и dddd не рабботает адекватно
 
     /**
      * responsible for the temperature operating status
      * used for debugging only
      */
-    public boolean stop = !isDevTemperature;
+    public boolean stop = isDevTemperature;
 
     public TemperatureController instance;
 
@@ -94,6 +103,7 @@ public class TemperatureController {
 
     public TemperatureController() {
         instance = this;
+        dddd/=tk;
         Events.run(EventType.Trigger.update, this::update);
         Events.run(EventType.Trigger.draw, this::draw);
         Events.on(EventType.WorldLoadEvent.class, e -> {
@@ -186,7 +196,13 @@ public class TemperatureController {
     public void at(int x, int y, float increment) {
         if (!check(x, y)) return;
         float t = temperature[x][y] + increment*tc;
-        if (t <= -tk || t >= tk) return;
+        if (t <= -tk) {
+            temperature[x][y] = -tk;
+            return;
+        } else if (t >= tk) {
+            temperature[x][y] = tk;
+            return;
+        }
         temperature[x][y] = t;
     }
 
@@ -221,12 +237,25 @@ public class TemperatureController {
         Float t = unitsTemperature.get(u.id);
         increment*=tc;
         if (t == null) {
-            if (increment <= -tk || increment >= tk) return;
+            if (increment <= -tk) {
+                unitsTemperature.put(u.id, -tk);
+                return;
+            } else if (increment >= tk) {
+                unitsTemperature.put(u.id, tk);
+                return;
+            }
+
             unitsTemperature.put(u.id, increment);
             return;
         }
         float a = t + increment;
-        if (a <= -tk || a >= tk) return;
+        if (a <= -tk) {
+            unitsTemperature.put(u.id, -tk);
+            return;
+        } else if (a >= tk) {
+            unitsTemperature.put(u.id, tk);
+            return;
+        }
         unitsTemperature.put(u.id, a);
     }
 

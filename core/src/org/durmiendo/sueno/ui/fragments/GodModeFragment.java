@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.ui.fragments;
 
 import arc.Core;
+import arc.Events;
 import arc.graphics.Color;
 import arc.input.KeyCode;
 import arc.math.Mathf;
@@ -14,6 +15,8 @@ import arc.util.Align;
 import arc.util.Log;
 import arc.util.Strings;
 import mindustry.Vars;
+import mindustry.game.EventType;
+import mindustry.graphics.Drawf;
 import mindustry.ui.Fonts;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
@@ -23,8 +26,9 @@ public class GodModeFragment extends Table {
     public Slider slider;
     public GodModeFragment() {
         super();
+
         background(Core.atlas.drawable("sueno-black75"));
-        label(() -> "        [gold]The God mode        ");
+        label(() -> "[gold]The God mode").minWidth(300).center();
         row();
         visible(() -> {
             if (Core.input.keyTap(KeyCode.slash)) {
@@ -79,32 +83,66 @@ public class GodModeFragment extends Table {
         row();
         add(slider).left();
         row();
+        Label lb1 = new Label("Радиус T: 0");
+        slider1 = new Slider(0, 100, 1, false);
+        slider1.changed(() -> {
+            lb1.setText("Радиус T: " + slider1.getValue());
+        });
+        add(lb1).left();
+        row();
+        add(slider1).left();
+        row();
         Slider s = new Slider(-SVars.temperatureController.tk, SVars.temperatureController.tk, SVars.temperatureController.tk/100f, false);
-        label(() -> "Установить T: " + Strings.fixed(s.getValue(),2)).left();
+        label(() -> "Установить T (j): " + Strings.fixed(s.getValue(),2)).left();
         CheckBox ch = new CheckBox("");
         add(ch).left();
         ch.setChecked(false);
+        Events.run(EventType.Trigger.update, () -> {
+            if (Core.input.keyTap(KeyCode.j)) {
+                setT(s.getValue(), slider1.getValue());
+            }
+        });
         ch.changed(() -> {
             ch.setChecked(false);
-            if (slider.getValue() > 0) {
-                for (int x = Mathf.ceil(Core.input.mouseWorldX() / 8f - slider.getValue()); x < Mathf.ceil(Core.input.mouseWorldX() / 8f + slider.getValue()); x += 1) {
-                    for (int y = Mathf.ceil(Core.input.mouseWorldY() / 8f - slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY() / 8f + slider.getValue()); y += 1) {
-                        if (SVars.temperatureController.check(x,y)) SVars.temperatureController.temperature[x][y] = s.getValue();
-                    }
-                }
-            } else {
-                if (SVars.temperatureController.check(Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f))) SVars.temperatureController.temperature[Mathf.ceil(Core.input.mouseWorldX() / 8f)][Mathf.ceil(Core.input.mouseWorldY() / 8f)] = s.getValue();
-            }
+            setT(s.getValue(), slider1.getValue());
         });
         row();
         add(s).left();
     }
 
+    public Slider slider1;
+    public void setT(float v, float r) {
+        if (slider.getValue() > 0) {
+            for (int x = Mathf.ceil(Core.input.mouseWorldX() / 8f - r); x < Mathf.ceil(Core.input.mouseWorldX() / 8f + r); x += 1) {
+                for (int y = Mathf.ceil(Core.input.mouseWorldY() / 8f -r); y < Mathf.ceil(Core.input.mouseWorldY() / 8f + r); y += 1) {
+                    if (SVars.temperatureController.check(x,y)) SVars.temperatureController.temperature[x][y] = v;
+                }
+            }
+        } else {
+            if (SVars.temperatureController.check(Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f))) SVars.temperatureController.temperature[Mathf.ceil(Core.input.mouseWorldX() / 8f)][Mathf.ceil(Core.input.mouseWorldY() / 8f)] = v;
+        }
+    }
+
     @Override
     public void draw() {
-        if (slider.getValue() > 0) {
-            for (int x = Mathf.ceil(Core.input.mouseWorldX()/8f-slider.getValue()); x < Mathf.ceil(Core.input.mouseWorldX()/8f+slider.getValue()); x+=1) {
-                for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-slider.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+slider.getValue()); y+=1) {
+        re(slider, true);
+
+        re(slider1, false);
+        super.draw();
+    }
+
+    private void re(Slider rr, boolean a) {
+        if (!a) {
+            float v = rr.getValue();
+            Vec2 p1 = Core.camera.project(
+                    Mathf.ceil(Core.input.mouseWorldX()/8f)*8f-4,
+                    Mathf.ceil(Core.input.mouseWorldY()/8f)*8f-4);
+            Drawf.dashSquare(new Color(1, 1, 1, 1), p1.x, p1.y, v*Vars.renderer.getDisplayScale()*16f);
+            return;
+        }
+        if (rr.getValue() > 0) {
+            for (int x = Mathf.ceil(Core.input.mouseWorldX()/8f-rr.getValue()); x < Mathf.ceil(Core.input.mouseWorldX()/8f+ rr.getValue()); x+=1) {
+                for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-rr.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+ rr.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
                     float t = SVars.temperatureController.temperatureAt(x, y);
@@ -117,6 +155,5 @@ public class GodModeFragment extends Table {
                 }
             }
         }
-        super.draw();
     }
 }
