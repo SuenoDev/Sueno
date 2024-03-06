@@ -21,7 +21,8 @@ public class TemperatureController {
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    public final float tk = 2f;
+    public final float tk = 100f;
+    public final float tc = 10f;
     public final float freezingDamage = 0.35f;
 
     /**
@@ -44,13 +45,13 @@ public class TemperatureController {
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
-    public final float dddd = 0.05f;
+    public final float dddd = 0.005f;
 
     /**
      * responsible for the temperature operating status
      * used for debugging only
      */
-    public boolean stop = false;
+    public boolean stop = !isDevTemperature;
 
     public TemperatureController instance;
 
@@ -124,6 +125,11 @@ public class TemperatureController {
         if (stop) return;
 
         long startTime = Time.millis();
+        temperatureCalculate();
+        time = Time.timeSinceMillis(startTime);
+    }
+
+    public void temperatureCalculate() {
 
         for (int i = 0; i < width; i++) {
             System.arraycopy(temperature[i], 0, prev[i], 0, height);
@@ -169,7 +175,6 @@ public class TemperatureController {
             }
         });
 
-        time = Time.timeSinceMillis(startTime);
     }
 
     /** Returns relative temperature. Use it in math. **/
@@ -180,7 +185,7 @@ public class TemperatureController {
     /** Increments relative temperature. Use it in math. **/
     public void at(int x, int y, float increment) {
         if (!check(x, y)) return;
-        float t = temperature[x][y] + increment * tk;
+        float t = temperature[x][y] + increment*tc;
         if (t <= -tk || t >= tk) return;
         temperature[x][y] = t;
     }
@@ -214,14 +219,15 @@ public class TemperatureController {
     /** Increments relative temperature. Use it in math. **/
     public void at(Unit u, float increment) {
         Float t = unitsTemperature.get(u.id);
-        increment*=tk;
+        increment*=tc;
         if (t == null) {
-            if (increment >= -tk && increment <= tk) return;
+            if (increment <= -tk || increment >= tk) return;
             unitsTemperature.put(u.id, increment);
             return;
         }
-        if (increment + t >= -tk && increment + t <= tk) return;
-        unitsTemperature.put(u.id, t + increment);
+        float a = t + increment;
+        if (a <= -tk || a >= tk) return;
+        unitsTemperature.put(u.id, a);
     }
 
     /** Returns absolute temperature. USE IT ONLY IN GUI, NOT IN MATH!!! **/

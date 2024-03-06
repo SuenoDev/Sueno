@@ -11,6 +11,7 @@ import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
 import arc.util.Align;
+import arc.util.Log;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.ui.Fonts;
@@ -38,6 +39,14 @@ public class GodModeFragment extends Table {
         check("T stop", SVars.temperatureController.stop, b -> {
             SVars.temperatureController.stop = !SVars.temperatureController.stop;
         }).left();
+        row();
+        CheckBox tfu = new CheckBox("T forced update");
+        tfu.changed(() -> {
+            tfu.setChecked(false);
+            Log.info("T forced updated");
+            SVars.TC.temperatureCalculate();
+        });
+        add(tfu).left();
         row();
 
         table(t -> {
