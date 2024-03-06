@@ -3,6 +3,7 @@ package org.durmiendo.sueno.graphics;
 import arc.func.Cons;
 import arc.graphics.g2d.Draw;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.graphics.Layer;
 
 public class SEffect {
@@ -30,7 +31,8 @@ public class SEffect {
         public boolean render() {
             renderer.get(this);
 
-            life += Time.delta;
+            if (Vars.state.isPlaying())
+                life += Time.delta;
             return life > lifeTime;
         }
     }
