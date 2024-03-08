@@ -1,6 +1,4 @@
-// configure all projects includes current
 (subprojects + project).each { Project project ->
-    // attach repositories
     project.repositories {
         mavenCentral()
         mavenLocal()
@@ -8,7 +6,6 @@
         maven { url "https://www.jitpack.io" };
     }
 
-    // apply plugins
     project.plugins.apply("java")
     project.plugins.apply("idea")
     project.plugins.apply("maven-publish")
@@ -18,8 +15,7 @@ wrapper { Wrapper wrapper ->
     wrapper.gradleVersion "8.1.1"
 }
 
-// deletes build dirs in the subprojects
-project.tasks.create("cleanBuilds") { Task task -> // TODO sucks where files locked
+project.tasks.create("cleanBuilds") { Task task -> // TODO sucks when files locked
     task.onlyIf { false }
 
     task.doLast {
@@ -32,7 +28,6 @@ project.tasks.create("cleanBuilds") { Task task -> // TODO sucks where files loc
 }
 
 ext {
-    // load settings
     var localFile = file("settings/local.json")
     if (localFile.exists())
         local = new groovy.json.JsonSlurper().parseText(localFile.text)
@@ -45,11 +40,9 @@ ext {
     else
         settings = null
 
-    // setup group and version
     project.group = project.ext.settings?.projectSettings?.group ?: "group"
     project.version = project.ext.settings?.projectSettings?.version ?: "nil"
 
-    // parse dependencies
     buildScriptExtensions = [:]
     settings?.extensions?.each { String ext ->
         project.file("extensions/$ext").listFiles()?.each { File file ->
@@ -62,43 +55,33 @@ ext {
         }
     }
 
-    // executes command
     doExec = { String cmd ->
         cmd.execute(null, rootProject.projectDir).waitForProcessOutput(System.out, System.err)
     }
 
-    // returns output jar name for specified project
     getOutputJar = { Project p ->
         return "${rootProject.name}-${p.name}-${p.version}.jar"
     }
 
-    // returns child of the file
     child = { File p, String c ->
         return new File(p, c)
     }
-
 }
 
-// builds jar with android and desktop sources
 project.tasks.create("buildRelease", Jar)
 
-// for github actions
 project.tasks.create("workflowBuild") { Task task ->
     task.dependsOn project.tasks.buildRelease
 }
 
-// apply extensions
 project.ext.buildScriptExtensions.rootProject?.each { File file ->
     project.apply(from: file)
 }
 
-// configure subprojects
 subprojects.each { Project project ->
-    // setup group and version
     project.group = project.parent.ext.settings?.projectSettings?.group ?: "group"
     project.version = project.parent.ext.settings?.projectSettings?.version ?: "nil"
 
-    // setup source sets
     // src - java sources
     // gen - generated java sources
     // res - resources (e.g. assets)
@@ -110,7 +93,6 @@ subprojects.each { Project project ->
     ]
 
     project.ext {
-        // parse annotation processors properties
         APArgs = []
         var APArgsConfig = project.parent.ext.settings?.APArgs
         if (APArgsConfig != null) {
@@ -123,7 +105,6 @@ subprojects.each { Project project ->
             }
         }
 
-        // parse dependencies
         deps = [:]
 
         var depsConf = project.parent.ext.settings?.dependencies
@@ -156,22 +137,18 @@ subprojects.each { Project project ->
     project.tasks.withType(JavaCompile) { JavaCompile task ->
         task.options.compilerArgs.addAll(project.ext.APArgs)
 
-        // setup compile options
         task.options.encoding = "UTF-8"
         task.options.compilerArgs += "-Xlint:none"
         task.options.generatedSourceOutputDirectory.set(project.file("gen"))
 
-        // if you want to specify jvm path
         var home = project.parent.local?.jvm?.home
         if (home != null)
             options.forkOptions.executable = home
 
-        // project should be complied in 64 bytecode version
         task.options.compilerArgs += ['--release', '8']
         task.targetCompatibility = 8
         task.sourceCompatibility = JavaVersion.VERSION_16
 
-        // specially for jabel
         task.options.forkOptions.jvmArgs += [
                 "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
                 "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
@@ -188,12 +165,13 @@ subprojects.each { Project project ->
         ]
 
         doFirst {
-            // clear previously generated sources
             delete options.generatedSourceOutputDirectory.get().asFile.listFiles()
         }
     }
 
     project.dependencies {
+        annotationProcessor "com.github.Anuken:jabel:93fde537c7"
+
         if (project.ext.deps.implementation != null)
             implementation project.ext.deps.implementation
 
@@ -205,12 +183,8 @@ subprojects.each { Project project ->
 
         if (project.ext.deps.annotationProcessor != null)
             annotationProcessor project.ext.deps.annotationProcessor
-
-        // needs for translate mod to 64 bytecode
-        annotationProcessor "com.github.Anuken:jabel:93fde537c7"
     }
 
-    // copy output jar to specified dirs
     project.tasks.create("copyJar") { Task task ->
         project.parent.ext.local?.copy?.get(project.name)?.each { p ->
             project.copy {
@@ -224,18 +198,15 @@ subprojects.each { Project project ->
         jar.archiveFileName = project.parent.ext.getOutputJar(project)
 
         jar.duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        // collect runtime classpath
         jar.from {
             project.configurations.runtimeClasspath.collect { File file ->
                 file.isDirectory() ? file : zipTree(file)
             }
         }
 
-        // copy jars
         jar.finalizedBy project.tasks.copyJar
     }
 
-    // apply extensions
     project.parent.ext.buildScriptExtensions.get(project.name)?.each { File file ->
         project.apply(from: file)
     }
