@@ -3,7 +3,6 @@ package org.durmiendo.sueno.graphics;
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
-import arc.graphics.Gl;
 import arc.graphics.g2d.Draw;
 import arc.graphics.gl.FrameBuffer;
 import arc.struct.Seq;
@@ -16,6 +15,7 @@ public class VoidStriderCollapseEffectController {
 
     public static Seq<SEffect.Container> containers = new Seq<>();
     public static BufferRegionDrawable uiDrawable;
+
 
     public static void init() {
         Events.run(EventType.Trigger.preDraw, () -> {

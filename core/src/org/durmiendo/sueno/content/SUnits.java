@@ -3,11 +3,11 @@ package org.durmiendo.sueno.content;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
-import arc.util.Nullable;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
@@ -15,15 +15,13 @@ import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.entities.Effect;
-import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.RailBulletType;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
-import mindustry.game.Team;
 import mindustry.gen.*;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
@@ -225,22 +223,47 @@ public class SUnits {
                 top = true;
                 layerOffset = 0.1f;
                 shootY = 4f;
-                reload = 3f;
+                reload = 13.5f;
                 rotate = true;
                 shootCone = 12f;
                 rotateSpeed = 3.2f;
-                recoil = 0f;
                 mirror = false;
+                inaccuracy = 3f;
+
 
                 shoot = new ShootBarrel(){{
+                    shootY = 8f;
+
                     barrels = new float[]{
                             -2f, 0f, 0f, 0f, 0f, 0f, 2f, 0f, 0f
                     };
-                    bullet = new RailBulletType(){{
-                        speed = 4f;
+                    bullet = new BasicBulletType(){
+                        float length = 24f;
+                        Color toColor = Color.valueOf("feb380");
+                        Color fromColor = Color.valueOf("ffc494");
+                        {
+                        speed = 14f;
                         damage = 77f;
-                        lifetime = 70f;
+                        lifetime = 90f;
+                        width = 4.3f;
+                        hitColor = Color.valueOf("ffdab7");
+                        shootEffect = smokeEffect = Fx.none;
+                        trailWidth = 0.8f;
+                        trailLength = 9;
+                        pierce = true;
+
                     }
+                        @Override
+                        public void draw(Bullet b) {
+                            super.draw(b);
+                            float realLength = length, rot = b.rotation();
+
+                            Draw.color(fromColor, toColor, b.fin());
+                            Drawf.tri(b.x, b.y, width * b.fout(), (realLength + 50), b.rotation());
+                            Drawf.tri(b.x, b.y, width * b.fout(), 3f, b.rotation() + 180f);
+                            Draw.reset();
+                            Drawf.light(b.x, b.y, b.x + Angles.trnsx(rot, realLength), b.y + Angles.trnsy(rot, realLength), width * 2.5f * b.fout(), toColor, lightOpacity);
+                        }
                         @Override
                         public void handlePierce(Bullet b, float initialHealth, float x, float y) {
                             SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.0005f);
@@ -255,20 +278,19 @@ public class SUnits {
                         }
                     };
                 }};
-                inaccuracy = 7f;
-            }}).add(new Weapon("sear-missile"){{
-                reload = 60f;
-                bullet = new BasicBulletType(){{
-                    speed = 4f;
-                    damage = 77f;
-                    lifetime = 30f;
-                }
-                public @Nullable Bullet create(@Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY){
-                    damage+=(((Unit) owner).maxHealth - ((Unit) owner).health)/1000f;
-                    return super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
-                }
-                };
-            }});
+            }});//.add(new Weapon("sear-missile"){{
+//                reload = 60f;
+//                bullet = new BasicBulletType(){{
+//                    speed = 4f;
+//                    damage = 77f;
+//                    lifetime = 30f;
+//                }
+//                public @Nullable Bullet create(@Nullable Entityc owner, @Nullable Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, @Nullable Mover mover, float aimX, float aimY){
+//                    damage+=(((Unit) owner).maxHealth - ((Unit) owner).health)/1000f;
+//                    return super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+//                }
+//                };
+//            }});
             abilities.add(new HeatAbility(new HeatData(true){{
                 generateTemperature = 0.0125f;
                 capacity = 0.75f;
@@ -335,14 +357,15 @@ public class SUnits {
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
             speed = 0.5f;
-            health = 150;
             outlineColor = Color.valueOf("141414");
             hitSize = 64f;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
-            health = 22000f;
-            armor = 18f;
+            health = 12000f;
+            armor = 38f;
+
+
 
             collapseEffect = SFx.voidStriderCollapseEffect;
             collapseRadius = 80;

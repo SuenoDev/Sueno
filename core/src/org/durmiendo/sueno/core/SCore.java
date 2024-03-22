@@ -2,7 +2,6 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
-import arc.math.Mathf;
 import mindustry.Vars;
 import mindustry.io.SaveVersion;
 import mindustry.mod.Mod;
@@ -16,7 +15,6 @@ import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
-import org.durmiendo.sueno.satellites.CharSatellite;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 
@@ -57,14 +55,14 @@ public class SCore extends Mod {
         SaveVersion.addCustomChunk("sueno-temperature-chunk", new TemperatureCustomChunk());
         VoidStriderCollapseEffectController.init();
 
-        char[] c = "Sueno в разработке!".toCharArray();
-        float len = c.length * 5.3f;
-        for (float i = 0; i < c.length; i++) {
-            CharSatellite s = new CharSatellite(12, 0f, 0.45f * Mathf.pi, SPlanets.hielo, c[c.length - (int) i - 1]);
-            s.speed = 1f / 120f;
-            s.angle = (i / len * Mathf.pi * 2f);
-            SVars.celestialBodyController.addCB(s);
-        }
+//        char[] c = "Sueno в разработке!".toCharArray();
+//        float len = c.length * 5.3f;
+//        for (float i = 0; i < c.length; i++) {
+//            CharSatellite s = new CharSatellite(12, 0f, 0.45f * Mathf.pi, SPlanets.hielo, c[c.length - (int) i - 1]);
+//            s.speed = 1f / 120f;
+//            s.angle = (i / len * Mathf.pi * 2f);
+//            SVars.celestialBodyController.addCB(s);
+//        }
         SVars.ui.build();
     }
 

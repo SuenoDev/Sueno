@@ -4,7 +4,6 @@ package org.durmiendo.sueno.ui;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureAtlas;
 import arc.input.KeyCode;
@@ -19,7 +18,6 @@ import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.ui.dialogs.CBDialog;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
-import org.durmiendo.sueno.ui.dialogs.ShadersEditor;
 import org.durmiendo.sueno.ui.fragments.GodModeFragment;
 import org.durmiendo.sueno.ui.scene.BufferRegionDrawable;
 
@@ -75,7 +73,6 @@ public class SUI {
                     bulbs.at(Vars.player.x, Vars.player.y);
                     VoidStriderCollapseEffectController.at(Vars.player.x, Vars.player.y, effect);
                 }).width(200);
-                t.row();
             });
         }
     }

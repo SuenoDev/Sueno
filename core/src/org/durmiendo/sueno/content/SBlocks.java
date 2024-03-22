@@ -5,6 +5,7 @@ import mindustry.content.UnitTypes;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import org.durmiendo.sueno.world.blocks.Heater;
@@ -67,6 +68,43 @@ public class SBlocks {
 //
 //            consumeLiquid(Liquids.water, 0.25f / 60f).boost();
 //        }};
+
+
+        new Floor("corite") {{
+            size = 1;
+            variants = 3;
+        }};
+
+
+        new StaticWall("corite-wall") {{
+            size = 1;
+            variants = 2;
+        }};
+
+        new Floor("Femmanite") {{
+            size = 1;
+            variants = 3;
+        }};
+
+        new StaticWall("Femmanite-wall") {{
+            size = 1;
+            variants = 2;
+        }};
+
+        new Prop("Femmanite-boulder") {{
+            size = 1;
+            variants = 2;
+        }};
+
+        new Floor("Femmanite-ice") {{
+            size = 1;
+            variants = 3;
+        }};
+
+        new StaticWall("Femmanite-ice-wall") {{
+            size = 1;
+            variants = 2;
+        }};
 
         new Floor("i") {{
             size = 1;

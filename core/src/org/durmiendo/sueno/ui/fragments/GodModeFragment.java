@@ -84,7 +84,7 @@ public class GodModeFragment extends Table {
         add(slider).left();
         row();
         Label lb1 = new Label("Радиус T: 0");
-        slider1 = new Slider(0, 100, 1, false);
+        slider1 = new Slider(0, 30, 0.5f, false);
         slider1.changed(() -> {
             lb1.setText("Радиус T: " + slider1.getValue());
         });
@@ -134,9 +134,16 @@ public class GodModeFragment extends Table {
     private void re(Slider rr, boolean a) {
         if (!a) {
             float v = rr.getValue();
-            Vec2 p1 = Core.camera.project(
-                    Mathf.ceil(Core.input.mouseWorldX()/8f)*8f-4,
-                    Mathf.ceil(Core.input.mouseWorldY()/8f)*8f-4);
+            Vec2 p1;
+            if (v == Mathf.floor(v)) {
+                p1 = Core.camera.project(
+                        Mathf.ceil(Core.input.mouseWorldX()/8f)*8f-4f,
+                        Mathf.ceil(Core.input.mouseWorldY()/8f)*8f-4f);
+            } else {
+                p1 = Core.camera.project(
+                        Mathf.round((Core.input.mouseWorldX())/8f)*8f,
+                        Mathf.round((Core.input.mouseWorldY())/8f)*8f);
+            }
             Drawf.dashSquare(new Color(1, 1, 1, 1), p1.x, p1.y, v*Vars.renderer.getDisplayScale()*16f);
             return;
         }

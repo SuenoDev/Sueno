@@ -23,7 +23,7 @@ public class TemperatureController {
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    public final float tk = 200f;
+    public final float tk = 1f;
     /**
      *  coefficient
      *
@@ -31,7 +31,7 @@ public class TemperatureController {
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    public final float tc = 200f;
+    public final float tc = 1f;
     public final float freezingDamage = 0.35f;
 
     /**

@@ -2,9 +2,7 @@ package org.durmiendo.sueno.ui.dialogs;
 
 import arc.Events;
 import arc.scene.ui.Dialog;
-import arc.util.Log;
 import mindustry.ui.dialogs.PlanetDialog;
-import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.events.SEvents;
 
 import static arc.Core.settings;
@@ -25,7 +23,7 @@ public class SPlanetDialog extends PlanetDialog {
 
     public void draw() {
         super.draw();
-        SVars.celestialBodyController.draw();
+//        SVars.celestialBodyController.draw();
     }
 
     public SPlanetDialog() {
