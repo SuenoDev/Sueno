@@ -15,21 +15,56 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
     @Override
     public void write(DataOutput stream) {
         Writes writes = new Writes(stream);
-        writes.bool(true);
-        writes.i(SVars.TC.width);
-        writes.i(SVars.TC.height);
-        if (!Vars.state.isPlaying()) {
-            writes.close();
-            return;
-        }
         if (Vars.state.rules.planet != SPlanets.hielo) {
             writes.close();
             return;
         }
-        if (SVars.TC.stop) {
-            writes.close();
+
+        try {
+            writes.bool(true);
+        } catch (Exception e) {
+            try {
+                baseWrite(writes);
+            } catch (Exception e2) {
+                writes.close();
+                return;
+            }
             return;
         }
+
+        baseWrite(writes);
+    }
+
+    @Override
+    public void read(DataInput stream) {
+        Reads reads = new Reads(stream);
+
+        if (Vars.state.rules.planet != SPlanets.hielo) {
+            reads.close();
+            return;
+        }
+
+        SVars.temperatureController.init();
+
+        try {
+            reads.bool();
+        } catch (Exception e) {
+            try {
+                baseRead(reads);
+            } catch (Exception e2) {
+                reads.close();
+                return;
+            }
+            return;
+        }
+
+        baseRead(reads);
+
+    }
+
+    public void baseWrite(Writes writes) {
+        writes.i(SVars.TC.width);
+        writes.i(SVars.TC.height);
 
         for (float[] i : SVars.TC.temperature) {
             for (float j : i) {
@@ -46,29 +81,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         writes.close();
     }
 
-    @Override
-    public void read(DataInput stream) {
-        Reads reads = new Reads(stream);
-        try {
-            reads.bool();
-        } catch (RuntimeException e) {
-            reads.close();
-            return;
-        }
+    public void baseRead(Reads reads) {
+
         int w = reads.i();
         int h = reads.i();
-        if (!Vars.state.isPlaying()) {
-            reads.close();
-            return;
-        }
-        if (Vars.state.rules.planet != SPlanets.hielo) {
-            reads.close();
-            return;
-        }
-        if (SVars.TC.stop) {
-            reads.close();
-            return;
-        }
+
 
 
 

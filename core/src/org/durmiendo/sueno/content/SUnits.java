@@ -106,6 +106,7 @@ public class SUnits {
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
                 bullet = new SRailBulletType(){{
+                    lifetime = 10f;
                     length = 210f;
                     instability = 80f;
                     damage = 12f;
@@ -156,7 +157,7 @@ public class SUnits {
 
                     @Override
                     public void handlePierce(Bullet b, float initialHealth, float x, float y) {
-                        SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.5f);
+                        SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.01f);
                         super.handlePierce(b, initialHealth, x, y);
                     }
 
@@ -164,7 +165,7 @@ public class SUnits {
                     public void despawned(Bullet b) {
                         super.despawned(b);
                         Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
-                        SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.5f);
+                        SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.01f);
                     }
                 };
             }});
@@ -233,6 +234,7 @@ public class SUnits {
 
                 shoot = new ShootBarrel(){{
                     shootY = 8f;
+                    recoil = 1.2f;
 
                     barrels = new float[]{
                             -2f, 0f, 0f, 0f, 0f, 0f, 2f, 0f, 0f
@@ -356,16 +358,26 @@ public class SUnits {
         }};
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
-            speed = 0.5f;
             outlineColor = Color.valueOf("141414");
-            hitSize = 64f;
-            treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
             health = 12000f;
             armor = 38f;
+            legCount = 4;
+            legLength = 18f;
+            lockLegBase = true;
+            legContinuousMove = true;
+//            legExtension = -3f;
+//            legBaseOffset = 5f;
+            legMaxLength = 1.1f;
+            legMinLength = 0.2f;
+            legLengthScl = 0.95f;
+            legForwardScl = 0.7f;
 
+            parts.add(new RegionPart("-wing"){{
+                mirror = true;
 
+            }});
 
             collapseEffect = SFx.voidStriderCollapseEffect;
             collapseRadius = 80;
