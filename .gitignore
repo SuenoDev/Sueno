@@ -1,6 +1,6 @@
 ### Gradle files
 /.gradle/
-build/
+/build/
 cache/
 javax.annotation.processing.Processor
 artifacts/
@@ -9,7 +9,7 @@ artifacts/
 /settings/local.json
 
 ### Generated files
-gen/
+/gen/
 
 ### IntelliJ IDEA files
 /.idea/

@@ -3,9 +3,10 @@ package org.durmiendo.sueno.core;
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
 import mindustry.Vars;
+import mindustry.gen.EntityMapping;
 import mindustry.io.SaveVersion;
 import mindustry.mod.Mod;
-import mmc.annotations.ModAnnotations;
+import mma.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.content.SItems;
 import org.durmiendo.sueno.content.SPlanets;
@@ -20,13 +21,11 @@ import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 
 import static arc.Core.settings;
 
-@ModAnnotations.RootDirectoryPath(rootDirectoryPath = "core")
 @ModAnnotations.AnnotationSettings(
         rootPackage = "org.durmiendo.sueno",
         modInfoPath = "res/mod.json",
         classPrefix = "S"
 )
-@ModAnnotations.MainClass
 public class SCore extends Mod {
     public SCore(){
         SVars.core = this;
@@ -39,6 +38,9 @@ public class SCore extends Mod {
 
         SCall.registerPackets();
         SEntityMapping.init();
+        EntityMapping.nameMap.keys().toSeq().each(s -> {
+            EntityMapping.nameMap.put("sueno-" + s, EntityMapping.nameMap.get(s));
+        });
 
         SItems.load();
         SUnits.load();

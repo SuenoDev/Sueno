@@ -1,30 +1,29 @@
 {
-  "projectSettings": {
-    "version": "0.16",
-    "group": "SuenoDev/Sueno"
-  },
+    "projectSettings": {
+        "version": "v0.17",
+        "group": "SuenoDev/Sueno"
+    },
 
-  "dependencies": {
-    "useJitpackForMindustryDependency": false,
-    "mindustryVersion": "v146",
+    "dependencies": {
+        "useJitpackForMindustryDependency": false,
+        "mindustryVersion": "v146",
 
-    "list": [
-      { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:-SNAPSHOT"}
-    ],
-    "projects": {
-      "core": {
-        "implementation": [],
-        "compileOnly": [
-          "list:zelaux-mod-core-anno"
+        "list": [
+            { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:74a5591c36b" }
         ],
-        "annotationProcessor": [
-          "list:zelaux-mod-core-anno"
-        ]
-      }
-    }
-  },
 
-  "extensions": [
-    "mindustry-mod", "sueno"
-  ]
+        "deps": {
+            "compileOnly": [
+                "list:zelaux-mod-core-anno"
+            ],
+            "annotationProcessor": [
+                "list:zelaux-mod-core-anno"
+            ]
+        }
+    },
+
+    "extensions":[
+        "mindustry-mod",
+        "zelaux-entity-anno-comp"
+    ]
 }

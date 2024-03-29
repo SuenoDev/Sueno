@@ -8,14 +8,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up JDK 16
+    - name: Set up JDK 20
       uses: actions/setup-java@v1
       with:
-        java-version: 16
+        java-version: 20
     - name: Build mod jars
       run: |
         chmod +x gradlew
-        ./gradlew buildRelease --stacktrace
+        ./gradlew copyBuildRelease --stacktrace
     - name: Upload built jar file
       uses: actions/upload-artifact@v3
       with:
