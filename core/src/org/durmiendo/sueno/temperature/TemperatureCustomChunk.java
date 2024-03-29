@@ -55,6 +55,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
                 reads.close();
                 return;
             }
+            reads.close();
             return;
         }
 

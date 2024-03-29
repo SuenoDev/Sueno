@@ -307,7 +307,7 @@ public class SUnits {
             rotateSpeed = 1.2f;
             health = 22000f;
             armor = 18f;
-            treadRects = new Rect[]{new Rect(20f-140f/2f, 15f-160f/2f, 17f, 132f)};
+            treadRects = new Rect[]{new Rect(19f-140f/2f, 21f-160f/2f, 20f, 132f)};
             researchCostMultiplier = 0f;
             weapons.add(new Weapon("sueno-sun-gun"){{
                 mirror = false;

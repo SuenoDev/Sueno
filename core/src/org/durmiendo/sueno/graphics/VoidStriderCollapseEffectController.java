@@ -33,6 +33,7 @@ public class VoidStriderCollapseEffectController {
     }
 
     public static void draw() {
+
         Draw.sort(false);
         Draw.proj(Core.camera);
 
