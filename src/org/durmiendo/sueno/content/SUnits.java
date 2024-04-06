@@ -16,6 +16,7 @@ import mindustry.content.Fx;
 import mindustry.core.World;
 import mindustry.entities.Effect;
 import mindustry.entities.abilities.Ability;
+import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
@@ -28,9 +29,12 @@ import mindustry.type.Weapon;
 import mindustry.type.unit.TankUnitType;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
+import org.durmiendo.sueno.entities.part.SHoverPart;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.math.Colorated;
+import org.durmiendo.sueno.temperature.FreezingAbility;
+import org.durmiendo.sueno.temperature.FreezingData;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
 import org.durmiendo.sueno.world.units.types.VoidStriderUnitType;
@@ -43,11 +47,122 @@ import static arc.math.Angles.randLenVectors;
 
 public class SUnits {
 
-    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType voidStrider;
+    public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType
+            voidStrider;
 
+    public static @Annotations.EntityDef({Unitc.class, ElevationMovec.class}) UnitType
+            vessel, vial, space, engross;
     public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
             spark, singe, sear, sun;
     public static void load() {
+
+        vessel = new UnitType("vessel"){{
+            hovering = true;
+            health = 980f;
+            armor = 4f;
+            speed = 2.8f;
+            rotateSpeed = 6.7f;
+
+            engineColor = Color.valueOf("9aedd7");
+            useEngineElevation = false;
+
+            abilities.add(new MoveEffectAbility(0f, -9f, engineColor, Fx.missileTrailShort, 4f){{
+            }});
+            engines.add(new UnitEngine(){{
+                x = 0f;
+                y = -4.7f;
+            }});
+
+            parts.add(new SHoverPart(){{
+                x = 4f;
+                y = -4f;
+                mirror = true;
+                radius = 6f;
+                phase = 63f;
+                stroke = 2f;
+                speed = -0.4f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }}, new SHoverPart(){{
+                x = 2.4f;
+                y = 4.5f;
+                mirror = true;
+                radius = 4f;
+                phase = 63f;
+                stroke = 2f;
+                speed = 0.4f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }});
+
+
+
+            weapons.add(new Weapon("sueno-vessel-weapon"){{
+                mirror = false;
+                x = 0f;
+                y = 0f;
+                bullet = new BasicBulletType(){{
+                    damage = 34;
+                }
+
+                public final float deadIncrement = -0.0002f;
+                    @Override
+                    public void handlePierce(Bullet b, float initialHealth, float x, float y) {
+                        SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, deadIncrement);
+                        super.handlePierce(b, initialHealth, x, y);
+                    }
+
+                    @Override
+                    public void despawned(Bullet b) {
+                        super.despawned(b);
+                        Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
+                        SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, deadIncrement);
+                    }
+                };
+            }});
+
+            abilities.add(new FreezingAbility(new FreezingData(){{
+                tmrGenCapacity = -0.15f;
+                tmrGenSpeed = 0.7f;
+
+                tmrGenPowerFP = -0.00015f;
+                tmrGenRadiusFP = 32f;
+                tmrGenCapacityFP = -0.2f;
+            }}));
+        }};
+
+        vial = new UnitType("vial"){{
+            hovering = true;
+            health = 4400f;
+            armor = 6;
+
+
+            abilities.add(new FreezingAbility(new FreezingData(){{
+
+            }}));
+        }};
+
+        space = new UnitType("space"){{
+            hovering = true;
+            health = 9000f;
+            armor = 7f;
+
+
+            abilities.add(new FreezingAbility(new FreezingData(){{
+
+            }}));
+        }};
+
+        engross = new UnitType("engross"){{
+            hovering = true;
+            health = 16000f;
+            armor = 27f;
+
+
+            abilities.add(new FreezingAbility(new FreezingData(){{
+
+            }}));
+        }};
         spark = new TankUnitType("spark"){{
             outlineColor = Color.valueOf("141414");
             hitSize = 12f;
@@ -244,12 +359,23 @@ public class SUnits {
                         Color toColor = Color.valueOf("feb380");
                         Color fromColor = Color.valueOf("ffc494");
                         {
-                        speed = 14f;
+                        speed = 19f;
                         damage = 77f;
-                        lifetime = 90f;
+                        lifetime = 26f;
                         width = 4.3f;
                         hitColor = Color.valueOf("ffdab7");
                         shootEffect = smokeEffect = Fx.none;
+                        despawnEffect = hitEffect = new Effect(30f, e -> {
+                            color(fromColor, e.color, e.fin());
+                            stroke(2f * e.fout());
+                            randLenVectors(e.id, 12, 65f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 20f, (x, y) -> {
+                                lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                            });
+                            stroke(1.5f * e.fout());
+                            randLenVectors(e.id, 6, 24f * e.fin(), -e.rotation+Mathf.randomSeed(e.id,-1.2f, 1.2f), 4f, (x, y) -> {
+                                lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                            });
+                        });
                         trailWidth = 0.8f;
                         trailLength = 9;
                         pierce = true;
