@@ -15,9 +15,6 @@ import mindustry.type.Category;
 import mindustry.ui.Fonts;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.meta.BuildVisibility;
-import org.durmiendo.sueno.core.SVars;
-import org.durmiendo.sueno.entities.bullet.SRailBulletType;
-import org.durmiendo.sueno.math.Colorated;
 
 public class UnDestroyable extends Wall {
 
@@ -30,8 +27,8 @@ public class UnDestroyable extends Wall {
     }
 
     public class Build extends Building {
-        public boolean isDraw = false;
-        public boolean tips = false;
+        public boolean isDraw = true;
+        public boolean tips = true;
         public float damage = 0;
         public float maxDamage = 0;
         public float dps = 0;
@@ -59,12 +56,12 @@ public class UnDestroyable extends Wall {
             }).get().setChecked(tips);
             table.row();
             table.label(() -> "x " + pos.x);
-            table.slider(-5, 5, 0.5f, pos.x, s -> {
+            table.slider(-10, 10, 0.5f, pos.x, s -> {
                 pos.x = s;
             });
             table.row();
             table.label(() -> "y " + pos.y);
-            table.slider(-5, 5, 0.5f, pos.y, s -> {
+            table.slider(-10, 10, 0.5f, pos.y, s -> {
                 pos.y = s;
             });
         }

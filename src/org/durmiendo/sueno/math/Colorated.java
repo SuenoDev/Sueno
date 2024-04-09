@@ -16,4 +16,12 @@ public class Colorated {
                 interpolation.apply(start.a, end.a, v)
         );
     }
+
+    public static Color applyToColor2(Interp interpolation, Color start, Color center, Color end, float v) {
+        if (v >= 0.5f) {
+            return applyToColor(interpolation, center, end, v*2f);
+        } else {
+            return applyToColor(interpolation, start, end, v*2f);
+        }
+    }
 }

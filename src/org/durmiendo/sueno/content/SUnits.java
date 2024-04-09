@@ -49,7 +49,6 @@ public class SUnits {
 
     public static @Annotations.EntityDef({Unitc.class, VoidStriderc.class, Legsc.class}) UnitType
             voidStrider;
-
     public static @Annotations.EntityDef({Unitc.class, ElevationMovec.class}) UnitType
             vessel, vial, space, engross;
     public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
@@ -68,6 +67,7 @@ public class SUnits {
 
             abilities.add(new MoveEffectAbility(0f, -9f, engineColor, Fx.missileTrailShort, 4f){{
             }});
+
             engines.add(new UnitEngine(){{
                 x = 0f;
                 y = -4.7f;
@@ -80,9 +80,10 @@ public class SUnits {
                 radius = 6f;
                 phase = 63f;
                 stroke = 2f;
-                speed = -0.4f;
+                speed = -0.28f;
                 layerOffset = -0.001f;
                 color = Color.valueOf("79eef2");
+
             }}, new SHoverPart(){{
                 x = 2.4f;
                 y = 4.5f;
@@ -90,19 +91,70 @@ public class SUnits {
                 radius = 4f;
                 phase = 63f;
                 stroke = 2f;
-                speed = 0.4f;
+                speed = 0.28f;
                 layerOffset = -0.001f;
                 color = Color.valueOf("79eef2");
+
             }});
 
 
 
             weapons.add(new Weapon("sueno-vessel-weapon"){{
+                recoil = 1f;
                 mirror = false;
                 x = 0f;
                 y = 0f;
-                bullet = new BasicBulletType(){{
-                    damage = 34;
+                reload = 19f;
+                bullet = new SRailBulletType(){{
+                    lifetime = 10f;
+                    length = 175f;
+                    instability = 0f;
+                    damage = 17f;
+                    hitColor = Color.valueOf("feb380");
+                    pierceDamageFactor = 0.8f;
+                    spread = 0f;
+                    smokeEffect = Fx.none;
+                    endEffect = hitEffect = new Effect(30, e -> {
+                        color(Color.valueOf("aed4f2"), Color.white, e.fin());
+                        stroke(1.5f * e.fout());
+                        randLenVectors(e.id, 5, 24f * e.fin(), (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                        });
+                        stroke(0.6f * e.fout());
+                        color(Color.white);
+                        randLenVectors(e.id, 5, 24f * e.fin(), (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 1.6f);
+                        });
+
+                    });
+
+                    lineEffect = new Effect(23f, e -> {
+                        if (!(e.data instanceof Vec2 v)) return;
+                        float len = v.dst(new Vec2(e.x, e.y));
+                        Fx.rand.setSeed(e.id);
+                        Color c = Color.valueOf("aed4f2");
+                        stroke(1.2f * e.fout());
+                        color(c);
+
+                        Vec2 s = new Vec2(v).add(new Vec2(e.x, e.y));
+                        s.x /= 2f; s.x += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
+                        s.y /= 2f; s.y += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
+                        Vec2 a = new Vec2(s);
+                        a.x += Fx.rand.random(-1.8f*len/8f, 1.8f*len/8f);
+                        a.y += Fx.rand.random(-1.8f*len/8f, 1.8f*len/8f);
+
+                        stroke(e.fout() * 1.2f + 0.6f);
+                        e.scaled(14f, b -> {
+                            stroke(1.6f * b.fout());
+                            color(c);
+                            Lines.curve(e.x, e.y, s.x, s.y, a.x, a.y, v.x, v.y, 10);
+
+                            stroke(0.4f * b.fout());
+                            color(Color.white);
+                            Lines.curve(e.x, e.y, s.x, s.y, a.x, a.y, v.x, v.y, 10);
+                        });
+
+                    });
                 }
 
                 public final float deadIncrement = -0.0002f;
@@ -115,8 +167,7 @@ public class SUnits {
                     @Override
                     public void despawned(Bullet b) {
                         super.despawned(b);
-                        Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
-                        SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, deadIncrement);
+                        SVars.temperatureController.at(Mathf.round(b.x)/8, Mathf.round(b.y)/8, deadIncrement);
                     }
                 };
             }});
@@ -232,12 +283,12 @@ public class SUnits {
                     endEffect = hitEffect = new Effect(30, e -> {
                         color(e.color);
                         stroke(1.2f * e.fout());
-                        randLenVectors(e.id + 1, 15, 1f + 12f * e.finpow(), (x, y) -> {
+                        randLenVectors(e.id + 1, 8, 1f + 12f * e.finpow(), (x, y) -> {
                             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
                         });
                         color(Color.white, e.color, e.fin());
                         stroke(1.5f * e.fout());
-                        randLenVectors(e.id, 5, 24f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 9f, (x, y) -> {
+                        randLenVectors(e.id, 4, 24f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 9f, (x, y) -> {
                             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
                         });
                     });
@@ -249,7 +300,7 @@ public class SUnits {
                         Fx.rand.setSeed(e.id);
                         Color c = Color.valueOf("f9350f");
                         c.a = 0.5f;
-                        for(int i = 0; i < 18; i++){
+                        for(int i = 0; i < 10; i++){
                             Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
                             stroke(e.fout() * 1.6f + 0.6f);
                             color(c);
@@ -274,6 +325,7 @@ public class SUnits {
                     public void handlePierce(Bullet b, float initialHealth, float x, float y) {
                         SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.01f);
                         super.handlePierce(b, initialHealth, x, y);
+
                     }
 
                     @Override
@@ -365,17 +417,26 @@ public class SUnits {
                         width = 4.3f;
                         hitColor = Color.valueOf("ffdab7");
                         shootEffect = smokeEffect = Fx.none;
-                        despawnEffect = hitEffect = new Effect(30f, e -> {
+                        hitEffect = new Effect(30f, e -> {
                             color(fromColor, e.color, e.fin());
                             stroke(2f * e.fout());
                             randLenVectors(e.id, 12, 65f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 20f, (x, y) -> {
                                 lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
                             });
                             stroke(1.5f * e.fout());
-                            randLenVectors(e.id, 6, 24f * e.fin(), -e.rotation+Mathf.randomSeed(e.id,-1.2f, 1.2f), 4f, (x, y) -> {
+                            randLenVectors(e.id, 6, 24f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-1.2f, 1.2f)-180f, 4f, (x, y) -> {
                                 lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
                             });
                         });
+
+                        despawnEffect = new Effect(30f, e -> {
+                            color(fromColor, e.color, e.fin());
+                            stroke(2f * e.fout());
+                            randLenVectors(e.id, 12, 65f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 20f, (x, y) -> {
+                                lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                            });
+                        });
+                        
                         trailWidth = 0.8f;
                         trailLength = 9;
                         pierce = true;

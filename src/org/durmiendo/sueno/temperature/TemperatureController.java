@@ -37,7 +37,7 @@ public class TemperatureController {
     /**
      * constant temperature reduction factor
      */
-    public final float freezingPower = -0.00375f;
+    public final float freezingPower = 0; //-0.00375f;
 
     /**
      * standard temperature
@@ -103,7 +103,6 @@ public class TemperatureController {
 
     public TemperatureController() {
         instance = this;
-        dddd/=tk;
         Events.run(EventType.Trigger.update, this::update);
         Events.run(EventType.Trigger.draw, this::draw);
         Events.on(EventType.WorldLoadEvent.class, e -> {

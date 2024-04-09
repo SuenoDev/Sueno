@@ -17,6 +17,7 @@ public class SPlanets {
     public static Planet hielo;
 
     public static void load() {
+
         hielo = new Planet("hielo", Planets.sun, 1f, 2) {
             {
                 generator = new ErekirPlanetGenerator();

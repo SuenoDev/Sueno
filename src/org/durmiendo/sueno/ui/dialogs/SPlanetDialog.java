@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.ui.dialogs;
 
+
 import arc.Events;
 import arc.scene.ui.Dialog;
 import mindustry.ui.dialogs.PlanetDialog;

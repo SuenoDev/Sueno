@@ -27,7 +27,6 @@ public class SHoverPart extends DrawPart {
 
         Draw.color(color);
 
-
         for(int c = 0; c < circles; c++){
             float fin = ((Time.time / phase + (float)c / circles) % 1f);
             Lines.stroke((1f-fin) * stroke + minStroke);
