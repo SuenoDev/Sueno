@@ -1,7 +1,6 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
-import mindustry.content.UnitTypes;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
@@ -26,15 +25,15 @@ public class SBlocks {
     //test
     ts, undestroyable;
     public static void load() {
+
         demand = new SCoreBlock("demand") {{
             requirements(Category.effect, with(Items.scrap, 10));
             size = 5;
             health = 16000;
             armor = 8f;
-            unitType = UnitTypes.gamma;
-        }
+            unitType = SUnits.believer;
+        }};
 
-        };
         heater = new Heater("heater") {{
             requirements(Category.effect, with(Items.scrap, 10));
             consumePower(1.5f);

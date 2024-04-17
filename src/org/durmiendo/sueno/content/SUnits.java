@@ -11,22 +11,26 @@ import arc.math.geom.Vec2;
 import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
+import mindustry.ai.types.BuilderAI;
 import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
-import mindustry.core.World;
 import mindustry.entities.Effect;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.BulletType;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
+import mindustry.graphics.Pal;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
+import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
+import mindustry.type.weapons.RepairBeamWeapon;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
@@ -37,12 +41,14 @@ import org.durmiendo.sueno.temperature.FreezingAbility;
 import org.durmiendo.sueno.temperature.FreezingData;
 import org.durmiendo.sueno.temperature.HeatAbility;
 import org.durmiendo.sueno.temperature.HeatData;
+import org.durmiendo.sueno.type.weapon.RevolverWeapon;
 import org.durmiendo.sueno.world.units.types.VoidStriderUnitType;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.lineAngle;
 import static arc.graphics.g2d.Lines.stroke;
 import static arc.math.Angles.randLenVectors;
+import static mindustry.Vars.tilesize;
 
 
 public class SUnits {
@@ -53,7 +59,69 @@ public class SUnits {
             vessel, vial, space, engross;
     public static @Annotations.EntityDef({Tankc.class, Unitc.class}) UnitType
             spark, singe, sear, sun;
+
+    public static @Annotations.EntityDef({Unitc.class, Payloadc.class}) UnitType
+            believer;
     public static void load() {
+        believer = new ErekirUnitType("believer") {{
+            coreUnitDock = true;
+            controller = u -> new BuilderAI(true, 500f);
+            isEnemy = false;
+            envDisabled = 0;
+
+            targetPriority = -2;
+            lowAltitude = false;
+            mineWalls = true;
+            mineFloor = true;
+            mineHardnessScaling = false;
+            flying = true;
+            mineSpeed = 9f;
+            mineTier = 3;
+            buildSpeed = 1.5f;
+            drag = 0.08f;
+            speed = 7.5f;
+            rotateSpeed = 8f;
+            accel = 0.08f;
+            itemCapacity = 110;
+            health = 700f;
+            armor = 3f;
+            hitSize = 12f;
+            buildBeamOffset = 8f;
+            payloadCapacity = 2f * 2f * tilesize * tilesize;
+            pickupUnits = false;
+            vulnerableWithPayloads = true;
+
+            fogRadius = 0f;
+            targetable = false;
+            hittable = false;
+
+            weapons.add(new RepairBeamWeapon(){{
+                widthSinMag = 0.11f;
+                reload = 20f;
+                x = 19f/4f;
+                y = 19f/4f;
+                rotate = false;
+                shootY = 0f;
+                beamWidth = 0.7f;
+                aimDst = 0f;
+                shootCone = 40f;
+                mirror = true;
+
+                repairSpeed = 3.6f / 2f;
+                fractionRepairSpeed = 0.03f;
+
+                targetUnits = false;
+                targetBuildings = true;
+                autoTarget = false;
+                controllable = true;
+                laserColor = Pal.accent;
+                healColor = Pal.accent;
+
+                bullet = new BulletType(){{
+                    maxRange = 65f;
+                }};
+            }});
+        }};
 
         vessel = new UnitType("vessel"){{
             hovering = true;
@@ -240,7 +308,7 @@ public class SUnits {
             public void draw(Unit unit) {
                 super.draw(unit);
                 Draw.draw(Layer.light, () -> {
-                    Draw.color(Colorated.gradient(Color.valueOf("FF5A40").a(0.07f), Color.valueOf("FF0000").a(0.9f), (SVars.temperatureController.at(unit) + SVars.temperatureController.tk)/(SVars.temperatureController.tk *2f)));
+                    Draw.color(Colorated.gradient(Color.valueOf("FF5A40").a(0.07f), Color.valueOf("FF0000").a(0.6f), (SVars.temperatureController.at(unit) + SVars.temperatureController.tk)/(SVars.temperatureController.tk *2f)));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
                 });
@@ -386,6 +454,7 @@ public class SUnits {
                     mirror = false;
                     outline = true;
                 }});
+                recoils = 3;
                 x = 0f;
                 y = 0;
                 top = true;
@@ -411,7 +480,7 @@ public class SUnits {
                         Color toColor = Color.valueOf("feb380");
                         Color fromColor = Color.valueOf("ffc494");
                         {
-                        speed = 19f;
+                        speed = 17.4f;
                         damage = 77f;
                         lifetime = 26f;
                         width = 4.3f;
@@ -496,12 +565,15 @@ public class SUnits {
             armor = 18f;
             treadRects = new Rect[]{new Rect(19f-140f/2f, 21f-160f/2f, 20f, 132f)};
             researchCostMultiplier = 0f;
-            weapons.add(new Weapon("sueno-sun-gun"){{
+            hitSize = 36f;
+            weapons.add(new RevolverWeapon("sueno-sun-gun"){{
                 mirror = false;
                 rotate = true;
-                reload = 50f;
+                reload = 10f;
                 y = -5;
                 x = 0;
+                maxCartridges = 6;
+                reloadCartridges = 40f;
                 bullet = new BasicBulletType(){{
                     speed = 4.2f;
                     damage = 77f;
@@ -513,8 +585,8 @@ public class SUnits {
                 if (SVars.temperatureController.at(unit) > 130f) mount.bullet.damage*=1.2f;
 
                 super.shoot(unit, mount, shootX, shootY, rotation);
-                Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));
-                Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> SVars.temperatureController.at(x, y, 0.05f));
+                //Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));
+                //Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> SVars.temperatureController.at(x, y, 0.05f));
             }
             });
 
@@ -546,24 +618,29 @@ public class SUnits {
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
             outlineColor = Color.valueOf("141414");
-            speed = 0.75f;
+            speed = 1.75f;
+            hitSize = 26f;
+            stepShake = 0.2f;
             rotateSpeed = 1.2f;
             health = 12000f;
             armor = 38f;
             legCount = 4;
-            legLength = 18f;
-            lockLegBase = true;
-            legContinuousMove = true;
-//            legExtension = -3f;
-//            legBaseOffset = 5f;
-            legMaxLength = 1.1f;
-            legMinLength = 0.2f;
-            legLengthScl = 0.95f;
-            legForwardScl = 0.7f;
+            legBaseOffset = 5f;
+            legGroupSize = 2;
+            legMoveSpace = 1.5f;
+            legForwardScl = 1.2f;
+            legLength = 30f;
+            legExtension = -5.5f;
+            legMinLength = 0.5f;
+            legMaxLength = 1.2f;
+            legLengthScl = 1f;
+            rippleScale = 0.24f;
+
 
             parts.add(new RegionPart("-wing"){{
                 mirror = true;
-
+                layerOffset = 0.01f;
+                layer =  Layer.groundUnit+0.1f;
             }});
 
             collapseEffect = SFx.voidStriderCollapseEffect;

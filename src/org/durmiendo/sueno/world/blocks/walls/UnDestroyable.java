@@ -23,6 +23,7 @@ public class UnDestroyable extends Wall {
         health = Integer.MAX_VALUE;
         buildVisibility = BuildVisibility.sandboxOnly;
         configurable = true;
+        update = true;
         category = Category.effect;
     }
 
@@ -39,8 +40,18 @@ public class UnDestroyable extends Wall {
 
         @Override
         public void update() {
+
             super.update();
             health = Integer.MAX_VALUE;
+            if (p >= 60) {
+//                Log.info("dps " + dps);
+//                Log.info("dm " + dm);
+//                Log.info("p " + p);
+                dps = dm;
+                dm = 0;
+                p = 0;
+            }
+            p += Time.delta;
         }
 
         @Override
@@ -69,24 +80,17 @@ public class UnDestroyable extends Wall {
         @Override
         public void damage(float damage) {
             super.damage(damage);
-            if (!isDraw) return;
             this.damage = damage;
             if (damage > maxDamage) {
                 maxDamage = damage;
             }
             dm += damage;
-            if (p > 60) {
-                dps = dm;
-                dm = 0;
-                p=0;
-            }
         }
 
         @Override
         public void draw() {
             super.draw();
             if (isDraw) {
-                p+=Time.delta;
                 Draw.draw(Layer.end, () -> {
                     if (tips) {
                         Fonts.def.draw("damage: " + Strings.fixed(damage, 2), x+pos.x*8, y+(pos.y+2)*8, Color.red, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);

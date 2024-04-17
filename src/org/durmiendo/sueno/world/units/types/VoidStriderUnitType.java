@@ -4,9 +4,11 @@ import arc.Core;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import mindustry.gen.Unit;
+import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import org.durmiendo.sueno.graphics.SEffect;
 import org.durmiendo.sueno.graphics.SFx;
+import org.durmiendo.sueno.graphics.SShaders;
 
 public class VoidStriderUnitType extends UnitType {
     public SEffect collapseEffect = SFx.voidStriderCollapseEffect;
@@ -17,7 +19,6 @@ public class VoidStriderUnitType extends UnitType {
 
     public VoidStriderUnitType(String name) {
         super(name);
-
     }
 
     @Override
@@ -29,10 +30,10 @@ public class VoidStriderUnitType extends UnitType {
     @Override
     public void drawCell(Unit unit) {
         super.drawCell(unit);
-        Draw.rect(vessel, unit.x, unit.y, unit.rotation - 90f);
-//        Draw.draw(Layer.groundUnit+1f, () -> {
-//            Draw.blit(vessel.texture, Shaders.space);
-//
-//        });
+
+        Draw.draw(Layer.groundUnit + 0.12f, () -> {
+            Draw.shader(SShaders.voidSpaceShader, true);
+            Draw.rect(vessel, unit.x, unit.y, unit.rotation - 90f);
+        });
     }
 }
