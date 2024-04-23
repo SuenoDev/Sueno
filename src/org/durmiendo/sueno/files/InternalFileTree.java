@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.files;
 
 import arc.files.*;
+import arc.util.OS;
 
 /**
  * Use for JAR internal navigation
@@ -20,6 +21,7 @@ public class InternalFileTree {
         String classPath = owner.getResource("").getFile().replaceAll("%20", " ");
         classPath = classPath.substring(classPath.indexOf(":")+2);
         String jarPath = classPath.substring(0, classPath.indexOf("!"));
+        if (OS.isLinux) jarPath = "/" + jarPath;
 
         root = new ZipFi(new Fi(jarPath));
     }

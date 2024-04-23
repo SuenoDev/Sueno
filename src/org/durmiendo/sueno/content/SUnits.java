@@ -14,6 +14,7 @@ import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
 import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
+import mindustry.entities.Damage;
 import mindustry.entities.Effect;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
@@ -574,11 +575,39 @@ public class SUnits {
                 x = 0;
                 maxCartridges = 6;
                 reloadCartridges = 40f;
-                bullet = new BasicBulletType(){{
-                    speed = 4.2f;
-                    damage = 77f;
-                    lifetime = 70f;
-                }};
+                bullet = new BasicBulletType() {
+                    {
+                        speed = 4.2f;
+                        damage = 77f;
+                        lifetime = 70f;
+                        sprite = "sueno-sun-bullet";
+                    }
+
+                    float ranges = 32f;
+
+                    @Override
+                    public void update(Bullet b) {
+                        super.update(b);
+                        Damage.damage(b.team, b.x, b.y, ranges, 2 * Time.delta);
+                    }
+
+                    public void draw(Bullet b) {
+                        float fin = (Time.time % 22) / 22f;
+                        color(Pal.lightOrange);
+                        stroke(2.1f * (1f - Mathf.sign(fin - 0.5f) * (fin - 0.5f)));
+                        randLenVectors(b.id + 1, 7, 1f + 12f * fin, (x, y) -> {
+                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 12f, fin * 32f);
+                        });
+
+
+                        color(Pal.lighterOrange);
+                        stroke(1.2f * (1f - Mathf.sign(fin - 0.5f) * (fin - 0.5f)));
+                        randLenVectors(b.id + 1, 15, 1f + 8f * fin, (x, y) -> {
+                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * -18f, fin * 20f);
+                        });
+                        super.draw(b);
+                    }
+                };
             }
                 @Override
                 protected void shoot(Unit unit, WeaponMount mount, float shootX, float shootY, float rotation) {
