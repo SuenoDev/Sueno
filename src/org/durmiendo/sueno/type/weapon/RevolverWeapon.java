@@ -18,20 +18,22 @@ public class RevolverWeapon extends Weapon {
 
     public int maxCartridges = 1;
 
+
     public Effect reloadCartridgesEffect = Fx.none;
     public Sound reloadCartridgesSound = Sounds.none;
     public float reloadCartridges = 1f;
-    public float shotCartridges = 1f;
-    public int numOfReloadCartridges = 1;
+
+
+
+    public TextureRegion cartridgesRegion;
 
     public Effect shootCartridgesEffect = Fx.none;
     public Sound shootCartridgesSound = Sounds.none;
+    public float shotCartridges = 1f;
+    public int numOfReloadCartridges = 1;
+
 
     public TextureRegion nonCartridgesRegion;
-    public TextureRegion cartridgesRegion;
-
-    public boolean numberRenderingCartridges = false;
-
     public Effect nonCartridgesShootEffect = Fx.none;
     public Sound nonCartridgesShootSound = Sounds.none;
 

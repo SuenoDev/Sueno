@@ -4,8 +4,10 @@ import arc.math.geom.Geometry;
 import arc.scene.ui.layout.Table;
 import arc.util.Time;
 import mindustry.Vars;
+import mindustry.entities.Damage;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
+import mindustry.gen.Healthc;
 import mindustry.gen.Unit;
 import org.durmiendo.sueno.core.SVars;
 
@@ -31,27 +33,19 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
             }
 
             if (SVars.temperatureController.at(unit) > hd.minSafeTemperature) {
-                Groups.unit.each(u -> {
-                    if (unit.dst(u.x, u.y) < hd.damageRange*8 && u.team != unit.team) {
-                        //TODO: Fix this
-                        u.damage((hd.damage / 8f + hd.overDamage * (SVars.temperatureController.at(u) - hd.minSafeTemperature) / 8f) / 3.5f * Time.delta);
-                    }
-                });
-
-                Geometry.circle(unit.tileX(), unit.tileY(), Math.round(hd.damageRange), (x, y) -> {
-                    Building b = Vars.world.build(x, y);
-                    if (b != null && b.team != unit.team) {
-                        b.damage((hd.damage / 8f + hd.overDamage * (SVars.temperatureController.at(x, y) - hd.minSafeTemperature)) * Time.delta);
-                    }
-                });
+                Damage.damage(unit.x, unit.y, hd.damageRange,
+                        (hd.damage / 8f + hd.overDamage *
+                                    (SVars.temperatureController.at(unit) - hd.minSafeTemperature) / 8f
+                            ) / 3.5f * Time.delta
+                );
             }
 
 
             if (hd.overArmor > 0 && SVars.temperatureController.at(unit) > hd.minSafeTemperature) {
                 unit.armor = unit.type.armor + hd.overArmor;
-            } else {
-                unit.armor = unit.type.armor - hd.overArmor;
-            }
+            } // else {
+//                unit.armor = unit.type.armor - hd.overArmor;
+//            }
 
 
             if ((SVars.temperatureController.at(unit) < hd.capacity) && !SVars.temperatureController.stop) {

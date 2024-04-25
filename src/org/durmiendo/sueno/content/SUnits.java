@@ -1,8 +1,10 @@
 package org.durmiendo.sueno.content;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
@@ -20,6 +22,7 @@ import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.units.WeaponMount;
@@ -196,19 +199,20 @@ public class SUnits {
                         });
 
                     });
-
                     lineEffect = new Effect(23f, e -> {
                         if (!(e.data instanceof Vec2 v)) return;
-                        float len = v.dst(new Vec2(e.x, e.y));
+                        b.set(e.x, e.y);
+                        float len = v.dst(b);
                         Fx.rand.setSeed(e.id);
                         Color c = Color.valueOf("aed4f2");
                         stroke(1.2f * e.fout());
                         color(c);
+                        this.c.set(v);
 
-                        Vec2 s = new Vec2(v).add(new Vec2(e.x, e.y));
+                        s = this.c.add(b);
                         s.x /= 2f; s.x += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
                         s.y /= 2f; s.y += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
-                        Vec2 a = new Vec2(s);
+                        a.set(s);
                         a.x += Fx.rand.random(-1.8f*len/8f, 1.8f*len/8f);
                         a.y += Fx.rand.random(-1.8f*len/8f, 1.8f*len/8f);
 
@@ -225,6 +229,11 @@ public class SUnits {
 
                     });
                 }
+
+                public static Vec2 a = new Vec2();
+                public static Vec2 s = new Vec2();
+                public static Vec2 b = new Vec2();
+                public static Vec2 c = new Vec2();
 
                 public final float deadIncrement = -0.0002f;
                     @Override
@@ -570,48 +579,72 @@ public class SUnits {
             weapons.add(new RevolverWeapon("sueno-sun-gun"){{
                 mirror = false;
                 rotate = true;
-                reload = 10f;
+                reload = 25f;
                 y = -5;
                 x = 0;
-                maxCartridges = 6;
-                reloadCartridges = 40f;
-                bullet = new BasicBulletType() {
-                    {
-                        speed = 4.2f;
-                        damage = 77f;
-                        lifetime = 70f;
-                        sprite = "sueno-sun-bullet";
-                    }
+                maxCartridges = 7;
+                reloadCartridges = 120f;
+                bullet = new MissileBulletType() {{
+                    trailLength = 12;
+                    homingPower = 0;
+                    speed = 1.6f;
+                    damage = 77f;
+                    lifetime = 190f;
+                }
 
                     float ranges = 32f;
 
                     @Override
                     public void update(Bullet b) {
                         super.update(b);
-                        Damage.damage(b.team, b.x, b.y, ranges, 2 * Time.delta);
+                        Damage.damage(b.team, b.x, b.y, ranges, 25 * Time.delta);
                     }
 
+                    @Override
+                    public void loadIcon() {
+                        super.loadIcon();
+                        bultex = Core.atlas.find("sueno-sun-bullet2");
+                    }
+
+                    float lfosb = 68f;
+                    TextureRegion bultex;
+
                     public void draw(Bullet b) {
-                        float fin = (Time.time % 22) / 22f;
-                        color(Pal.lightOrange);
-                        stroke(2.1f * (1f - Mathf.sign(fin - 0.5f) * (fin - 0.5f)));
-                        randLenVectors(b.id + 1, 7, 1f + 12f * fin, (x, y) -> {
-                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 12f, fin * 32f);
-                        });
+                        float fin = (Time.time % lfosb) / lfosb;
 
+                        float fin1 = (Time.time % (lfosb*1.2f)) / (lfosb*1.2f);
+//                        color(Pal.lightOrange);
+//                        stroke(2.9f * (0.5f - mod(fin1 - 0.5f)));
+//                        randLenVectors(b.id + (long)(Time.time / (lfosb*1.2f)), 7, 1f, (x, y) -> {
+//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin1 * 80, fin1 * 16f);
+//                        });
+//
+//                        color(Pal.lighterOrange);
+//                        stroke(1.5f * (0.5f - mod(fin - 0.5f)));
+//                        randLenVectors(b.id + 1 + (long)(Time.time / (lfosb)), 10, 1f, (x, y) -> {
+//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 66, fin * 16f);
+//                        });
+//
+//                        color(Color.white);
+//                        stroke(0.8f * (0.5f - mod(fin - 0.5f)));
+//                        randLenVectors(b.id + 1 + (long)(Time.time / (lfosb)), 14, 1f, (x, y) -> {
+//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 66, fin * 24f);
+//                        });
 
-                        color(Pal.lighterOrange);
-                        stroke(1.2f * (1f - Mathf.sign(fin - 0.5f) * (fin - 0.5f)));
-                        randLenVectors(b.id + 1, 15, 1f + 8f * fin, (x, y) -> {
-                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * -18f, fin * 20f);
-                        });
                         super.draw(b);
+                        bultex.scale = (Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 15) / 16f - 0.0625f;
+                        Drawf.spinSprite(bultex, b.x, b.y, ((Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 25) / 26f) * 360f - 166.153846f);
+                    }
+
+                    float mod(float x){
+                        if (x < 0) x*=-1;
+                        return x;
                     }
                 };
             }
                 @Override
                 protected void shoot(Unit unit, WeaponMount mount, float shootX, float shootY, float rotation) {
-                if (SVars.temperatureController.at(unit) > 130f) mount.bullet.damage*=1.2f;
+                if (SVars.temperatureController.at(unit) > 0.65f) mount.bullet.damage*=1.2f;
 
                 super.shoot(unit, mount, shootX, shootY, rotation);
                 //Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));
@@ -626,10 +659,6 @@ public class SUnits {
             }){
                 public void update(Unit unit) {
                     super.update(unit);
-                    Geometry.circle(unit.tileX(), unit.tileY(), 12, (x, y) -> {
-                        Building c = Vars.world.build(x,y);
-                        if (c!=null && c.team!=unit.team) c.health-=70*Time.delta;
-                    });
                     HeatAbility ha = null;
                     for (Ability ability : unit.abilities) {
                         if (ability instanceof HeatAbility) {
