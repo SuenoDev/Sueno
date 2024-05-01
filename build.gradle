@@ -140,7 +140,6 @@ project.tasks.compileJava { JavaCompile task ->
 
 project.dependencies {
     annotationProcessor "com.github.Anuken:jabel:93fde537c7"
-
     if (project.ext.deps.implementation != null)
         implementation project.ext.deps.implementation
 

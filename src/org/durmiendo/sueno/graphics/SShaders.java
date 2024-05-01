@@ -25,7 +25,7 @@ public class SShaders {
                     SVars.internalFileTree.child("shaders/void-space.frag").readString()
             );
 
-            Core.assets.load("sprites/space.png", Texture.class).loaded = t -> {
+            Core.assets.load("sprites/spaaaaaaaaaaaaaace.png", Texture.class).loaded = t -> {
                 texture = t;
                 texture.setFilter(Texture.TextureFilter.linear);
                 texture.setWrap(Texture.TextureWrap.mirroredRepeat);

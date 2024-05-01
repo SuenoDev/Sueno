@@ -24,7 +24,9 @@ import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.part.RegionPart;
+import mindustry.entities.pattern.ShootAlternate;
 import mindustry.entities.pattern.ShootBarrel;
+import mindustry.entities.pattern.ShootPattern;
 import mindustry.entities.units.WeaponMount;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
@@ -66,6 +68,12 @@ public class SUnits {
 
     public static @Annotations.EntityDef({Unitc.class, Payloadc.class}) UnitType
             believer;
+
+    private static final Vec2 a = new Vec2();
+    private static final Vec2 s = new Vec2();
+    private static final Vec2 b = new Vec2();
+    private static final Vec2 f = new Vec2();
+
     public static void load() {
         believer = new ErekirUnitType("believer") {{
             coreUnitDock = true;
@@ -92,7 +100,7 @@ public class SUnits {
             hitSize = 12f;
             buildBeamOffset = 8f;
             payloadCapacity = 2f * 2f * tilesize * tilesize;
-            pickupUnits = false;
+            pickupUnits = true;
             vulnerableWithPayloads = true;
 
             fogRadius = 0f;
@@ -102,14 +110,14 @@ public class SUnits {
             weapons.add(new RepairBeamWeapon(){{
                 widthSinMag = 0.11f;
                 reload = 20f;
-                x = 19f/4f;
-                y = 19f/4f;
+                x = 0f;
+                y = 4.5f;
                 rotate = false;
                 shootY = 0f;
-                beamWidth = 0.7f;
+                beamWidth = 0.33f;
                 aimDst = 0f;
                 shootCone = 40f;
-                mirror = true;
+                mirror = false;
 
                 repairSpeed = 3.6f / 2f;
                 fractionRepairSpeed = 0.03f;
@@ -125,6 +133,14 @@ public class SUnits {
                     maxRange = 65f;
                 }};
             }});
+
+            outlineColor = Color.valueOf("141414");
+
+            engineOffset = 10.0f;
+            trailColor = engineColor = Color.valueOf("ffbc7b");
+            engineSize = 3f;
+
+            trailLength = 12;
         }};
 
         vessel = new UnitType("vessel"){{
@@ -207,9 +223,9 @@ public class SUnits {
                         Color c = Color.valueOf("aed4f2");
                         stroke(1.2f * e.fout());
                         color(c);
-                        this.c.set(v);
+                        f.set(v);
 
-                        s = this.c.add(b);
+                        s.set(f.add(b));
                         s.x /= 2f; s.x += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
                         s.y /= 2f; s.y += Fx.rand.random(-0.8f*len/8f, 0.8f*len/8f);
                         a.set(s);
@@ -229,11 +245,6 @@ public class SUnits {
 
                     });
                 }
-
-                public static Vec2 a = new Vec2();
-                public static Vec2 s = new Vec2();
-                public static Vec2 b = new Vec2();
-                public static Vec2 c = new Vec2();
 
                 public final float deadIncrement = -0.0002f;
                     @Override
@@ -292,6 +303,17 @@ public class SUnits {
 
             }}));
         }};
+
+
+
+
+
+
+
+
+
+
+
         spark = new TankUnitType("spark"){{
             outlineColor = Color.valueOf("141414");
             hitSize = 12f;
@@ -567,7 +589,6 @@ public class SUnits {
 
         sun = new TankUnitType("sun"){{
             outlineColor = Color.valueOf("141414");
-            hitSize = 12f;
             treadPullOffset = 3;
             speed = 0.75f;
             rotateSpeed = 1.2f;
@@ -575,13 +596,50 @@ public class SUnits {
             armor = 18f;
             treadRects = new Rect[]{new Rect(19f-140f/2f, 21f-160f/2f, 20f, 132f)};
             researchCostMultiplier = 0f;
-            hitSize = 36f;
+            hitSize = 24f;
+            singleTarget = true;
+            targetGround = true;
+            targetAir = true;
             weapons.add(new RevolverWeapon("sueno-sun-gun"){{
+                parts.add(new RegionPart(){{
+                    suffix = "-blade";
+                    under = true;
+                    mirror = true;
+                    x = 4.25f;
+                    y = 17f;
+                    moveRot = 180f;
+                    moveY = 5f;
+                    moveX = 0.5f;
+                    progress = PartProgress.warmup;
+                }}, new RegionPart(){{
+                        suffix = "-coil";
+                        mirror = true;
+                        under = true;
+                        moveY = 2f;
+                        moveX = 1f;
+                        progress = PartProgress.warmup;
+                        moves.add(new PartMove(){{
+                            y = -1f;
+                            x = -1f;
+                            progress = PartProgress.recoil;
+                        }});
+                }});
                 mirror = false;
-                rotate = true;
+                top = true;
+                layerOffset = 0.01f;
+                y = -5f;
+                x = 0f;
                 reload = 25f;
-                y = -5;
-                x = 0;
+                inaccuracy = 2f;
+                rotate = true;
+                rotateSpeed = 1.2f;
+                shootSound = Sounds.bang;
+                shootY = 24f;
+                shoot = new ShootAlternate(){{
+                    barrels = 1;
+                    shots = 1;
+                    spread = 8.5f;
+                }};
                 maxCartridges = 7;
                 reloadCartridges = 120f;
                 bullet = new MissileBulletType() {{
@@ -603,7 +661,7 @@ public class SUnits {
                     @Override
                     public void loadIcon() {
                         super.loadIcon();
-                        bultex = Core.atlas.find("sueno-sun-bullet2");
+                        bultex = Core.atlas.find("sueno-sun-bullet");
                     }
 
                     float lfosb = 68f;

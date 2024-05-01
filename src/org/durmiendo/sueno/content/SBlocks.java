@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.content.Items;
+import mindustry.gen.Icon;
 import mindustry.type.Category;
 import mindustry.world.Block;
 import mindustry.world.blocks.environment.Floor;
