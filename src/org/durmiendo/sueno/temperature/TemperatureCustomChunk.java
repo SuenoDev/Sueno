@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.temperature;
 
+import arc.util.Log;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
@@ -31,8 +32,13 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
             }
             return;
         }
+        try {
+            baseWrite(writes);
+        } catch (Exception e) {
+            writes.close();
+            Log.info("Error writing temperature custom chunk");
+        }
 
-        baseWrite(writes);
     }
 
     @Override
@@ -59,13 +65,19 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
             return;
         }
 
-        baseRead(reads);
-
+        try {
+            baseRead(reads);
+        } catch (Exception e) {
+            reads.close();
+            Log.info("Error reading temperature custom chunk");
+        }
     }
 
     public void baseWrite(Writes writes) {
         writes.i(SVars.TC.width);
         writes.i(SVars.TC.height);
+
+        if (SVars.temperatureController.temperature == null) SVars.temperatureController.init();
 
         for (float[] i : SVars.TC.temperature) {
             for (float j : i) {
