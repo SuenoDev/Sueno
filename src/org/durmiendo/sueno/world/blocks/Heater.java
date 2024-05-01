@@ -35,6 +35,7 @@ public class Heater extends Block {
         @Override
         public void updateTile() {
             if (!SVars.temperatureController.stop) {
+
                 for (int x = tileX(); x < tileX()+size; x++) {
                     for (int y = tileY(); y < tileY()+size; y++) {
                         SVars.temperatureController.at(

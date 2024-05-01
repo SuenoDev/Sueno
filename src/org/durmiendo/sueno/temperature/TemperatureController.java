@@ -266,6 +266,7 @@ public class TemperatureController {
     }
 
     public boolean check(int x, int y) {
+        if (temperature == null) return false;
         return x > 0 && x < width && y > 0 && y < height;
     }
 }
