@@ -23,13 +23,8 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
 
         try {
             writes.bool(true);
+            Log.info("Error writing save bool variable");
         } catch (Exception e) {
-            try {
-                baseWrite(writes);
-            } catch (Exception e2) {
-                writes.close();
-                return;
-            }
             return;
         }
         try {
@@ -53,15 +48,15 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         SVars.temperatureController.init();
 
         try {
-            reads.bool();
-        } catch (Exception e) {
-            try {
-                baseRead(reads);
-            } catch (Exception e2) {
+            boolean t = reads.bool();
+            Log.info("Temperature custom chunk loaded: " + t);
+            if (t == false) {
                 reads.close();
                 return;
             }
+        } catch (Exception e) {
             reads.close();
+            Log.info("Error reading save bool variable");
             return;
         }
 
@@ -74,10 +69,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
     }
 
     public void baseWrite(Writes writes) {
+        if (SVars.temperatureController.temperature == null) SVars.temperatureController.init();
+
         writes.i(SVars.TC.width);
         writes.i(SVars.TC.height);
 
-        if (SVars.temperatureController.temperature == null) SVars.temperatureController.init();
 
         for (float[] i : SVars.TC.temperature) {
             for (float j : i) {
@@ -95,12 +91,8 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
     }
 
     public void baseRead(Reads reads) {
-
         int w = reads.i();
         int h = reads.i();
-
-
-
 
         SVars.TC.temperature = new float[w][h];
         for (int i = 0; i < w; i++) {
