@@ -25,15 +25,10 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
             writes.bool(true);
             Log.info("Error writing save bool variable");
         } catch (Exception e) {
-            return;
-        }
-        try {
-            baseWrite(writes);
-        } catch (Exception e) {
-            writes.close();
-            Log.info("Error writing temperature custom chunk");
+            throw new RuntimeException(e);
         }
 
+        baseWrite(writes);
     }
 
     @Override
@@ -55,17 +50,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
                 return;
             }
         } catch (Exception e) {
-            reads.close();
             Log.info("Error reading save bool variable");
-            return;
+            throw new RuntimeException(e);
         }
 
-        try {
-            baseRead(reads);
-        } catch (Exception e) {
-            reads.close();
-            Log.info("Error reading temperature custom chunk");
-        }
+        baseRead(reads);
     }
 
     public void baseWrite(Writes writes) {
