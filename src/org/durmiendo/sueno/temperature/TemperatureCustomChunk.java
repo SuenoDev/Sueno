@@ -7,6 +7,7 @@ import mindustry.Vars;
 import mindustry.io.SaveFileReader;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.utils.SLog;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -16,62 +17,71 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
     @Override
     public void write(DataOutput stream) {
         Writes writes = new Writes(stream);
-        if (Vars.state.rules.planet != SPlanets.hielo) {
-            writes.close();
-            return;
-        }
 
         try {
-            writes.bool(true);
-            Log.info("Error writing save bool variable");
+            if (SVars.temperatureController == null) {
+                writes.bool(false);
+                writes.close();
+                SLog.info("writing Temperature chunk: false");
+                return;
+            } else {
+                SLog.info("writing Temperature chunk: true");
+                writes.bool(true);
+            }
         } catch (Exception e) {
+            SLog.error("writing save bool variable");
             throw new RuntimeException(e);
         }
 
-        baseWrite(writes);
+        try {
+            baseWrite(writes);
+        } catch (Exception e) {
+            SLog.error("writing Temperature chunk");
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void read(DataInput stream) {
         Reads reads = new Reads(stream);
 
-        if (Vars.state.rules.planet != SPlanets.hielo) {
-            reads.close();
-            return;
-        }
-
-        SVars.temperatureController.init();
-
         try {
             boolean t = reads.bool();
-            Log.info("Temperature custom chunk loaded: " + t);
+            SLog.info("Temperature chunk loaded: " + t);
             if (t == false) {
                 reads.close();
+                SVars.temperatureController = new TemperatureController();
+                SVars.temperatureController.init(Vars.world.width()-1, Vars.world.height()-1);
                 return;
             }
         } catch (Exception e) {
-            Log.info("Error reading save bool variable");
+            SLog.error("reading save bool variable");
             throw new RuntimeException(e);
         }
 
-        baseRead(reads);
+        try {
+            baseRead(reads);
+        } catch (Exception e) {
+            SLog.error("reading Temperature chunk");
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void baseWrite(Writes writes) {
-        if (SVars.temperatureController.temperature == null) SVars.temperatureController.init();
 
-        writes.i(SVars.TC.width);
-        writes.i(SVars.TC.height);
+        writes.i(SVars.temperatureController.width);
+        writes.i(SVars.temperatureController.height);
 
 
-        for (float[] i : SVars.TC.temperature) {
+        for (float[] i : SVars.temperatureController.temperature) {
             for (float j : i) {
                 writes.f(j);
             }
         }
 
-        writes.i(SVars.TC.unitsTemperature.size);
-        SVars.TC.unitsTemperature.each((u ,t) -> {
+        writes.i(SVars.temperatureController.unitsTemperature.size);
+        SVars.temperatureController.unitsTemperature.each((u ,t) -> {
             writes.i(u);
             writes.f(t);
         });
@@ -83,10 +93,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         int w = reads.i();
         int h = reads.i();
 
-        SVars.TC.temperature = new float[w][h];
+        SVars.temperatureController = new TemperatureController();
+        SVars.temperatureController.init(w, h);
         for (int i = 0; i < w; i++) {
-            for (int z = 0; z < h; z++) {
-                SVars.TC.temperature[i][z] = reads.f();
+            for (int j = 0; j < h; j++) {
+                SVars.temperatureController.set(i, j, reads.f());
             }
         }
 
@@ -94,7 +105,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         for (int i = 0; i < size; i++) {
             int id = reads.i();
             float t = reads.f();
-            SVars.TC.unitsTemperature.put(id, t);
+            SVars.temperatureController.unitsTemperature.put(id, t);
         }
 
         reads.close();

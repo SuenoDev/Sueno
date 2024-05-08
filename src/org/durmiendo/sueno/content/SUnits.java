@@ -693,11 +693,6 @@ public class SUnits {
                         bultex.scale = (Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 15) / 16f - 0.0625f;
                         Drawf.spinSprite(bultex, b.x, b.y, ((Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 25) / 26f) * 360f - 166.153846f);
                     }
-
-                    float mod(float x){
-                        if (x < 0) x*=-1;
-                        return x;
-                    }
                 };
             }
                 @Override

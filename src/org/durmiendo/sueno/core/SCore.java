@@ -2,6 +2,7 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
+import arc.util.Log;
 import mindustry.Vars;
 import mindustry.gen.EntityMapping;
 import mindustry.io.SaveVersion;
@@ -51,8 +52,6 @@ public class SCore extends Mod {
     @Override
     public void init() {
         SVars.weathercontroller = new WeatherController();
-        SVars.temperatureController = new TemperatureController();
-        SVars.TC = SVars.temperatureController;
         SVars.celestialBodyController = new CelestialBodyController();
         SaveVersion.addCustomChunk("sueno-temperature-chunk", new TemperatureCustomChunk());
         VoidStriderCollapseEffectController.init();
@@ -66,6 +65,14 @@ public class SCore extends Mod {
 //            SVars.celestialBodyController.addCB(s);
 //        }
         SVars.ui.build();
+
+
+
+        Vars.renderer.maxZoom = 30f;
+        Log.info("max zoom setting from: 30.0f");
+
+        Vars.renderer.minZoom = 0.5f;
+        Log.info("min zoom setting from: 0.5f");
     }
 
     public TextureRegion getRegion(String nameWithoutPrefix) {

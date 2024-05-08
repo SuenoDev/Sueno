@@ -17,6 +17,7 @@ import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.graphics.Drawf;
+import mindustry.logic.LExecutor;
 import mindustry.ui.Fonts;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
@@ -26,20 +27,26 @@ public class GodModeFragment extends Table {
     public Slider slider;
     public GodModeFragment() {
         super();
-
-        background(Core.atlas.drawable("sueno-black75"));
-        label(() -> "[gold]The God mode").minWidth(300).center();
-        row();
         visible(() -> {
             if (Core.input.keyTap(KeyCode.slash)) {
                 show = !show;
                 if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
                 else touchable(() -> Touchable.enabled);
             }
+
+            if (show) build();
             return show;
         });
+    }
 
+    public void build() {
+        background(Core.atlas.drawable("sueno-black75"));
+        label(() -> "[gold]The God mode").minWidth(300).center();
         row();
+        if (SVars.temperatureController == null) {
+            label(() -> "[red]T controller is null!").minWidth(300).center();
+            return;
+        }
         check("T stop", SVars.temperatureController.stop, b -> {
             SVars.temperatureController.stop = !SVars.temperatureController.stop;
         }).left();
@@ -48,7 +55,7 @@ public class GodModeFragment extends Table {
         tfu.changed(() -> {
             tfu.setChecked(false);
             Log.info("T forced updated");
-            SVars.TC.temperatureCalculate();
+            SVars.temperatureController.temperatureCalculate();
         });
         add(tfu).left();
         row();
@@ -108,6 +115,7 @@ public class GodModeFragment extends Table {
         });
         row();
         add(s).left();
+        row();
     }
 
     public Slider slider1;

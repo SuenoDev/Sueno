@@ -13,6 +13,7 @@ import mindustry.gen.Unit;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.core.SVars;
 
 public class TemperatureController {
 
@@ -50,7 +51,7 @@ public class TemperatureController {
     public final float maxSafeTemperature = 0.6f;
     public final float maxHeatDamage = 300;
     public final float maxBoost = 20;
-    public final boolean isDevTemperature = true;
+    public final boolean isDevTemperature = SVars.debug;
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
@@ -105,23 +106,21 @@ public class TemperatureController {
         instance = this;
         Events.run(EventType.Trigger.update, this::update);
         Events.run(EventType.Trigger.draw, this::draw);
-        Events.on(EventType.WorldLoadEvent.class, e -> {
-            if(Vars.state.isEditor()) return;
-            init();
-        });
     }
 
-    public void init() {
+    public void init(int w, int h) {
         unitsTemperature.clear();
-        temperature = new float[Vars.world.width()][Vars.world.height()];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        temperature = new float[w][h];
+        width = w;
+        height = h;
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
                 temperature[i][j] = standardTemperature;
             }
         }
-        prev = new float[Vars.world.width()][Vars.world.height()];
-        width = Vars.world.width();
-        height = Vars.world.height();
+        prev = new float[w][h];
+
     }
 
     public void draw() {
@@ -268,5 +267,10 @@ public class TemperatureController {
     public boolean check(int x, int y) {
         if (temperature == null) return false;
         return x > 0 && x < width && y > 0 && y < height;
+    }
+
+    public void set(int x, int y, float f) {
+        if (!check(x, y)) return;
+        temperature[x][y] = f;
     }
 }

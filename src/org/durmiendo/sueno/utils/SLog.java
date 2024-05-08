@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.utils;
 
 import arc.util.Log;
+import org.durmiendo.sueno.core.SVars;
 
 import java.lang.reflect.Field;
 
@@ -20,5 +21,19 @@ public class SLog {
             infoFld(o, f);
         }
         Log.info("\n--------------------");
+    }
+
+    public static void error(String msg) {
+        Log.info("----------------------");
+        Log.info("Sueno Error: " + msg);
+        Log.info("----------------------");
+    }
+
+    public static void info(String msg) {
+        Log.info("Sueno info: " + msg);
+    }
+
+    public static void debug(String msg) {
+        if (SVars.debug) Log.info("Sueno debug: " + msg);
     }
 }

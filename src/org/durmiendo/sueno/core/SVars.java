@@ -21,12 +21,8 @@ public class SVars {
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
     public static TemperatureController temperatureController;
-    public static TemperatureController TC;
 
     /** Useless **/
     public static boolean onCampaign;
-    public static void initTe() {
-        temperatureController = new TemperatureController();
-        SVars.TC = SVars.temperatureController;
-    }
+    public static boolean debug = true;
 }

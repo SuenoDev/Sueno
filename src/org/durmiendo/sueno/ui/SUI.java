@@ -38,6 +38,7 @@ public class SUI {
         planet = new SPlanetDialog();
         Vars.ui.planet = planet;
         Vars.ui.paused = new SPausedDialog(); // right?
+
         Vars.ui.hudGroup.fill(t -> {
             t.left();
             t.add(new GodModeFragment());
