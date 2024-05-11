@@ -22,7 +22,7 @@ jobs:
           name: ${{ github.event.repository.name }}
           path: artifacts/*.jar
       - name: Upload to Discord
-        uses: thedoctor0/discord-webhook@v1
+        uses: nobrayner/discord-webhook
         with:
           SECRET: ${{ secrets.DISCORD_WEBHOOK }}
           ARGS: |
