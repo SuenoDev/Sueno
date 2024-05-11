@@ -26,12 +26,6 @@ jobs:
           embed-url: ${{ github.event.commits[0].html_url }}
           embed-footer: "Версия: -"
           filename: artifacts/Sueno.jar
-          # Форматирование вывода коммитов
-          extra-fields: |-
-            "Коммит ${{ github.event.commits[index].sha }}"
-            "Описание: ${{ github.event.commits[index].commit.message }}"
-            "(От: ${{ github.event.commits[index].committer.name }})"
-        with-commits-context: true
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
