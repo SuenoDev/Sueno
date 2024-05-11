@@ -21,7 +21,7 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           content: ${{ github.event_name }}
-          filename: .github/workflows/build.json
+          filename: artifacts/SuenoDev-Sueno-v0.18.jar
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
