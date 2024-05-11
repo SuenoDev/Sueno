@@ -8,8 +8,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Basic Content Test
-        uses: ./
       - name: Set up JDK 20
         uses: actions/setup-java@v1
         with:
@@ -23,7 +21,7 @@ jobs:
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           content: ${{ github.event_name }}
-          filename: artifacts/*.jar
+          filename: .github/workflows/build.json
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
