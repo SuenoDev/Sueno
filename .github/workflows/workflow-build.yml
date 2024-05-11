@@ -22,6 +22,7 @@ jobs:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           raw-data: .github/workflows/build.json
           filename: artifacts/*.jar
+      - uses: actions/checkout@v2
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
