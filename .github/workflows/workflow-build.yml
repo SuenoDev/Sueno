@@ -25,7 +25,7 @@ jobs:
         uses: nobrayner/discord-webhook@v1
         with:
           url: ${{ secrets.DISCORD_WEBHOOK }}
-          username: "GitHub Actions"
+          github-token: ${{ secrets.github_token }}
           content: "${{ github.event.repository.name }} build is complete!
           - Build status: ${{ job.status }}
           - Commit: ${{ github.event.head_commit.message }}
