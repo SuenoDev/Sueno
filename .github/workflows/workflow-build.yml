@@ -6,7 +6,7 @@ jobs:
   buildJar:
     runs-on: ubuntu-latest
 
-    steps:
+      steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 20
         uses: actions/setup-java@v1
@@ -20,12 +20,18 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed-title: Новая сборка Sueno № ${{ github.run_number }}
-          embed-description: "Данные о коммитах: ${{ toJSON(github.event.commits) }}"
+          embed-title: Новая сборка для Sueno № ${{ github.run_number }}
+          embed-description: "Данные о коммитах:"
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].html_url }}
-          footer: "Сборка создана: ${{ github.actor }}"
+          embed-footer: "Сборка создана: ${{ github.actor }}"
           filename: artifacts/Sueno.jar
+          # Форматирование вывода коммитов
+          extra-fields: |-
+            "Коммит ${{ github.event.commits[index].sha }}"
+            "Описание: ${{ github.event.commits[index].commit.message }}"
+            "(От: ${{ github.event.commits[index].committer.name }})"
+        with-commits-context: true
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
