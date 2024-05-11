@@ -24,7 +24,7 @@ jobs:
           embed-description: "Данные о коммитах:"
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].html_url }}
-          embed-footer: "Сборка создана: ${{ github.actor }}"
+          embed-footer: "Версия: -"
           filename: artifacts/Sueno.jar
           # Форматирование вывода коммитов
           extra-fields: |-
