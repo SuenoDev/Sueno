@@ -62,7 +62,7 @@ public class SBlocks {
     //floor
     dev, devNone,
     //turrets
-    violence,
+    violence, slice, stab, slash,
     //test
     ts, undestroyable;
     public static void load() {
@@ -111,7 +111,7 @@ public class SBlocks {
                 shotDelay = 3f;
             }};
 
-            shootType = new BasicBulletType() {{
+            shootType = new CopyBulletType() {{
 
                 makeFire = true;
                 damage = 0f;
@@ -155,6 +155,12 @@ public class SBlocks {
                 this.stats.add(Stat.abilities, "[#aa2828]Насилие порождает насилие");
             }
         };
+
+        slice = new PowerTurret("slice") {{
+
+        }};
+
+
 
 
 
