@@ -6,7 +6,7 @@
   "repo": "SuenoDev/Sueno",
   "subtitle": "Content mod",
   "description": "Sueno is a modification that allows you to go to a new planet with unique temperature mechanics",
-  "version": "0.18",
+  "version": "0.19",
   "minGameVersion": "146",
   "java": true,
   "hidden": false,
