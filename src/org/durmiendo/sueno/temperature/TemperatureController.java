@@ -51,7 +51,7 @@ public class TemperatureController {
     public final float maxSafeTemperature = 0.6f;
     public final float maxHeatDamage = 300;
     public final float maxBoost = 20;
-    public final boolean isDevTemperature = SVars.debug;
+    public final boolean isDevTemperature = true;
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
@@ -265,7 +265,6 @@ public class TemperatureController {
     }
 
     public boolean check(int x, int y) {
-        if (temperature == null) return false;
         return x > 0 && x < width && y > 0 && y < height;
     }
 

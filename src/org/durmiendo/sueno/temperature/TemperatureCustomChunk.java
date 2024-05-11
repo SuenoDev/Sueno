@@ -19,7 +19,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         Writes writes = new Writes(stream);
 
         try {
-            if (SVars.temperatureController == null) {
+            if (SVars.temperatureController == null || Vars.state.isEditor()) {
                 writes.bool(false);
                 writes.close();
                 SLog.info("writing Temperature chunk: false");
@@ -51,7 +51,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
             if (t == false) {
                 reads.close();
                 SVars.temperatureController = new TemperatureController();
-                SVars.temperatureController.init(Vars.world.width()-1, Vars.world.height()-1);
+                SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
                 return;
             }
         } catch (Exception e) {
@@ -69,10 +69,8 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
     }
 
     public void baseWrite(Writes writes) {
-
-        writes.i(SVars.temperatureController.width);
-        writes.i(SVars.temperatureController.height);
-
+        writes.i(Vars.world.width());
+        writes.i(Vars.world.height());
 
         for (float[] i : SVars.temperatureController.temperature) {
             for (float j : i) {
@@ -95,6 +93,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
 
         SVars.temperatureController = new TemperatureController();
         SVars.temperatureController.init(w, h);
+
+        if (Vars.state.isEditor()) {
+            reads.close();
+            return;
+        }
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 SVars.temperatureController.set(i, j, reads.f());

@@ -32,6 +32,9 @@ public class SLog {
     public static void info(String msg) {
         Log.info("Sueno info: " + msg);
     }
+    public static void info(String msg, Object... args) {
+        Log.info("Sueno info: " + msg, args);
+    }
 
     public static void debug(String msg) {
         if (SVars.debug) Log.info("Sueno debug: " + msg);

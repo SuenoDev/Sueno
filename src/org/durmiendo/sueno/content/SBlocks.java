@@ -1,31 +1,46 @@
 package org.durmiendo.sueno.content;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
+import arc.struct.ObjectMap;
 import arc.util.Log;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.FlakBulletType;
 import mindustry.entities.pattern.ShootPattern;
 import mindustry.gen.Bullet;
 import mindustry.gen.Icon;
 import mindustry.gen.PayloadUnit;
+import mindustry.gen.Teamc;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
+import mindustry.type.StatusEffect;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.blocks.defense.turrets.BaseTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.defense.turrets.ReloadTurret;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.Prop;
+import mindustry.world.blocks.environment.ShallowLiquid;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.Stat;
+import mindustry.world.meta.StatValues;
+import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.entities.bullet.CopyBulletType;
+import org.durmiendo.sueno.utils.SLog;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
@@ -38,11 +53,14 @@ import static mindustry.world.meta.StatValues.ammo;
 public class SBlocks {
 
     public static Block
+
     //cores
     demand,
     //heaters
     heater,
 
+    //floor
+    dev, devNone,
     //turrets
     violence,
     //test
@@ -83,6 +101,8 @@ public class SBlocks {
             size = 6;
             health = 1000;
             reload = 50f;
+            inaccuracy = 12;
+            range = 54f * 8f;
 
 
 
@@ -92,13 +112,11 @@ public class SBlocks {
             }};
 
             shootType = new BasicBulletType() {{
-                inaccuracy = 0f;
 
                 makeFire = true;
                 damage = 0f;
                 speed = 30f;
                 lifetime = 16f;
-                maxRange = 56f;
 
                 pierce = true;
                 pierceBuilding = true;
@@ -106,32 +124,37 @@ public class SBlocks {
                 trailColor = Color.valueOf("c02f2f");
                 trailLength = 12;
 
-//                trailChance = 0.9f;
-//                trailInterval = 0.1f;
-//                trailWidth = 1f;
-//                trailEffect = new Effect(30.0F, (e) -> {
-//                    Draw.color(Color.valueOf("7a1a1a"), Color.valueOf("5a0a0a"), e.fin());
-//                    Angles.randLenVectors((long)e.id, 2, 2.0F + e.fin() * 9.0F, (x, y) -> {
-//                        Fill.circle(e.x + x, e.y + y, 0.12F + e.fslope() * 1.5F);
-//                    });
-//                    Draw.color();
-//                    Drawf.light(e.x, e.y, 20.0F * e.fslope(), Pal.lightFlame, 1F);
-//                });
+                trailChance = 0.1f;
+                trailInterval = 0.1f;
+                trailWidth = 0.7f;
+                trailEffect = new Effect(30.0F, (e) -> {
+                    Draw.color(Color.valueOf("7a1a1a"), Color.valueOf("5a0a0a"), e.fin());
+                    Angles.randLenVectors((long)e.id, 1, 2.0F + e.fin() * 9.0F, (x, y) -> {
+                        Fill.circle(e.x + x, e.y + y, 0.12F + e.fslope() * 1.5F);
+                    });
+                    Draw.color();
+                    Drawf.light(e.x, e.y, 20.0F * e.fslope(), Pal.lightFlame, 1F);
+                });
 
-                homingRange = 32f;
-                homingPower = 0.08f;
-                homingDelay = 2.3f;
+                homingRange = 192;
+                homingPower = 0.04f;
+                homingDelay = 2.1f;
             }
 
                 @Override
                 public void update(Bullet b) {
                     super.update(b);
                     if (Mathf.random(0f, 1f) > 0.9f) {
-                        b.vel.setAngle(b.vel.angle() + Mathf.random(-180, 160));
+                        b.vel.setAngle(b.vel.angle() + Mathf.random(-12, 12));
                     }
                 }
             };
-        }};
+        }
+            public void setStats() {
+                super.setStats();
+                this.stats.add(Stat.abilities, "[#aa2828]Насилие порождает насилие");
+            }
+        };
 
 
 
@@ -162,6 +185,16 @@ public class SBlocks {
         new Floor("Femmanite") {{
             size = 1;
             variants = 3;
+        }};
+
+        dev = new Floor("dev") {{
+            size = 1;
+            variants = 5;
+        }};
+
+        devNone = new Floor("test") {{
+            size = 1;
+            variants = 1;
         }};
 
         new StaticWall("Femmanite-wall") {{
