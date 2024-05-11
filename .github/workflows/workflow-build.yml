@@ -33,7 +33,7 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed-title: Сборка Sueno №${{ github.run_number }}
+          embed-title: Сборка Sueno № ${{ github.run_number }}
           embed-description: "### Изменения:\n${{ github.event.commits[0].message }}"
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].url }}
