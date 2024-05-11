@@ -16,13 +16,14 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew copyBuildRelease --stacktrace
+      - uses: actions/checkout@v2
       - name: Discord Webhook Action
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           raw-data: .github/workflows/build.json
           filename: artifacts/*.jar
-      - uses: actions/checkout@v2
+
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
