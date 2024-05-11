@@ -1,0 +1,8 @@
+{
+  "embeds": [
+    {
+      "title":"Вышел новый билд!",
+      "description":"#${{ github.event.push.head_commit.message }}"
+    }
+  ]
+}
