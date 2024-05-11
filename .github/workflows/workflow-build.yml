@@ -19,6 +19,11 @@ jobs:
       - name: Rename jar
         run: |
           mv artifacts/Sueno.jar artifacts/Sueno-${{ github.run_number }}.jar
+      - name: Get mod version
+        id: get-version
+        run: |
+          VERSION=$(cat mod.json | jq -r '.version')
+          echo "::set-output name=version::$VERSION"
       - name: Discord Webhook Action 1
         uses: tsickert/discord-webhook@v5.3.0
         with:
@@ -27,7 +32,7 @@ jobs:
           embed-description: "### Изменения:\n${{ github.event.commits[0].message }}"
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].url }}
-          embed-footer-text: "Версия: $(jq -r '.version' ./mod.json)"
+          embed-footer-text: Версия ${{ steps.get-version.outputs.version }}
           filename: artifacts/Sueno-${{ github.run_number }}.jar
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
