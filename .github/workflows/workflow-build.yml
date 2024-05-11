@@ -16,16 +16,19 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew copyBuildRelease --stacktrace
+      - name: Rename jar
+        run: |
+          mv artifacts/Sueno.jar artifacts/Sueno-${{ github.run_number }}.jar
       - name: Discord Webhook Action 1
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed-title: Новая сборка для Sueno № ${{ github.run_number }}
-          embed-description: "Данные о коммитах:"
+          embed-title: Сборка Sueno No.${{ github.run_number }}
+          embed-description:
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].html_url }}
-          embed-footer: "Версия: -"
-          filename: artifacts/Sueno.jar
+          embed-footer: "Версия: $(jq -r '.version' mod.json)"
+          filename: artifacts/Sueno-${{ github.run_number }}.jar
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
