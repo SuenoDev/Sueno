@@ -1,5 +1,4 @@
-name: Build, Test, and Notify
-
+name: Testing
 on: [ pull_request ]
 
 jobs:
