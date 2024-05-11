@@ -20,7 +20,7 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed-tile: Новая сборка для Sueno
+          embed-title: Новая сборка для Sueno
           embed-description: ${{ github.event.head_commit.message }}
           embed-color: 15386701
           filename: artifacts/Sueno.jar
