@@ -1,8 +1,11 @@
 {
+  "content": null,
   "embeds": [
     {
-      "title":"Вышел новый билд!",
-      "description":"#${{ github.event.push.head_commit.message }}"
+      "title": "Новая сборка для Sueno!",
+      "description": "${{ github.event.head_commit.message }}",
+      "color": 15386701
     }
-  ]
+  ],
+  "attachments": []
 }

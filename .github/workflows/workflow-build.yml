@@ -16,12 +16,18 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew copyBuildRelease --stacktrace
-      - name: Discord Webhook Action
+      - name: Discord Webhook Action 1
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          content: "Новый билд для ${{ github.event.repository.name }}!\n\nИзменения:\n${{ github.event.head_commit.message }}"
+          raw-data: .github/workflows/build.json
+      - name: Discord Webhook Action 2
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
+          content: null
           filename: artifacts/Sueno.jar
+
       - name: Upload built jar file
         uses: actions/upload-artifact@v3
         with:
