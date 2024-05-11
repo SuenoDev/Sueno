@@ -20,7 +20,7 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          content: ${{ github.event_name }}
+          content: "Новый билд для ${{ github.event.repository.name }}!\n\nИзменения:\n${{ github.event.head_commit.message }}"
           filename: artifacts/Sueno.jar
       - name: Upload built jar file
         uses: actions/upload-artifact@v3

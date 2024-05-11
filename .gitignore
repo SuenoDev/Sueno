@@ -7,8 +7,6 @@ artifacts/
 
 ### Local files
 /settings/local.json
-/settings/*.sh
-/settings/*.bat
 
 ### Generated files
 /gen/
