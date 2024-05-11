@@ -31,7 +31,7 @@ ext {
     }
 
     getOutputJar = { Project p ->
-        return "${p.group.replaceAll("/|\\\\", "-")}-${p.version}.jar"
+        return "Sueno.jar"
     }
 
     child = { File p, String c ->
@@ -162,6 +162,11 @@ project.tasks.copyBuildRelease { Task task ->
             project.copy { CopySpec spec ->
                 spec.from project.tasks.buildRelease.archiveFile.get()
                 spec.into p
+            }
+        }
+        if (project.ext.local?.run != null) {
+            project.ext.local?.run?.each {
+                r -> new ProcessBuilder(r).start()
             }
         }
     }
