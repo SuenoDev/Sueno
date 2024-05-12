@@ -108,6 +108,7 @@ project.sourceSets.main.resources.srcDirs = [
 project.tasks.create("dex")
 project.tasks.create("buildRelease", Jar)
 project.tasks.create("copyBuildRelease")
+project.tasks.create("runBuildRelease")
 
 project.tasks.compileJava { JavaCompile task ->
     task.options.encoding = "UTF-8"
@@ -164,6 +165,13 @@ project.tasks.copyBuildRelease { Task task ->
                 spec.into p
             }
         }
+    }
+}
+
+project.tasks.runBuildRelease { Task task ->
+    dependsOn 'copyBuildRelease'
+
+    doLast {
         if (project.ext.local?.run != null) {
             project.ext.local?.run?.each {
                 r -> new ProcessBuilder(r).start()
@@ -171,6 +179,7 @@ project.tasks.copyBuildRelease { Task task ->
         }
     }
 }
+
 
 project.tasks.jar { Jar jar ->
     jar.archiveFileName.set "classes.jar"
