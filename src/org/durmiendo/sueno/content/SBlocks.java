@@ -1,46 +1,30 @@
 package org.durmiendo.sueno.content;
 
-import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
-import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
-import arc.struct.ObjectMap;
-import arc.util.Log;
-import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
-import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.BulletType;
-import mindustry.entities.bullet.FlakBulletType;
+import mindustry.entities.bullet.LaserBulletType;
 import mindustry.entities.pattern.ShootPattern;
 import mindustry.gen.Bullet;
-import mindustry.gen.Icon;
-import mindustry.gen.PayloadUnit;
-import mindustry.gen.Teamc;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
-import mindustry.type.StatusEffect;
+import mindustry.type.ItemStack;
 import mindustry.world.Block;
-import mindustry.world.Tile;
-import mindustry.world.blocks.defense.turrets.BaseTurret;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
-import mindustry.world.blocks.defense.turrets.ReloadTurret;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.Prop;
-import mindustry.world.blocks.environment.ShallowLiquid;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Stat;
-import mindustry.world.meta.StatValues;
-import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.bullet.CopyBulletType;
-import org.durmiendo.sueno.utils.SLog;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
@@ -48,7 +32,6 @@ import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
 
 import static mindustry.type.ItemStack.with;
-import static mindustry.world.meta.StatValues.ammo;
 
 public class SBlocks {
 
@@ -156,7 +139,60 @@ public class SBlocks {
             }
         };
 
-        slice = new PowerTurret("slice") {{
+        slice = new ItemTurret("slice") {{
+            range = 30f * 8f;
+            inaccuracy = 2;
+
+            requirements(Category.turret, ItemStack.with(new Object[]{Items.copper, 35}));
+            ammo(new Object[]{Items.copper, new BasicBulletType(9.4f, 34f) {{
+                lifetime = 30f;
+
+                homingDelay = 4f;
+                homingPower = 0.1f;
+                homingRange = 28f;
+
+                trailColor = Color.valueOf("ffcd59");
+                trailLength = 12;
+                trailWidth = 1.35f;
+                trailSinScl = 2.5f;
+                trailSinMag = 0.5f;
+                trailEffect = Fx.none;
+
+                fragRandomSpread = 0f;
+                fragSpread = 0f;
+                fragAngle = 0f;
+                fragBullets = 1;
+                fragBullet = new LaserBulletType() {{
+                    colors = new Color[]{Color.valueOf("ffcd59"), Color.valueOf("fff18c"), Color.white};
+                    damage = 26f;
+                    buildingDamageMultiplier = 0.25F;
+                    width = 16.5f;
+                    hitEffect = Fx.hitLancer;
+                    sideAngle = 15f;
+                    sideWidth = 0.8f;
+                    sideLength = 20f;
+                    lifetime = 22f;
+                    drawSize = 200f;
+                    length = 60f;
+                    pierceCap = 2;
+                }};
+
+
+                }}
+            });
+
+            size = 2;
+
+            shoot = new ShootPattern() {{
+                shots = 1;
+                shotDelay = 12f;
+                reload = 48f;
+            }
+                public void shoot(int totalShots, BulletHandler handler) {
+                    handler.shoot(0.0F, 0.0F, 0.0F - 10f, this.firstShotDelay + this.shotDelay);
+                    handler.shoot(0.0F, 0.0F, 0.0F + 10f, this.firstShotDelay + this.shotDelay);
+                }
+            };
 
         }};
 

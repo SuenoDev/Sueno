@@ -17,17 +17,16 @@ import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.graphics.Drawf;
-import mindustry.logic.LExecutor;
 import mindustry.ui.Fonts;
-import org.durmiendo.sueno.content.SBlocks;
+import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
-import org.durmiendo.sueno.utils.SLog;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
     public boolean tmp = show;
     public Slider slider;
+    private boolean working = true;
     public GodModeFragment() {
         super();
         visible(() -> {
@@ -36,7 +35,7 @@ public class GodModeFragment extends Table {
                 if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
                 else touchable(() -> Touchable.enabled);
             }
-            if (show != tmp && show) {
+            if (show != tmp) {
                 build();
                 tmp = show;
             }
@@ -49,8 +48,18 @@ public class GodModeFragment extends Table {
         background(Core.atlas.drawable("sueno-black75"));
         label(() -> "[gold]The God mode").minWidth(300).center();
         row();
+
         if (SVars.temperatureController == null) {
             label(() -> "[red]T controller is null!").minWidth(300).center();
+            working = false;
+            return;
+        }
+
+        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) {
+            label(() -> "[red]Planet is not hielo!").minWidth(300).center();
+            row();
+            label(() -> "[gray]Temperature is only\navailable on hielo").minWidth(300).center();
+            working = false;
             return;
         }
         check("T stop", SVars.temperatureController.stop, b -> {
@@ -128,11 +137,6 @@ public class GodModeFragment extends Table {
 
     public Slider slider1;
     public void setT(float v, float r) {
-        SLog.info("temperature set: " + v + " radius: " + r);
-        SLog.info("temperature check: " + SVars.temperatureController.check(Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f)));
-        SLog.info("x > 0 && x < width && y > 0 && y < height;");
-        SLog.info("@ > 0 && @ < @ && @ > 0 && @ < @", Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldX() / 8f), SVars.temperatureController.width, Mathf.ceil(Core.input.mouseWorldY() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f), SVars.temperatureController.height);
-        SLog.info("@ && @ && @ && @", Mathf.ceil(Core.input.mouseWorldX() / 8f) > 0, Mathf.ceil(Core.input.mouseWorldX() / 8f) < SVars.temperatureController.width, Mathf.ceil(Core.input.mouseWorldY() / 8f) > 0, Mathf.ceil(Core.input.mouseWorldY() / 8f) < SVars.temperatureController.height);
         if (slider.getValue() > 0) {
             for (int x = Mathf.ceil(Core.input.mouseWorldX() / 8f - r); x < Mathf.ceil(Core.input.mouseWorldX() / 8f + r); x += 1) {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY() / 8f -r); y < Mathf.ceil(Core.input.mouseWorldY() / 8f + r); y += 1) {
@@ -146,13 +150,16 @@ public class GodModeFragment extends Table {
 
     @Override
     public void draw() {
-        re(slider, true);
+        if (working) {
+            re(slider, true);
 
-        re(slider1, false);
+            re(slider1, false);
+        }
         super.draw();
     }
 
     private void re(Slider rr, boolean a) {
+        if (!working) return;
         if (!a) {
             float v = rr.getValue();
             Vec2 p1;

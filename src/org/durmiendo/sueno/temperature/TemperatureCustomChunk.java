@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.temperature;
 
-import arc.util.Log;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
 import mindustry.Vars;
@@ -19,7 +18,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         Writes writes = new Writes(stream);
 
         try {
-            if (SVars.temperatureController == null || Vars.state.isEditor()) {
+            if (SVars.temperatureController == null || !SPlanets.hielo.equals(Vars.state.rules.planet)) {
                 writes.bool(false);
                 writes.close();
                 SLog.info("writing Temperature chunk: false");
