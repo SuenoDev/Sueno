@@ -825,7 +825,6 @@ public class SUnits {
                 shootX = -10f;
                 shootY = 0f;
                 inaccuracy = 4;
-
                 shoot = new ShootPattern() {{
                     shots = 3;
                     shotDelay = 2f;
