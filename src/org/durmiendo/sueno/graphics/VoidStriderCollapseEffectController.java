@@ -45,7 +45,7 @@ public class VoidStriderCollapseEffectController {
         for (int i = 0; i < containers.size; i++) {
             if (containers.get(i).render()) {
                 containers.remove(i);
-                i--;
+                i--; 
             }
         }
 

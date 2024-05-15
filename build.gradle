@@ -169,9 +169,9 @@ project.tasks.copyBuildRelease { Task task ->
 }
 
 project.tasks.runBuildRelease { Task task ->
-    dependsOn 'copyBuildRelease'
+    task.dependsOn 'copyBuildRelease'
 
-    doLast {
+    task.doLast {
         if (project.ext.local?.run != null) {
             project.ext.local?.run?.each {
                 r -> new ProcessBuilder(r).start()

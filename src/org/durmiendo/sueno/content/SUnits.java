@@ -7,7 +7,6 @@ import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
-import arc.math.geom.Geometry;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.util.Time;
@@ -32,16 +31,19 @@ import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
+import mindustry.graphics.Trail;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.ErekirUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.type.weapons.RepairBeamWeapon;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.entities.VEffect;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.SFx;
+import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.math.Colorated;
 import org.durmiendo.sueno.temperature.FreezingAbility;
 import org.durmiendo.sueno.temperature.FreezingData;
@@ -751,8 +753,86 @@ public class SUnits {
             parts.add(new RegionPart("-wing"){{
                 mirror = true;
                 layerOffset = 0.01f;
-                layer =  Layer.groundUnit+0.1f;
+                layer = Layer.groundUnit + 0.1f;
+                moves.add(new PartMove(){{
+                    y = -1f;
+                    x = -1f;
+                    moveX = 3.6f;
+                    moveY = 0f;
+                    rotation = 0f;
+                    moveRot = -20f;
+                    progress = PartProgress.charge;
+                }});
             }});
+
+            weapons.add(new Weapon(){{
+                bullet = new BasicBulletType(){{
+                    damage = 420f;
+                    speed = 10.5f;
+                    shootEffect = Fx.none;
+                    hitEffect = despawnEffect = Fx.none;
+
+                    homingDelay = 2f;
+                    homingPower = 0;
+                    homingRange = 0;
+
+                    trailColor = Color.valueOf("ffffff");
+                    trailLength = 14;
+                    trailWidth = 1.6f;
+                    trailSinScl = 2.5f;
+                    trailSinMag = 0.5f;
+                    trailEffect = Fx.none;
+
+                }
+
+                public Effect t = new VEffect(400.0F, (e) -> {
+                    Object trail$temp = e.data;
+                    if (trail$temp instanceof Trail) {
+                        Trail trail = (Trail)trail$temp;
+                        e.lifetime = (float)trail.length * 1.4F;
+                        if (!Vars.state.isPaused()) {
+                            trail.shorten();
+                        }
+
+                        Draw.z(SLayers.voidspace);
+                        trail.drawCap(e.color, e.rotation);
+                        Draw.z(SLayers.voidspace);
+                        trail.draw(e.color, e.rotation);
+                    }
+                });
+                    public void drawTrail(Bullet b) {
+                        if (this.trailLength > 0 && b.trail != null) {
+                            float z = SLayers.voidspace;
+                            Draw.z(z);
+                            b.trail.draw(this.trailColor, this.trailWidth);
+                            Draw.z(z);
+                        }
+
+                    }
+
+                    public void removed(Bullet b) {
+                        if (this.trailLength > 0 && b.trail != null && b.trail.size() > 0) {
+                            Draw.z(SLayers.voidspace);
+                            t.at(b.x, b.y, this.trailWidth, this.trailColor, b.trail.copy());
+                        }
+
+                    }
+                };
+
+                mirror = true;
+                recoil = 0.5f;
+                reload = 5f;
+                shootX = -10f;
+                shootY = 0f;
+                inaccuracy = 4;
+
+                shoot = new ShootPattern() {{
+                    shots = 3;
+                    shotDelay = 2f;
+                    reload = 38f;
+                }};
+            }});
+
 
             collapseEffect = SFx.voidStriderCollapseEffect;
             collapseRadius = 80;

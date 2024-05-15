@@ -22,8 +22,6 @@ public class SVars {
     public static WeatherController weathercontroller;
     public static TemperatureController temperatureController;
 
-
     public static boolean onCampaign;
     public static boolean debug = true;
-
 }

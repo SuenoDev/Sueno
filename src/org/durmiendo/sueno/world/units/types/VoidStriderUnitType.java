@@ -1,13 +1,17 @@
 package org.durmiendo.sueno.world.units.types;
 
 import arc.Core;
+import arc.Events;
+import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
+import mindustry.Vars;
+import mindustry.game.EventType;
 import mindustry.gen.Unit;
-import mindustry.graphics.Layer;
 import mindustry.type.UnitType;
 import org.durmiendo.sueno.graphics.SEffect;
 import org.durmiendo.sueno.graphics.SFx;
+import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 
 public class VoidStriderUnitType extends UnitType {
@@ -19,6 +23,13 @@ public class VoidStriderUnitType extends UnitType {
 
     public VoidStriderUnitType(String name) {
         super(name);
+
+        Events.run(EventType.Trigger.drawOver, () -> {
+            Draw.drawRange(SLayers.voidspace, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+                Vars.renderer.effectBuffer.end();
+                Vars.renderer.effectBuffer.blit(SShaders.voidSpaceShader);
+            });
+        });
     }
 
     @Override
@@ -31,9 +42,7 @@ public class VoidStriderUnitType extends UnitType {
     public void drawCell(Unit unit) {
         super.drawCell(unit);
 
-        Draw.draw(Layer.groundUnit + 0.12f, () -> {
-            Draw.shader(SShaders.voidSpaceShader, true);
-            Draw.rect(vessel, unit.x, unit.y, unit.rotation - 90f);
-        });
+        Draw.z(SLayers.voidspace);
+        Draw.rect(vessel, unit.x, unit.y, unit.rotation - 90f);
     }
 }
