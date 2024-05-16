@@ -27,7 +27,7 @@ float random (in vec2 st) {
 
 // 2D Noise based on Morgan McGuire @morgan3d
 // https://www.shadertoy.com/view/4dS3Wd
-float noise (in vec2 st) {
+float noiser (in vec2 st) {
     vec2 i = floor(st);
     vec2 f = fract(st);
 
@@ -60,7 +60,7 @@ float fbm(float x) {
     float a = 0.5;
     float shift = float(100);
     for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
+        v += a * noiser(x);
         x = x * 2.0 + shift;
         a *= 0.5;
     }
@@ -75,7 +75,7 @@ float fbm(vec2 x) {
     // Rotate to reduce axial bias
     mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
     for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
+        v += a * noiser(x);
         x = rot * x * 2.0 + shift;
         a *= 0.5;
     }
@@ -88,7 +88,7 @@ float fbm(vec3 x) {
     float a = 0.5;
     vec3 shift = vec3(100);
     for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
+        v += a * noiser(x);
         x = x * 2.0 + shift;
         a *= 0.5;
     }
