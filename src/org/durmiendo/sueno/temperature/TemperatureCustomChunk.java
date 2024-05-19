@@ -49,8 +49,6 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
             SLog.info("Temperature chunk loaded: " + t);
             if (t == false) {
                 reads.close();
-                SVars.temperatureController = new TemperatureController();
-                SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
                 return;
             }
         } catch (Exception e) {
