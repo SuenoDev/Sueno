@@ -52,7 +52,6 @@ public class TemperatureController {
     public final float maxBoost = 20;
     public final boolean isDevTemperature = true;
     public final float def = 30;
-
     // Теплопередача, TODO: костыль убрать
     public float dddd = 0.005f; //при большоих значениях tc, tk и dddd не работает адекватно
 
