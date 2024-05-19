@@ -54,7 +54,7 @@ public class TemperatureController {
     public final float def = 30;
 
     // Теплопередача, TODO: костыль убрать
-    public float dddd = 0.005f; //при большоих значениях tc, tk и dddd не рабботает адекватно
+    public float dddd = 0.005f; //при большоих значениях tc, tk и dddd не работает адекватно
 
     /**
      * responsible for the temperature operating status
