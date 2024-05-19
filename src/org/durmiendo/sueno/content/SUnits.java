@@ -730,6 +730,7 @@ public class SUnits {
         }};
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
+
             outlineColor = Color.valueOf("141414");
             speed = 1.75f;
             hitSize = 26f;
@@ -773,8 +774,8 @@ public class SUnits {
                     hitEffect = despawnEffect = Fx.none;
 
                     homingDelay = 2f;
-                    homingPower = 0;
-                    homingRange = 0;
+                    homingPower = 0.01f;
+                    homingRange = 32f;
 
                     trailColor = Color.valueOf("ffffff");
                     trailLength = 14;
@@ -824,7 +825,7 @@ public class SUnits {
                 reload = 5f;
                 shootX = -10f;
                 shootY = 0f;
-                inaccuracy = 4;
+                inaccuracy = 9;
                 shoot = new ShootPattern() {{
                     shots = 3;
                     shotDelay = 2f;

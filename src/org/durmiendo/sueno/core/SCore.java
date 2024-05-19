@@ -19,8 +19,6 @@ import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
 
-import static arc.Core.settings;
-
 @ModAnnotations.AnnotationSettings(
         rootPackage = "org.durmiendo.sueno",
         modInfoPath = "res/mod.json",
@@ -65,7 +63,7 @@ public class SCore extends Mod {
 //        }
         SVars.ui.build();
 
-        settings.put("campaignselect", true);
+        Core.settings.put("campaignselect", true);
 
         Vars.renderer.maxZoom = 30f;
         SLog.info("max zoom setting from: 30.0f");

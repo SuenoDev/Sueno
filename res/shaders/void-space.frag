@@ -1,6 +1,3 @@
-#define HIGHP
-#define NSCALE 2700.0
-
 uniform sampler2D u_texture;
 
 uniform vec2 u_campos;
@@ -10,16 +7,7 @@ uniform float u_time;
 
 varying vec2 v_texCoords;
 
-
-
-float rand (in vec2 uv) { return fract(sin(dot(uv,vec2(12.4124,48.4124)))*48512.41241); }
-const vec2 O = vec2(0.,1.);
-float noise2 (in vec2 uv) {
-    vec2 b = floor(uv);
-    return mix(mix(rand(b),rand(b+O.yx),.5),mix(rand(b+O),rand(b+O.yy),.5),.5);
-}
-
-float random (in vec2 st) {
+float random(in vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))
                  * 43758.5453123);
@@ -27,7 +15,7 @@ float random (in vec2 st) {
 
 // 2D Noise based on Morgan McGuire @morgan3d
 // https://www.shadertoy.com/view/4dS3Wd
-float noise (in vec2 st) {
+float dvnoise (in vec2 st) {
     vec2 i = floor(st);
     vec2 f = fract(st);
 
@@ -49,46 +37,24 @@ float noise (in vec2 st) {
     (d - b) * u.x * u.y;
 }
 
-float ave(vec3 v) {
-    return (v.r + v.g + v.b) / 3.0;
-}
-
-#define NUM_OCTAVES 5
-
-float fbm(float x) {
+float fbm1(vec2 x) {
     float v = 0.0;
     float a = 0.5;
-    float shift = float(100);
-    for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
+    vec2 shift = vec2(100);
+    for (int i = 0; i < 4; ++i) {
+        v += a * dvnoise(x);
         x = x * 2.0 + shift;
         a *= 0.5;
     }
     return v;
 }
 
-
-float fbm(vec2 x) {
+float fbm2(vec2 x) {
     float v = 0.0;
     float a = 0.5;
     vec2 shift = vec2(100);
-    // Rotate to reduce axial bias
-    mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.50));
-    for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
-        x = rot * x * 2.0 + shift;
-        a *= 0.5;
-    }
-    return v;
-}
-
-
-float fbm(vec3 x) {
-    float v = 0.0;
-    float a = 0.5;
-    vec3 shift = vec3(100);
-    for (int i = 0; i < NUM_OCTAVES; ++i) {
-        v += a * noise(x);
+    for (int i = 0; i < 8; ++i) {
+        v += a * dvnoise(x);
         x = x * 2.0 + shift;
         a *= 0.5;
     }
@@ -98,7 +64,15 @@ float fbm(vec3 x) {
 void main(){
     vec2 T = v_texCoords.xy;
     vec4 color = texture2D(u_texture, T);
-    color.rgb = color.rgb * (fbm(T * 14.0 + u_time/60.0) + vec3(1.0)) / 2.0 * vec3(150.0/256.0, 42.0/256.0, 170.0/256.0);
+    float noise = (fbm1(vec2(T * 14.0 + u_time/60.0)) + vec3(1.0)) / 2.0;
+    float cnoise = (fbm2(vec2(T * 56.0 + u_time/40.0)) + vec3(1.0)) / 2.2;
+
+    vec3 c1 = vec3(44, 93, 170) / 256.0;
+    vec3 c2 = vec3(126, 20, 195) / 256.0;
+
+    vec3 ctmp = mix(c1, c2, cnoise);
+
+    color.rgb *= noise * ctmp;
 
     gl_FragColor = color;
 }

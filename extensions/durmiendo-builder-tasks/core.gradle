@@ -1,0 +1,28 @@
+project.tasks.create("runBuildRelease")
+project.tasks.create("run")
+project.tasks.create("firstRun")
+
+project.tasks.runBuildRelease { Task task ->
+    task.dependsOn 'copyBuildRelease'
+    task.dependsOn 'run'
+}
+
+project.tasks.run { Task task ->
+    task.doLast {
+        if (project.ext.local?.run != null) {
+            project.ext.local?.run?.each {
+                r -> new ProcessBuilder(r).start()
+            }
+        }
+    }
+}
+
+project.tasks.firstRun { Task task ->
+    task.doLast {
+        if (project.ext.local?.frun != null) {
+            project.ext.local?.frun?.each {
+                r -> new ProcessBuilder(r).start()
+            }
+        }
+    }
+}
