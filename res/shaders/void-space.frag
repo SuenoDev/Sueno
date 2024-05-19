@@ -64,15 +64,17 @@ float fbm2(vec2 x) {
 void main(){
     vec2 T = v_texCoords.xy;
     vec4 color = texture2D(u_texture, T);
-    float noise = (fbm1(vec2(T * 14.0 + vec2(u_time/60.0))) + 1.0) / 2.0;
-    float cnoise = (fbm2(vec2(T * 56.0 + vec2(u_time/40.0))) + 1.0) / 2.2;
+    if (color.a > 0.01) {
+        float noise = (fbm1(vec2(T * 14.0 + vec2(u_time/60.0))) + 1.0) / 2.0;
+        float cnoise = (fbm2(vec2(T * 56.0 + vec2(u_time/40.0))) + 1.0) / 2.2;
 
-    vec3 c1 = vec3(44, 93, 170) / 256.0;
-    vec3 c2 = vec3(126, 20, 195) / 256.0;
+        vec3 c1 = vec3(44, 93, 170) / 256.0;
+        vec3 c2 = vec3(126, 20, 195) / 256.0;
 
-    vec3 ctmp = mix(c1, c2, cnoise);
+        vec3 ctmp = mix(c1, c2, cnoise);
 
-    color.rgb *= noise * ctmp;
+        color.rgb *= noise * ctmp;
+    }
 
     gl_FragColor = color;
 }
