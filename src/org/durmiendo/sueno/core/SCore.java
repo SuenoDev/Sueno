@@ -63,13 +63,9 @@ public class SCore extends Mod {
 //        }
         SVars.ui.build();
 
-        Core.settings.put("campaignselect", true);
-
-        Vars.renderer.maxZoom = 30f;
-        SLog.info("max zoom setting from: 30.0f");
-
-        Vars.renderer.minZoom = 0.5f;
-        SLog.info("min zoom setting from: 0.5f");
+        SLog.info("settings start");
+        Setter.load();
+        SLog.info("settings end");
 
         SLog.info("mod inited");
     }

@@ -14,13 +14,14 @@ public class Setter {
 
     private static void loadUI() {
         Events.on(EventType.ClientLoadEvent.class, e -> {
+            if (Core.settings.getBool("not-completed-message")) return;
             Time.runTask(10f, () -> {
                 BaseDialog dialog = new BaseDialog("@mod.notification");
                 dialog.setStyle(Styles.defaultDialog);
                 dialog.cont.add("@mod.notification.not-completed.message").row();
-                dialog.cont.check("@mod.notification.dont-show", Core.settings.getBool("not-completed-message"), (a) -> Core.settings.put("not-completed-message", a)).size(100f, 50f).row();
                 dialog.cont.button("@mod.notification.ok", dialog::hide).size(100f, 50f);
                 dialog.show();
+                Core.settings.put("not-completed-message", true);
             });
         });
     }
