@@ -234,6 +234,11 @@ public class SBlocks {
             variants = 5;
         }};
 
+        new Floor("none") {{
+            size = 1;
+            variants = 1;
+        }};
+
         devNone = new Floor("test") {{
             size = 1;
             variants = 1;
