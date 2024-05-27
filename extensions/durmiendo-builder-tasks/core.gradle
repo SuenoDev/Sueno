@@ -9,8 +9,8 @@ project.tasks.runBuildRelease { Task task ->
 
 project.tasks.run { Task task ->
     task.doLast {
-        if (project.ext.local?.run != null) {
-            project.ext.local?.run?.each {
+        if (project.ext.local?.dbt.run != null) {
+            project.ext.local?.dbt.run?.each {
                 r -> new ProcessBuilder(r).start()
             }
         }
@@ -19,8 +19,8 @@ project.tasks.run { Task task ->
 
 project.tasks.firstRun { Task task ->
     task.doLast {
-        if (project.ext.local?.frun != null) {
-            project.ext.local?.frun?.each {
+        if (project.ext.local?.dbt.frun != null) {
+            project.ext.local?.dbt.frun?.each {
                 r -> new ProcessBuilder(r).start()
             }
         }

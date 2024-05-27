@@ -49,7 +49,8 @@ public class SPlanets {
                 accessible = true;
                 visible = true;
                 landCloudColor = Pal.spore.cpy().a(0.5f);
-                hiddenItems.addAll(Items.erekirItems).removeAll(Items.serpuloItems);
+                hiddenItems.removeAll(Items.erekirItems);
+                hiddenItems.removeAll(Items.serpuloItems);
             }
         };
     }

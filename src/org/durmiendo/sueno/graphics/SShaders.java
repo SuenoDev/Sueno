@@ -70,15 +70,6 @@ public class SShaders {
             setUniformf("u_ccampos", Core.camera.position);
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
             setUniformf("u_time", Time.time);
-
-            if (texture != null) {
-                texture.bind(0);
-                Vars.renderer.effectBuffer.getTexture().bind(0);
-
-                setUniformi("u_stars", 0);
-            } else {
-                texture = Core.assets.get("sprites/space.png", Texture.class);
-            }
         }
     }
 

@@ -24,4 +24,5 @@ public class SVars {
 
     public static boolean onCampaign;
     public static boolean debug = true;
+    public static boolean extendedLogs = false;
 }

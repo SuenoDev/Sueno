@@ -13,6 +13,7 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
+import mindustry.ai.types.SuicideAI;
 import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
@@ -39,8 +40,10 @@ import mindustry.type.unit.TankUnitType;
 import mindustry.type.weapons.RepairBeamWeapon;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.VEffect;
+import org.durmiendo.sueno.entities.abilities.DeathZoneAbility;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
+import org.durmiendo.sueno.gen.TimedDestroyc;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.graphics.SLayers;
@@ -70,6 +73,8 @@ public class SUnits {
 
     public static @Annotations.EntityDef({Unitc.class, Payloadc.class}) UnitType
             believer;
+
+    public static @Annotations.EntityDef({Unitc.class, ElevationMovec.class, TimedDestroyc.class}) UnitType butterfly;
 
     private static final Vec2 a = new Vec2();
     private static final Vec2 s = new Vec2();
@@ -295,18 +300,67 @@ public class SUnits {
             }}));
         }};
 
+        butterfly = new UnitType("butterfly"){{
+            aiController = SuicideAI::new;
+            hovering = true;
+
+            speed = 2.4f;
+            hitSize = 6f;
+            health = 230;
+            mechSideSway = 0.25f;
+            range = 40f;
+            aimDst = 80f;
+            homingDelay = 1f;
+
+            weapons.add(new Weapon(){{
+                shootOnDeath = true;
+                reload = 24f;
+                shootCone = 180f;
+                ejectEffect = Fx.none;
+                shootSound = Sounds.explosion;
+                x = shootY = 0f;
+                mirror = false;
+                bullet = new BulletType(){{
+                    collidesTiles = false;
+                    collides = false;
+                    hitSound = Sounds.explosion;
+
+                    rangeOverride = 30f;
+                    hitEffect = Fx.pulverize;
+                    speed = 0f;
+                    splashDamageRadius = 55f;
+                    instantDisappear = true;
+                    splashDamage = 90f;
+                    killShooter = true;
+                    hittable = false;
+                    collidesAir = true;
+                }};
+            }});
+        }};
+
+
         engross = new UnitType("engross"){{
             hovering = true;
             health = 16000f;
             armor = 27f;
+            hitSize = 42.5f;
 
+            weapons.add(new RepairBeamWeapon("sueno-engross-gun"){{
+                mirror = true;
+                x = 10.625f;
+                y = -7.083f;
+                range = 48f;
+                shootY = 4.5f;
+                beamWidth = 0.5f;
 
-            abilities.add(new FreezingAbility(new FreezingData(){{
+                bullet = new BulletType(){{
+                    maxRange = 65f;
+                }};
+            }});
 
-            }}));
+            float spawnTime = 60f * 2f;
+            abilities.add(new DeathZoneAbility(butterfly, spawnTime, 40f, 80f));
         }};
-
-
 
 
 
@@ -778,12 +832,13 @@ public class SUnits {
                     homingRange = 32f;
 
                     trailColor = Color.valueOf("ffffff");
-                    trailLength = 14;
-                    trailWidth = 1.6f;
+                    trailLength = 9;
+                    trailWidth = 0.62f;
                     trailSinScl = 2.5f;
                     trailSinMag = 0.5f;
                     trailEffect = Fx.none;
 
+                    sprite = "sueno-large-orb";
                 }
 
                 public Effect t = new VEffect(400.0F, (e) -> {
@@ -816,7 +871,6 @@ public class SUnits {
                             Draw.z(SLayers.voidspace);
                             t.at(b.x, b.y, this.trailWidth, this.trailColor, b.trail.copy());
                         }
-
                     }
                 };
 
@@ -825,11 +879,11 @@ public class SUnits {
                 reload = 5f;
                 shootX = -10f;
                 shootY = 0f;
-                inaccuracy = 9;
+                inaccuracy = 6.5f;
                 shoot = new ShootPattern() {{
                     shots = 3;
-                    shotDelay = 2f;
-                    reload = 38f;
+                    shotDelay = 3.2f;
+                    reload = 42f;
                 }};
             }});
 

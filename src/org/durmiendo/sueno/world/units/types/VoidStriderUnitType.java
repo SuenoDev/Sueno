@@ -1,20 +1,20 @@
 package org.durmiendo.sueno.world.units.types;
 
 import arc.Core;
-import arc.Events;
-import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.math.Mathf;
 import arc.math.geom.Geometry;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.gen.Unitc;
 import mindustry.type.UnitType;
-import org.durmiendo.sueno.graphics.*;
+import org.durmiendo.sueno.graphics.SEffect;
+import org.durmiendo.sueno.graphics.SFx;
+import org.durmiendo.sueno.graphics.SLayers;
+import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 
 public class VoidStriderUnitType extends UnitType {
     public SEffect collapseEffect = SFx.voidStriderCollapseEffect;
@@ -25,13 +25,6 @@ public class VoidStriderUnitType extends UnitType {
 
     public VoidStriderUnitType(String name) {
         super(name);
-
-        Events.run(EventType.Trigger.drawOver, () -> {
-            Draw.drawRange(SLayers.voidspace, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
-                Vars.renderer.effectBuffer.end();
-                Vars.renderer.effectBuffer.blit(SShaders.voidSpaceShader);
-            });
-        });
     }
 
     @Override
