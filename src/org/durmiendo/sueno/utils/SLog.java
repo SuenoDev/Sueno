@@ -32,27 +32,27 @@ public class SLog {
     }
 
     public static void info(String msg) {
-        Log.info("[cyan]@  [white] " + msg, getVert());
+        Log.info("[cyan]@[white]" + msg, getVert());
     }
 
     public static void info(String msg, Object... args) {
-        Log.info("[cyan]@  [white] " + msg, getVert(), args);
+        Log.info("[cyan]@[white]" + msg, getVert(), args);
     }
 
     public static void einfo(String msg) {
-        if (SVars.extendedLogs) Log.info("[cyan]@[white] " + msg, getVert());
+        if (SVars.extendedLogs) Log.info("[cyan]@[white]" + msg, getVert());
     }
 
     public static void einfo(String msg, Object... args) {
-        if (SVars.extendedLogs) Log.info("[cyan]@[white] " + msg, getVert(), args);
+        if (SVars.extendedLogs) Log.info("[cyan]@[white]" + msg, getVert(), args);
     }
 
     public static void load(String msg) {
-        if (SVars.extendedLogs) Log.info("[cyan]@[white] loading @...", getVert(), msg);
+        if (SVars.extendedLogs) Log.info("[cyan]@[white]loading @[gray]...[white]", getVert(), msg);
     }
 
     public static void load(String msg, Object... args) {
-        if (SVars.extendedLogs) Log.info("[cyan]@[white] loading @...", getVert(), msg, args);
+        if (SVars.extendedLogs) Log.info("[cyan]@[white]loading @[gray]...[white]", getVert(), msg, args);
     }
 
     public static void einfoElapsed(String msg) {

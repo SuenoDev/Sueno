@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.core;
 
-import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
@@ -57,7 +56,7 @@ public class Setter {
     }
 
     private static void loadChunks() {
-        SLog.load("temperature custom chunks");
+        SLog.load("temperature custom chunk");
         SaveVersion.addCustomChunk("sueno-temperature-chunk", new TemperatureCustomChunk());
     }
 
@@ -69,23 +68,28 @@ public class Setter {
                 Vars.renderer.effectBuffer.blit(SShaders.voidSpaceShader);
             });
         });
+
+        SLog.load("dead zone shader");
+        Events.run(EventType.Trigger.drawOver, () -> {
+            Draw.drawRange(SLayers.deadZone, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+                Vars.renderer.effectBuffer.end();
+                Vars.renderer.effectBuffer.blit(SShaders.deadShader);
+            });
+        });
     }
 
     private static void loadVars() {
-        SLog.load("temperature controller init hooks");
+        SLog.load("temperature controller hooks");
         Events.on(EventType.WorldLoadBeginEvent.class, e -> {
             SVars.temperatureController = new TemperatureController();
             SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
         });
 
         SLog.load("Setting maxZoom to 5x");
-        Vars.renderer.maxZoom *= 5;
+        Vars.renderer.maxZoom *= 5f;
 
         SLog.load("Setting minZoom to x/5");
-        Vars.renderer.minZoom /= 5;
-
-        SLog.load("extended log setting");
-        SVars.extendedLogs = Core.settings.getBool("extended-logs");
+        Vars.renderer.minZoom /= 5f;
     }
 
     private static void loadUI() {

@@ -3,6 +3,7 @@ package org.durmiendo.sueno.entities.abilities;
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.scene.ui.layout.Table;
 import arc.util.Strings;
@@ -16,10 +17,11 @@ import mindustry.game.EventType;
 import mindustry.gen.Building;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
-import mindustry.graphics.Drawf;
 import mindustry.type.UnitType;
 import mindustry.world.meta.Stat;
 import mindustry.world.meta.StatUnit;
+import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.graphics.SLayers;
 
 public class DeathZoneAbility extends Ability {
     public UnitType summon;
@@ -69,10 +71,16 @@ public class DeathZoneAbility extends Ability {
     @Override
     public void draw(Unit unit) {
         super.draw(unit);
-        Drawf.circles(unit.x, unit.y, maxRange, Color.valueOf("aa22aa").a(0.5f));
-        Drawf.circles(unit.x, unit.y, minRange, Color.valueOf("aa22aa").a(0.5f));
-        Drawf.circles(unit.x, unit.y, 240, Color.valueOf("bb2222").a(0.5f));
+        Draw.z(SLayers.deadZone);
+        Draw.alpha(0.5f);
+        Draw.color(Color.white);
+        Draw.scl(1f / 64f * maxRange);
+        Draw.rect(SVars.core.getRegion("circle"), unit.x, unit.y);
 
+        Draw.color(Color.black);
+        Draw.scl(1f / 64f * minRange);
+        Draw.rect(SVars.core.getRegion("circle"), unit.x, unit.y);
+        Draw.reset();
 
     }
 

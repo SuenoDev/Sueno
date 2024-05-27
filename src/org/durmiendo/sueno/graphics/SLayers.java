@@ -1,6 +1,9 @@
 package org.durmiendo.sueno.graphics;
 
+import mindustry.graphics.Layer;
+
 public class SLayers {
     public static final float
-                voidspace = 112;
+            voidspace = Layer.groundUnit+3f,
+            deadZone = Layer.flyingUnit+3f;
 }

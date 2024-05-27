@@ -13,7 +13,6 @@ import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
-import mindustry.ai.types.SuicideAI;
 import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
 import mindustry.entities.Damage;
@@ -23,6 +22,7 @@ import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.MissileBulletType;
+import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootAlternate;
 import mindustry.entities.pattern.ShootBarrel;
@@ -301,16 +301,19 @@ public class SUnits {
         }};
 
         butterfly = new UnitType("butterfly"){{
-            aiController = SuicideAI::new;
+            targetAir = false;
             hovering = true;
-
-            speed = 2.4f;
-            hitSize = 6f;
-            health = 230;
-            mechSideSway = 0.25f;
-            range = 40f;
-            aimDst = 80f;
-            homingDelay = 1f;
+            speed = 4.6f;
+            maxRange = 5f;
+            outlineColor = Pal.darkOutline;
+            health = 70;
+            homingDelay = 10f;
+            lowAltitude = true;
+            engineSize = 3f;
+            engineColor = trailColor = Pal.lightOrange;
+            engineLayer = Layer.effect;
+            deathExplosionEffect = Fx.none;
+            loopSoundVolume = 0.1f;
 
             weapons.add(new Weapon(){{
                 shootOnDeath = true;
@@ -358,7 +361,7 @@ public class SUnits {
                 }};
             }});
 
-            float spawnTime = 60f * 2f;
+            float spawnTime = 60f * 16f;
             abilities.add(new DeathZoneAbility(butterfly, spawnTime, 40f, 80f));
         }};
 
@@ -786,7 +789,7 @@ public class SUnits {
         voidStrider = new VoidStriderUnitType("void-strider"){{
 
             outlineColor = Color.valueOf("141414");
-            speed = 1.75f;
+            speed = 0.75f;
             hitSize = 26f;
             stepShake = 0.2f;
             rotateSpeed = 1.2f;
@@ -833,12 +836,29 @@ public class SUnits {
 
                     trailColor = Color.valueOf("ffffff");
                     trailLength = 9;
-                    trailWidth = 0.62f;
+                    trailWidth = 2.0f;
                     trailSinScl = 2.5f;
                     trailSinMag = 0.5f;
                     trailEffect = Fx.none;
 
-                    sprite = "sueno-large-orb";
+                    sprite = "sueno-laarge-orb";
+
+                    hitEffect = despawnEffect = new ExplosionEffect(){{
+                        layer = SLayers.voidspace;
+                        lifetime = 50f;
+                        waveStroke = 0;
+                        waveLife = 0;
+                        waveColor = Color.clear;
+                        sparkColor = smokeColor = Color.lightGray;
+                        waveRad = 0f;
+                        smokeSize = 4f;
+                        smokes = 7;
+                        smokeSizeBase = 0f;
+                        sparks = 10;
+                        sparkRad = 40f;
+                        sparkLen = 6f;
+                        sparkStroke = 2f;
+                    }};
                 }
 
                 public Effect t = new VEffect(400.0F, (e) -> {
@@ -872,7 +892,7 @@ public class SUnits {
                             t.at(b.x, b.y, this.trailWidth, this.trailColor, b.trail.copy());
                         }
                     }
-                };
+            };
 
                 mirror = true;
                 recoil = 0.5f;
