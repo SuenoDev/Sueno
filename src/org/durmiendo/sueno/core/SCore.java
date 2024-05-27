@@ -22,6 +22,7 @@ public class SCore extends Mod {
     @Override
     public void loadContent(){
         SVars.sueno = Vars.mods.getMod(getClass());
+
         SLoader.load();
     }
 
