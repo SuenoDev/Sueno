@@ -836,7 +836,7 @@ public class SUnits {
 
                     trailColor = Color.valueOf("ffffff");
                     trailLength = 9;
-                    trailWidth = 2.0f;
+                    trailWidth = 1.75f;
                     trailSinScl = 2.5f;
                     trailSinMag = 0.5f;
                     trailEffect = Fx.none;

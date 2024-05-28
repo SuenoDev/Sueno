@@ -66,7 +66,7 @@ void main(){
     vec4 color = texture2D(u_texture, T);
     if (color.a > 0.01) {
         float noise = (fbm1(vec2(T * 14.0 + vec2(u_time/60.0))) + 1.0) / 2.0;
-        float cnoise = (fbm2(vec2(T * 56.0 + vec2(u_time/40.0))) + 1.0) / 2.2;
+        float cnoise = (fbm2(vec2(T * 56.0 + vec2(u_time/40.0)) + 12.0) + 1.0) / 2.0;
 
         vec3 c1 = vec3(0, 22, 22) / 256.0;
         vec3 c2 = vec3(214, 71, 255) / 256.0;
