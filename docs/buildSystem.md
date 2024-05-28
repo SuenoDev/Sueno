@@ -1,36 +1,56 @@
-# Briefly about the build system
-For a better build, it is recommended to create a local.json file in settings
-example:
+# Configuring the Build System
+
+To optimize your build process, it's recommended to create a `local.json` file in the `settings` directory. This file allows you to customize various aspects of the build system. Here's an example configuration:
 ```json
 {
   "copy": [
-    "your path from dir"
-  ],
+    "path/to/directory"
+  ], 
   "build": {
     "buildAndroid": false
-  },
+  }, 
   "dbt": {
     "run": [
-      "command №1"
-    ],
+      "run command"
+    ], 
     "frun": [
-      "command №2"
+      "first run command"
     ]
   }
 }
 ```
 
-## field `copy`
-the paths where the compiled mod will be copied when running `copyBuildRelease` or `runCopyBuildRelease` are indicated
 
+## copy field
+This section specifies the paths where the compiled mod will be copied when running `copyBuildRelease` or `runBuildRelease`. These commands ensure that the mod is automatically deployed to the appropriate location after the build process.
 
-## field `build.buildAndroid`
-indicates whether the mod should be compiled for Android.
+## build.buildAndroid field
+This flag determines whether the mod should be compiled for the Android platform. Set it to true to enable Android build, or false to skip it.
 
+## dbt.run field
+This section defines the commands that will be executed when `run` or `runBuildRelease` is invoked. These commands typically perform the same tasks as copyBuildRelease, but also launch the application after the build and copy operations are completed.
 
-## field `dbt.run`
-Specify what will be executed when `run` or `runBuildRelease` is run (does everything the same as `copyBuildRelease`, but runs the launch after `run`)
+## dbt.frun field
+This section specifies the commands that will be executed when `firstRun` is launched. These commands are typically used for initial setup or configuration tasks.
 
+Example configuration:
+```json
+{
+  "copy": [
+    "/home/durmiendo/.local/share/Mindustry/mods"
+  ], 
+  "build": {
+    "buildAndroid": false
+  }, 
+  "dbt": {
+    "run": [
+      "java -jar /home/durmiendo/mindustry/Mindustry.jar"
+    ],
+    "frun": [
+      "nautilus /home/durmiendo/.local/share/Mindustry"
+    ]
+  }
+}
+```
 
-## field `dbt.frun`
-commands that are executed when `firstRun` is launched
+In this example, the compiled mod will be copied to the `/home/durmiendo/.local/share/Mindustry/mods` directory. The build process will not include an Android build, and the `run` command will launch the Mindustry application, while the `frun` command will open the Mindustry directory in the file manager.
