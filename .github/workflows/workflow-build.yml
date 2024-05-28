@@ -32,7 +32,7 @@ jobs:
           name: ${{ github.event.repository.name }}
           path: artifacts/*.jar
       - name: Discord Webhook Action
-        if: !startsWith(github.event.commits[0].message, '[NS] ')
+        if: !startsWith(github.event.commits[0].message, '[NS]')
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
