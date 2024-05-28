@@ -11,9 +11,12 @@ project.tasks.run { Task task ->
     task.doLast {
         if (project.ext.local?.dbt.run != null) {
             project.ext.local?.dbt.run?.each {
-                r -> new ProcessBuilder(r).start()
+                r ->
+                    String[] command = r.split(" ");
+                    new ProcessBuilder(command).start();
             }
         }
+
     }
 }
 
@@ -21,7 +24,9 @@ project.tasks.firstRun { Task task ->
     task.doLast {
         if (project.ext.local?.dbt.frun != null) {
             project.ext.local?.dbt.frun?.each {
-                r -> new ProcessBuilder(r).start()
+                r ->
+                    String[] command = r.split(" ");
+                    new ProcessBuilder(command).start();
             }
         }
     }
