@@ -28,9 +28,9 @@ the paths where the compiled mod will be copied when running `copyBuildRelease` 
 indicates whether the mod should be compiled for Android.
 
 
-## field `drm-build-tools.run`
+## field `dbt.run`
 Specify what will be executed when `run` or `runBuildRelease` is run (does everything the same as `copyBuildRelease`, but runs the launch after `run`)
 
 
-## field `drm-build-tools.frun`
+## field `dbt.frun`
 commands that are executed when `firstRun` is launched
