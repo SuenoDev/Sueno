@@ -2,6 +2,8 @@ name: Building
 
 on: [push, pull_request]
 
+# im dead
+
 jobs:
   buildJar:
     runs-on: ubuntu-latest
