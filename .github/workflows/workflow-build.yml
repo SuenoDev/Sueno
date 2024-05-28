@@ -30,12 +30,12 @@ jobs:
           name: ${{ github.event.repository.name }}
           path: artifacts/*.jar
       - name: Discord Webhook Action
-        if: !startsWith(github.event.commits[0].message, '[NS]')
+        if: !startsWith(github.event.commits[0].message, '# ') || github.event.commits[0].author.username == 'Durmiendo'
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           embed-title: "Сборка Sueno #${{ github.run_number }}"
-          embed-description: "### ${{ github.event.commits[0].message }}"
+          embed-description: "##${{ github.event.commits[0].message }}"
           embed-color: 15386701
           embed-url: ${{ github.event.commits[0].url }}
           embed-image-url: "https://raw.githubusercontent.com/SuenoDev/Sueno/${{ github.event.commits[0].id }}/.screenshot/img.png"
