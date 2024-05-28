@@ -36,7 +36,7 @@ jobs:
           echo "::set-output name=trimmed_message::$(echo ${{ github.event.commits[0].message }} | cut -c 7-)"
       - name: Discord Webhook Action
         if: startsWith(github.event.commits[0].message, '[SEND] ')
-        uses: tsickert/discord-webhook@v5.3z.0
+        uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           embed-title: "Сборка Sueno #${{ github.run_number }}"
