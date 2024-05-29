@@ -38,15 +38,8 @@ public class SUI {
         planet = new SPlanetDialog();
         Vars.ui.planet = planet;
         Vars.ui.paused = new SPausedDialog(); // right?
-        Vars.ui.settings.addCategory("@settings", Core.atlas.drawable("sueno-sueno-white"), s -> {
-            s.checkPref("extended logs", false, c -> {
-                Core.settings.put("extended-logs", c);
-            });
 
-            s.checkPref("shaders (useless)", true, c -> {
-                Core.settings.put("s-shaders", c);
-            });
-        });
+
 
 
 

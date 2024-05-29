@@ -8,6 +8,7 @@ import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
+import org.durmiendo.sueno.gen.SettingsUI;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
@@ -40,6 +41,12 @@ public class Setter {
         SLog.mark();
         loadChunks();
         SLog.einfoElapsed("chunks");
+
+
+        SLog.mark();
+        SettingsUI.build();
+        SLog.einfoElapsed("settings");
+
 
         SLog.einfoElapsed("load settings finished");
     }

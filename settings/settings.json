@@ -1,6 +1,6 @@
 {
     "projectSettings": {
-        "version": "v0.18",
+        "version": "v0.20",
         "group": "SuenoDev/Sueno"
     },
 
@@ -14,10 +14,12 @@
 
         "deps": {
             "compileOnly": [
-                "list:zelaux-mod-core-anno"
+                "list:zelaux-mod-core-anno",
+                "project:annotations"
             ],
             "annotationProcessor": [
-                "list:zelaux-mod-core-anno"
+                "list:zelaux-mod-core-anno",
+                "project:annotations"
             ]
         }
     },

@@ -1,0 +1,74 @@
+project.repositories {
+    mavenCentral()
+    mavenLocal()
+    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven { url "https://www.jitpack.io" }
+}
+
+project.plugins.apply("java")
+project.plugins.apply("idea")
+project.plugins.apply("maven-publish")
+
+project.sourceSets.main.java.srcDirs = [
+        "src", "gen"
+]
+project.sourceSets.main.resources.srcDirs = [
+        "res"
+]
+
+project.tasks.compileJava { JavaCompile task ->
+    task.options.forkOptions.executable = "D:/.jdks/corretto-1.8.0_372/bin/javac.exe"
+    //task.options.fork = true
+
+    task.options.encoding = "UTF-8"
+    task.options.compilerArgs += "-Xlint:none"
+    task.options.generatedSourceOutputDirectory.set(project.file("gen"))
+
+    //task.options.compilerArgs += ['--release', '8']
+    task.targetCompatibility = JavaVersion.VERSION_1_8
+    task.sourceCompatibility = JavaVersion.VERSION_1_8
+
+    task.options.forkOptions.jvmArgs += [
+            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+            "--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED"
+    ]
+
+    doFirst {
+        delete options.generatedSourceOutputDirectory.get().asFile.listFiles()
+    }
+
+    doLast {
+        var processorDir = new File(file(project.sourceSets.main.resources.srcDirs.first()), "META-INF/services/")
+        projectDir.mkdirs()
+        var processorFile = new File(processorDir, "javax.annotation.processing.Processor")
+
+        var text = new StringBuilder()
+        project.sourceSets.main.java.srcDirs.each { File f ->
+            f.eachFileRecurse(groovy.io.FileType.FILES){ file ->
+                boolean isProcessor = file.text.contains('// annotation processor')
+                if(file.name.endsWith(".java") && isProcessor){
+                    text.append(file.path.substring(f.path.length() + 1)).append("\n")
+                }
+            }
+        }
+
+        processorFile.text = text.toString().replace(".java", "").replace("/", ".").replace("\\", ".")
+    }
+}
+
+project.dependencies {
+    //annotationProcessor "com.github.Anuken:jabel:93fde537c7"
+
+    compileOnly "com.github.Anuken.Arc:arc-core:v145"
+    compileOnly "com.squareup:javapoet:1.13.0"
+}

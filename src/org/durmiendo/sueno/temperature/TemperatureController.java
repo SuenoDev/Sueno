@@ -12,6 +12,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.world.Block;
 import mindustry.world.Tile;
+import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.content.SPlanets;
 
 public class TemperatureController {
@@ -23,7 +24,8 @@ public class TemperatureController {
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    public final float tk = 1f;
+    @SuenoSettings(min = 1f, max = 100f, steep = 1f)
+    public static final float tk = 1f;
     /**
      *  coefficient
      *
@@ -52,8 +54,11 @@ public class TemperatureController {
     public final float maxBoost = 20;
     public final boolean isDevTemperature = true;
     public final float def = 30;
+
+
     // Теплопередача, TODO: костыль убрать
-    public float dddd = 0.005f; //при большоих значениях tc, tk и dddd не работает адекватно
+    @SuenoSettings(min = 0f, max = 0.025f, steep = 0.001f)
+    public static float dddd = 0.005f; //при большоих значениях tc, tk и dddd не работает адекватно
 
     /**
      * responsible for the temperature operating status
