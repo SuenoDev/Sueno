@@ -25,7 +25,7 @@ public class TemperatureController {
      *  standard value 1 and always > 0
      */
     @SuenoSettings(min = 1f, max = 100f, steep = 1f)
-    public static final float tk = 1f;
+    public static float tk = 1f;
     /**
      *  coefficient
      *

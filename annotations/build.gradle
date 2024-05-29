@@ -49,7 +49,7 @@ project.tasks.compileJava { JavaCompile task ->
 
     doLast {
         var processorDir = new File(file(project.sourceSets.main.resources.srcDirs.first()), "META-INF/services/")
-        projectDir.mkdirs()
+        processorDir.mkdirs()
         var processorFile = new File(processorDir, "javax.annotation.processing.Processor")
 
         var text = new StringBuilder()

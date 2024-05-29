@@ -1,22 +1,22 @@
 package org.durmiendo.sueno.core;
 
+import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.scene.ui.layout.Table;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
-import org.durmiendo.sueno.gen.SettingsUI;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
+import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
-
-
 
 public class Setter {
     public static void load() {
@@ -44,9 +44,8 @@ public class Setter {
 
 
         SLog.mark();
-        SettingsUI.build();
+        SettingsBuilder.uiBuild();
         SLog.einfoElapsed("settings");
-
 
         SLog.einfoElapsed("load settings finished");
     }
