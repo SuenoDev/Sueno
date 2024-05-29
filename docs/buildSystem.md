@@ -1,6 +1,6 @@
 # Configuring the Build System
 
-To optimize your build process, it's recommended to create a `local.json` file in the `settings` directory. This file allows you to customize various aspects of the build system. Here's an example configuration:
+To improve the build process, it's recommended to create a `local.json` file in the `settings` directory. This file allows you to customize various aspects of the build system. Here's an example configuration:
 ```json
 {
   "copy": [
