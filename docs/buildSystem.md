@@ -33,7 +33,7 @@ This section defines the commands that will be executed when `run` or `runBuildR
 ## dbt.frun field
 This section specifies the commands that will be executed when `firstRun` is launched. These commands are typically used for initial setup or configuration tasks.
 
-Example configuration:
+## Example configuration:
 ```json
 {
   "copy": [
