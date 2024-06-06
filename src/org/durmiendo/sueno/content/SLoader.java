@@ -33,7 +33,6 @@ public class SLoader {
         SUnits.load();
         SLog.einfoElapsed("units");
 
-
         SLog.mark();
         SBlocks.load();
         SLog.einfoElapsed("blocks");
@@ -42,6 +41,7 @@ public class SLoader {
         SLog.mark();
         SPlanets.load();
         SLog.einfoElapsed("planets");
+
 
         SLog.einfoElapsed("load content finished");
     }

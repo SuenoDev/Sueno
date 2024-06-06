@@ -62,6 +62,8 @@ public class GodModeFragment extends Table {
             working = false;
             return;
         }
+        working = true;
+
         check("T stop", SVars.temperatureController.stop, b -> {
             SVars.temperatureController.stop = !SVars.temperatureController.stop;
         }).left();

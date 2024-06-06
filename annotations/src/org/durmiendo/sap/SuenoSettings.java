@@ -13,4 +13,6 @@ public @interface SuenoSettings {
     float max() default 1f;
     float steep() default 0.1f;
     float def() default 0;
+    int accuracy() default 4;
+    int priority() default -1;
 }

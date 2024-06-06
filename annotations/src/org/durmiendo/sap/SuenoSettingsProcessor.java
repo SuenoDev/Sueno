@@ -2,7 +2,10 @@ package org.durmiendo.sap;
 
 import arc.util.Log;
 import arc.util.Strings;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
@@ -10,13 +13,19 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Stream;
 
 // annotation processor
 public class SuenoSettingsProcessor extends BaseProc {
     String outputPackage = "org.durmiendo.sueno.settings", className = "SettingsBuilder";
+    int[] order = {
+            TypeKind.FLOAT.ordinal(),
+            TypeKind.INT.ordinal(),
+            TypeKind.SHORT.ordinal(),
+            TypeKind.BYTE.ordinal(),
+            TypeKind.BOOLEAN.ordinal(),
+    };
 
     public SuenoSettingsProcessor() {
         supportedAnnotations.add(SuenoSettings.class);
@@ -28,13 +37,22 @@ public class SuenoSettingsProcessor extends BaseProc {
 
             TypeSpec.Builder builderClass = TypeSpec.classBuilder(ClassName.get(outputPackage, className)).addModifiers(Modifier.PUBLIC);
             MethodSpec.Builder uiBuildSpec = MethodSpec.methodBuilder("uiBuild").addModifiers(Modifier.STATIC, Modifier.PUBLIC)
-                    .returns(ClassName.get("arc.scene.ui.layout", "Table"));
+                    .returns(void.class);
             MethodSpec.Builder loadSpec = MethodSpec.methodBuilder("load").addModifiers(Modifier.STATIC, Modifier.PUBLIC);
 
-            uiBuildSpec.addCode("Table out = new Table();\n");
-            uiBuildSpec.addCode("out.defaults().fillY();\n");
+            uiBuildSpec.addCode("mindustry.Vars.ui.settings.addCategory(\"sueno-settings\", \"sueno-sueno-white\", s -> {\n");
 
-            for (Element element : elements) {
+
+            Stream<? extends Element> sorted = elements.stream().sorted((a, b) -> {
+                int aa = ((VariableElement) as(a)).asType().getKind().ordinal();
+                int bb = ((VariableElement) as(b)).asType().getKind().ordinal();
+                if (aa > 4) aa = 4;
+                if (bb > 4) bb = 4;
+                return order[aa] - order[bb];
+            });
+
+            for (Object e : sorted.toArray()) {
+                Element element = (Element) e;
                 SuenoSettings anno = element.getAnnotation(SuenoSettings.class);
 
                 VariableElement var = as(element);
@@ -49,20 +67,44 @@ public class SuenoSettingsProcessor extends BaseProc {
                                     SuenoSettings.class, fullVarName)));
 
                 TypeKind kind = varTypeMirror.getKind();
+                String[] n = fullVarName.split("\\.");
+                String varName = "-";
+                if (n.length >= 2) varName = n[n.length-2] + "." + n[n.length-1];
+
+                Log.info("@ @", fullVarName, kind);
                 switch (kind) {
                     case BYTE:
                     case SHORT:
-                    case INT:
-                    case LONG:
-                    case FLOAT:
-                    case DOUBLE: {
-                        uiBuildSpec.addCode(Strings.format("out.slider(@f, @f, @f, @f, v -> {@ = v;});\n",
-                                anno.min(), anno.max(), anno.steep(), anno.def(), fullVarName));
-                    }
+                    case INT: {
+                        uiBuildSpec.addCode(Strings.format(
+                                "  s.sliderPref(arc.Core.bundle.get(\"@\"), @, @, @, @, v -> {\n" +
+                                        "    @ = v;\n" +
+                                        "    return v;\n" +
+                                        "  });\n",
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName));
+                    } break;
+                    case BOOLEAN:{
+                        uiBuildSpec.addCode(Strings.format(
+                                "  s.checkPref(arc.Core.bundle.get(\"@\"), @, v -> {\n" +
+                                        "    @ = v;\n" +
+                                        "  });\n",
+                                varName, anno.def() == 1, fullVarName));
+                    } break;
+                    case FLOAT:{
+                        uiBuildSpec.addCode(Strings.format(
+                                "  s.pref(new org.durmiendo.sueno.ui.dialogs.SliderSetting(arc.Core.bundle.get(\"@\"), @f, @f, @f, @f, v -> {\n" +
+                                "    @ = v;\n" +
+                                "    return org.durmiendo.sueno.utils.SStrings.fixed(v, @).toString();\n" +
+                                "  }));\n",
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, anno.accuracy()));
+                    } break;
+                    default: {
+                        uiBuildSpec.addCode(Strings.format("arc.util.Log.warn(\"generating settings for @ is not supported (@)\");\n", kind, varName));
+                    } break;
                 }
+                uiBuildSpec.addCode(Strings.format("org.durmiendo.sueno.utils.SLog.einfo(\"created \" + arc.Core.bundle.get(\"@\") + \" setting\");\n", varName));
             }
-
-            uiBuildSpec.addCode("return out;");
+            uiBuildSpec.addCode("});");
 
             builderClass.addMethod(uiBuildSpec.build());
             builderClass.addMethod(loadSpec.build());

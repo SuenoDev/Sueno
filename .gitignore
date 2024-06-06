@@ -20,4 +20,8 @@ artifacts/
 ### Aseprite files
 *.aseprite
 *.ase
-*.ase
+
+/annotations/build/
+/annotations/build
+/annotations/gen
+/annotations/gen/

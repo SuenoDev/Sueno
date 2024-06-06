@@ -1,10 +1,8 @@
 package org.durmiendo.sueno.core;
 
-import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
-import arc.scene.ui.layout.Table;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
@@ -42,10 +40,13 @@ public class Setter {
         loadChunks();
         SLog.einfoElapsed("chunks");
 
+        if (SVars.mainDirecory.child("settings.ulk").exists()) {
+            SLog.mark();
+            SettingsBuilder.uiBuild();
+            SLog.einfoElapsed("settings");
+        }
 
-        SLog.mark();
-        SettingsBuilder.uiBuild();
-        SLog.einfoElapsed("settings");
+
 
         SLog.einfoElapsed("load settings finished");
     }

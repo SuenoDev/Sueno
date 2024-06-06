@@ -15,7 +15,7 @@ import org.durmiendo.sueno.content.SLoader;
 )
 public class SCore extends Mod {
     public SCore(){
-        SVars.extendedLogs = Core.settings.getBool("extended-logs");
+        SVars.extendedLogs = true;//Core.settings.getBool("extended-logs");
         SVars.core = this;
     }
 

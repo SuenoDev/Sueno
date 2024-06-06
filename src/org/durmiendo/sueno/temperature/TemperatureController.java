@@ -24,7 +24,6 @@ public class TemperatureController {
      *  all actions with temperature must be carried out taking it into account
      *  standard value 1 and always > 0
      */
-    @SuenoSettings(min = 1f, max = 100f, steep = 1f)
     public static float tk = 1f;
     /**
      *  coefficient
@@ -45,27 +44,29 @@ public class TemperatureController {
      * standard temperature
      * if the temperature value is undefined then this value will be used
      */
-    public final float standardTemperature = -tk;
-    public final float minEffectivityTemperature = 0.5f;
-    public final float minSafeTemperature = -0.5f;
-    public final float minTemperatureDamage = 20;
-    public final float maxSafeTemperature = 0.6f;
-    public final float maxHeatDamage = 300;
-    public final float maxBoost = 20;
-    public final boolean isDevTemperature = true;
-    public final float def = 30;
+    @SuenoSettings(min = -1, max = 1, steep = 0.01f, accuracy = 2, def = -1, priority = 0)
+    public static float standardTemperature = -tk;
+    public static float minEffectivityTemperature = 0.5f;
+    public static float minSafeTemperature = -0.5f;
+    public static float minTemperatureDamage = 20;
+    public static float maxSafeTemperature = 0.6f;
+    public static float maxHeatDamage = 300;
+    public static float maxBoost = 20;
+    @SuenoSettings(def = 1)
+    public static boolean isDevTemperature = true;
+    public static float def = 30;
 
 
     // Теплопередача, TODO: костыль убрать
-    @SuenoSettings(min = 0f, max = 0.025f, steep = 0.001f)
+    @SuenoSettings(min = 0f, max = 0.025f, steep = 0.001f, accuracy = 6, def = 0.005f, priority = 1)
     public static float dddd = 0.005f; //при большоих значениях tc, tk и dddd не работает адекватно
 
     /**
      * responsible for the temperature operating status
      * used for debugging only
      */
-    public boolean stop = isDevTemperature;
-
+    @SuenoSettings(def = 1)
+    public static boolean stop = isDevTemperature;
     public TemperatureController instance;
 
     /**

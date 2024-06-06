@@ -1,6 +1,9 @@
 package org.durmiendo.sueno.core;
 
+import arc.files.Fi;
+import mindustry.Vars;
 import mindustry.mod.Mods;
+import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.files.InternalFileTree;
@@ -24,5 +27,7 @@ public class SVars {
 
     public static boolean onCampaign;
     public static boolean debug = true;
+    public static Fi mainDirecory = Vars.dataDirectory.child("sueno/");
+    @SuenoSettings()
     public static boolean extendedLogs = false;
 }

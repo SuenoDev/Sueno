@@ -1,50 +1,62 @@
 package org.durmiendo.sueno.type.effects;
 
-import arc.Core;
 import arc.graphics.g2d.TextureRegion;
-import arc.util.Time;
 import mindustry.ctype.ContentType;
 import mindustry.ctype.UnlockableContent;
-import org.durmiendo.sueno.entities.effect.StatusEntity;
+
 
 public class SStatusEffect extends UnlockableContent {
     public String name;
     public TextureRegion effect;
-    public float lifetime;
-    //public Effect particle;
+    public float lifetime = 20f * 60f;
+    public float limit = 100f;
+    public float worth = 35f;
+    public float subsides = 5f * 60f;
+
+    public boolean show = true;
 
     public SStatusEffect(String name) {
         super(name);
-        lifetime = 20f;
+
     }
 
-    public void update(StatusEntity e) {
-        e.lifetime -= Time.delta;
-        if(e.lifetime <= 0) e.remove();
+    public void update() {
+
     }
 
-    public void draw(StatusEntity e) {
+    public void created() {
+
+    }
+
+    @Override
+    public void init() {}
+
+    @Override
+    public boolean isHidden() {
+        return !show;
+    }
+
+    @Override
+    public void setStats() {
 
     }
 
     @Override
-    public void init() {
-        super.init();
+    public boolean showUnlock() {
+        return true;
+    }
+
+    public void draw() {
+
     }
 
     @Override
-    public void loadIcon() {
-        super.loadIcon();
-    }
-
-    @Override
-    public void load() {
-        super.load();
-        effect = Core.atlas.find(name);
+    public String toString() {
+        return localizedName;
     }
 
     @Override
     public ContentType getContentType() {
-        return ContentType.effect_UNUSED;
+        return ContentType.status;
     }
 }
