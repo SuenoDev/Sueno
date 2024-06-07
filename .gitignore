@@ -21,9 +21,5 @@ artifacts/
 *.aseprite
 *.ase
 
-/annotations/build/.
-/annotations/build/*
-/annotations/build
-/annotations/gen
-/annotations/gen/.
-/annotations/gen/*
+
+/annotations/build/
