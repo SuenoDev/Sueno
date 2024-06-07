@@ -828,7 +828,6 @@ public class SUnits {
                     damage = 420f;
                     speed = 10.5f;
                     shootEffect = Fx.none;
-                    hitEffect = despawnEffect = Fx.none;
 
                     homingDelay = 2f;
                     homingPower = 0.01f;

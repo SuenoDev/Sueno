@@ -9,8 +9,8 @@ public class SStatusEffect extends UnlockableContent {
     public String name;
     public TextureRegion effect;
     public float lifetime = 20f * 60f;
-    public float limit = 100f;
-    public float worth = 35f;
+    public float limit = 200f;
+    public float power = 35f;
     public float subsides = 5f * 60f;
 
     public boolean show = true;

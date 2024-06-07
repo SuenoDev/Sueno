@@ -8,15 +8,22 @@ import arc.math.Mathf;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.entities.Effect;
+import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.LaserBulletType;
+import mindustry.entities.effect.ExplosionEffect;
+import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.pattern.ShootPattern;
+import mindustry.gen.Building;
 import mindustry.gen.Bullet;
+import mindustry.gen.Sounds;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.type.ItemStack;
 import mindustry.world.Block;
+import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.environment.Floor;
@@ -27,6 +34,7 @@ import mindustry.world.meta.Stat;
 import org.durmiendo.sueno.entities.bullet.CopyBulletType;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
+import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
@@ -45,7 +53,7 @@ public class SBlocks {
     //floor
     dev, devNone,
     //turrets
-    violence, slice, stab, slash,
+    violence, slice, stab, slash, avoidance,
     //test
     ts, undestroyable;
     public static void load() {
@@ -194,6 +202,82 @@ public class SBlocks {
                 }
             };
 
+        }};
+
+
+        avoidance = new SItemTurret("avoidance") {{
+            requirements(Category.turret, ItemStack.with(Items.copper, 35));
+            ammo(Items.copper, new ArtilleryBulletType(2.1f, 34f) {{
+                lifetime = 287f;
+                scaleLife = false;
+                width = height = 11f;
+
+                trailColor = Color.valueOf("8ca3c4");
+                trailLength = 10;
+                trailWidth = 2.75f;
+                trailSinScl = 2.5f;
+                trailSinMag = 0.5f;
+
+                frontColor = Color.valueOf("a8ccdb");
+                backColor = Color.valueOf("6a83bd");
+
+                trailEffect = new Effect(50.0F, (e) -> {
+                    Draw.color(backColor);
+                    Draw.z(Layer.bullet - 1);
+                    Fill.circle(e.x, e.y, e.rotation * e.fout());
+                });
+
+                collidesTiles = true;
+                collidesGround = true;
+                collides = true;
+
+                ammoMultiplier = 1f;
+
+                homingPower = 0.005f;
+                homingRange = 120f;
+
+                weaveMag = 0.3f;
+                weaveScale = 1f;
+                knockback = 0.8f;
+
+                hitEffect = despawnEffect = new ExplosionEffect(){{
+                    lifetime = 50f;
+                    waveStroke = 0;
+                    waveLife = 0;
+                    waveColor = Color.clear;
+                    sparkColor = smokeColor = backColor;
+                    waveRad = 0f;
+                    smokeSize = 4f;
+                    smokes = 7;
+                    smokeSizeBase = 0f;
+                    sparks = 10;
+                    sparkRad = 40f;
+                    sparkLen = 6f;
+                    sparkStroke = 2f;
+                }};
+            }
+                @Override
+                public boolean testCollision(Bullet bullet, Building tile) {
+                    return !(tile.block instanceof Wall) && super.testCollision(bullet, tile);
+                }
+            });
+
+            size = 4;
+            targetAir = false;
+            recoil = 2f;
+            range = 540f;
+            inaccuracy = 3f;
+            shootCone = 10f;
+            health = 1200;
+            shootSound = Sounds.bang;
+            shoot = new ShootBarrel() {{
+                barrels = new float[]{
+                        -10f, 0f, 0f, 10f, 0f, 0f
+                };
+                shots = 14;
+                shotDelay = 6.8f;
+                reload = 350f;
+            }};
         }};
 
 

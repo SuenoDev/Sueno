@@ -46,8 +46,6 @@ public class Setter {
             SLog.einfoElapsed("settings");
         }
 
-
-
         SLog.einfoElapsed("load settings finished");
     }
 
