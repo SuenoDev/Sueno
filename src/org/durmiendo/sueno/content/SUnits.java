@@ -1,22 +1,19 @@
 package org.durmiendo.sueno.content;
 
-import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.TextureRegion;
 import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
-import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
 import mindustry.annotations.Annotations;
 import mindustry.content.Fx;
-import mindustry.entities.Damage;
 import mindustry.entities.Effect;
+import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
@@ -28,6 +25,7 @@ import mindustry.entities.pattern.ShootAlternate;
 import mindustry.entities.pattern.ShootBarrel;
 import mindustry.entities.pattern.ShootPattern;
 import mindustry.entities.units.WeaponMount;
+import mindustry.game.Team;
 import mindustry.gen.*;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
@@ -709,48 +707,11 @@ public class SUnits {
                     lifetime = 190f;
                 }
 
-                    float ranges = 32f;
-
                     @Override
-                    public void update(Bullet b) {
-                        super.update(b);
-                        Damage.damage(b.team, b.x, b.y, ranges, 25 * Time.delta);
-                    }
-
-                    @Override
-                    public void loadIcon() {
-                        super.loadIcon();
-                        bultex = Core.atlas.find("sueno-sun-bullet");
-                    }
-
-                    float lfosb = 68f;
-                    TextureRegion bultex;
-
-                    public void draw(Bullet b) {
-                        float fin = (Time.time % lfosb) / lfosb;
-
-                        float fin1 = (Time.time % (lfosb*1.2f)) / (lfosb*1.2f);
-//                        color(Pal.lightOrange);
-//                        stroke(2.9f * (0.5f - mod(fin1 - 0.5f)));
-//                        randLenVectors(b.id + (long)(Time.time / (lfosb*1.2f)), 7, 1f, (x, y) -> {
-//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin1 * 80, fin1 * 16f);
-//                        });
-//
-//                        color(Pal.lighterOrange);
-//                        stroke(1.5f * (0.5f - mod(fin - 0.5f)));
-//                        randLenVectors(b.id + 1 + (long)(Time.time / (lfosb)), 10, 1f, (x, y) -> {
-//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 66, fin * 16f);
-//                        });
-//
-//                        color(Color.white);
-//                        stroke(0.8f * (0.5f - mod(fin - 0.5f)));
-//                        randLenVectors(b.id + 1 + (long)(Time.time / (lfosb)), 14, 1f, (x, y) -> {
-//                            lineAngle(b.x + x, b.y + y, Mathf.angle(x, y) + fin * 66, fin * 24f);
-//                        });
-
-                        super.draw(b);
-                        bultex.scale = (Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 15) / 16f - 0.0625f;
-                        Drawf.spinSprite(bultex, b.x, b.y, ((Mathf.cos(2f * Mathf.pi * (fin-0.5f)) + 25) / 26f) * 360f - 166.153846f);
+                    public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
+                        Bullet b = super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
+                        SFx.sun.create(x, y, 0, Color.white, b);
+                        return b;
                     }
                 };
             }

@@ -151,7 +151,7 @@ public class SBlocks {
             range = 30f * 8f;
             inaccuracy = 2;
 
-            requirements(Category.turret, ItemStack.with(new Object[]{Items.copper, 35}));
+            requirements(Category.turret, ItemStack.with(Items.copper, 35));
             ammo(new Object[]{Items.copper, new BasicBulletType(9.4f, 34f) {{
                 lifetime = 30f;
 
@@ -214,12 +214,13 @@ public class SBlocks {
 
                 trailColor = Color.valueOf("8ca3c4");
                 trailLength = 10;
-                trailWidth = 2.75f;
+                trailWidth = 2.6f;
                 trailSinScl = 2.5f;
-                trailSinMag = 0.5f;
+                trailSinMag = 0.37f;
 
                 frontColor = Color.valueOf("a8ccdb");
                 backColor = Color.valueOf("6a83bd");
+
 
                 trailEffect = new Effect(50.0F, (e) -> {
                     Draw.color(backColor);
@@ -279,6 +280,21 @@ public class SBlocks {
                 reload = 350f;
             }};
         }};
+
+        slash = new ItemTurret("slash") {{
+            requirements(Category.turret, ItemStack.with(Items.copper, 35));
+            size = 4;
+            recoil = 2f;
+            range = 540f;
+            inaccuracy = 3f;
+            shootCone = 10f;
+            health = 1200;
+            shoot = new ShootBarrel() {{
+
+            }};
+        }};
+
+
 
 
 
