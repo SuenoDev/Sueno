@@ -17,7 +17,6 @@ public class SPlanets {
     public static Planet hielo;
 
     public static void load() {
-
         hielo = new Planet("hielo", Planets.sun, 1f, 2) {
             {
                 generator = new HieloPlanetGenerator();
@@ -46,7 +45,7 @@ public class SPlanets {
                 atmosphereRadOut = 0.3f;
                 startSector = 15;
                 alwaysUnlocked = true;
-                accessible = false;
+                accessible = true;
                 visible = true;
                 landCloudColor = Pal.spore.cpy().a(0.5f);
                 hiddenItems.removeAll(Items.erekirItems);

@@ -47,7 +47,7 @@ public class TemperatureSource extends Block {
         @Override
         public void draw() {
             super.draw();
-            Drawf.additive(Core.atlas.find("sueno-tst"), Colorated.gradient(Color.cyan, Color.red, te*SVars.temperatureController.tk), x, y);
+            Drawf.additive(Core.atlas.find("sueno-tst"), Colorated.gradient(Color.cyan, Color.red, te), x, y);
         }
 
         @Override
@@ -68,7 +68,7 @@ public class TemperatureSource extends Block {
             table.add(s);
             table.row();
 
-            Slider slider = new Slider(-SVars.temperatureController.tk, SVars.temperatureController.tk, SVars.temperatureController.tk/100f, false);
+            Slider slider = new Slider(-1, 1, 1f/100f, false);
             slider.setValue(te);
 
             Label labels = new Label("Температура " + Strings.fixed(te, 2) + " °S");
@@ -102,8 +102,8 @@ public class TemperatureSource extends Block {
 
         @Override
         public void drawSelect(){
-            indexer.eachBlock(this.team, new Rect(x-range/2, y-range/2, range, range), other -> true, other -> Drawf.selected(other, Tmp.c1.set(Colorated.gradient(Color.cyan, Color.red, (te+SVars.temperatureController.tk)/(SVars.temperatureController.tk *2))).a(Mathf.absin(4f, 1f))));
-            Drawf.dashSquare(Colorated.gradient(Color.cyan, Color.red, (te+SVars.temperatureController.tk)/(SVars.temperatureController.tk *2)), x, y, range);
+            indexer.eachBlock(this.team, new Rect(x-range/2, y-range/2, range, range), other -> true, other -> Drawf.selected(other, Tmp.c1.set(Colorated.gradient(Color.cyan, Color.red, (te+1)/2f)).a(Mathf.absin(4f, 1f))));
+            Drawf.dashSquare(Colorated.gradient(Color.cyan, Color.red, (te+1)/2f), x, y, range);
         }
 
         @Override

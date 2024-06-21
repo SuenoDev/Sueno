@@ -21,6 +21,7 @@ import mindustry.ui.Fonts;
 import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
+import org.durmiendo.sueno.temperature.TemperatureController;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -64,8 +65,8 @@ public class GodModeFragment extends Table {
         }
         working = true;
 
-        check("T stop", SVars.temperatureController.stop, b -> {
-            SVars.temperatureController.stop = !SVars.temperatureController.stop;
+        check("T stop", TemperatureController.stop, b -> {
+            TemperatureController.stop = !TemperatureController.stop;
         }).left();
         row();
         CheckBox tfu = new CheckBox("T forced update");
@@ -82,9 +83,9 @@ public class GodModeFragment extends Table {
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
-                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-SVars.temperatureController.tk);
+                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-1);
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+SVars.temperatureController.tk) / (SVars.temperatureController.tk*2f)),
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+1) / 2f),
                         Strings.fixed(SVars.temperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
@@ -92,7 +93,7 @@ public class GodModeFragment extends Table {
             label(() -> {
                 if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.temperatureAt(Vars.player.unit())+SVars.temperatureController.tk) / (SVars.temperatureController.tk*2f))),
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.temperatureAt(Vars.player.unit())+1) / 2f)),
                         Strings.fixed(SVars.temperatureController.temperatureAt(Vars.player.unit()), 2));
 
             }).left();
@@ -116,7 +117,7 @@ public class GodModeFragment extends Table {
         row();
         add(slider1).left();
         row();
-        Slider s = new Slider(-SVars.temperatureController.tk, SVars.temperatureController.tk, SVars.temperatureController.tk/100f, false);
+        Slider s = new Slider(-1, 1, 1 /100f, false);
         label(() -> "Установить T (j): " + Strings.fixed(s.getValue(),2)).left();
         CheckBox ch = new CheckBox("");
         add(ch).left();
@@ -186,7 +187,7 @@ public class GodModeFragment extends Table {
                     String s;
                     s = Strings.fixed(t, 2);
                     Color c;
-                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at(x, y)+SVars.temperatureController.tk)/(SVars.temperatureController.tk*2));
+                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at(x, y)+1)/2f);
 
                     Fonts.def.draw(s, p.x, p.y, c, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);
                 }

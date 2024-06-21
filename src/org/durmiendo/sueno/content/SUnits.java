@@ -397,7 +397,7 @@ public class SUnits {
             public void draw(Unit unit) {
                 super.draw(unit);
                 Draw.draw(Layer.light, () -> {
-                    Draw.color(Colorated.gradient(Color.valueOf("FF5A40").a(0.07f), Color.valueOf("FF0000").a(0.6f), (SVars.temperatureController.at(unit) + SVars.temperatureController.tk)/(SVars.temperatureController.tk *2f)));
+                    Draw.color(Colorated.gradient(Color.valueOf("FF5A40").a(0.07f), Color.valueOf("FF0000").a(0.6f), (SVars.temperatureController.at(unit) + 1)/2f));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
                 });
@@ -706,11 +706,12 @@ public class SUnits {
                     damage = 77f;
                     lifetime = 190f;
                 }
-
+                public Color bullet = Color.valueOf("FFF2B3");
                     @Override
                     public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
                         Bullet b = super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
-                        SFx.sun.create(x, y, 0, Color.white, b);
+                        SFx.sun.create(x, y, 0, bullet, b);
+
                         return b;
                     }
                 };

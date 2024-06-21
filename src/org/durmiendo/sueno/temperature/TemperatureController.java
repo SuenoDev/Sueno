@@ -16,23 +16,6 @@ import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.content.SPlanets;
 
 public class TemperatureController {
-
-    /**
-     *  zone
-     *
-     *  main indicators of temperature
-     *  all actions with temperature must be carried out taking it into account
-     *  standard value 1 and always > 0
-     */
-    public static float tk = 1f;
-    /**
-     *  coefficient
-     *
-     *  main indicators of temperature
-     *  all actions with temperature must be carried out taking it into account
-     *  standard value 1 and always > 0
-     */
-    public final float tc = 1f;
     public final float freezingDamage = 0.35f;
 
     /**
@@ -45,7 +28,7 @@ public class TemperatureController {
      * if the temperature value is undefined then this value will be used
      */
     @SuenoSettings(min = -1, max = 1, steep = 0.01f, accuracy = 2, def = -1, priority = 0)
-    public static float standardTemperature = -tk;
+    public static float standardTemperature = -1;
     public static float minEffectivityTemperature = 0.5f;
     public static float minSafeTemperature = -0.5f;
     public static float minTemperatureDamage = 20;
@@ -197,12 +180,12 @@ public class TemperatureController {
     /** Increments relative temperature. Use it in math. **/
     public void at(int x, int y, float increment) {
         if (!check(x, y)) return;
-        float t = temperature[x][y] + increment*tc;
-        if (t <= -tk) {
-            temperature[x][y] = -tk;
+        float t = temperature[x][y] + increment;
+        if (t <= -1f) {
+            temperature[x][y] = -1f;
             return;
-        } else if (t >= tk) {
-            temperature[x][y] = tk;
+        } else if (t >= 1f) {
+            temperature[x][y] = 1f;
             return;
         }
         temperature[x][y] = t;
@@ -237,13 +220,12 @@ public class TemperatureController {
     /** Increments relative temperature. Use it in math. **/
     public void at(Unit u, float increment) {
         Float t = unitsTemperature.get(u.id);
-        increment*=tc;
         if (t == null) {
-            if (increment <= -tk) {
-                unitsTemperature.put(u.id, -tk);
+            if (increment <= -1f) {
+                unitsTemperature.put(u.id, -1f);
                 return;
-            } else if (increment >= tk) {
-                unitsTemperature.put(u.id, tk);
+            } else if (increment >= 1f) {
+                unitsTemperature.put(u.id, 1f);
                 return;
             }
 
@@ -251,11 +233,11 @@ public class TemperatureController {
             return;
         }
         float a = t + increment;
-        if (a <= -tk) {
-            unitsTemperature.put(u.id, -tk);
+        if (a <= -1f) {
+            unitsTemperature.put(u.id, -1f);
             return;
-        } else if (a >= tk) {
-            unitsTemperature.put(u.id, tk);
+        } else if (a >= 1f) {
+            unitsTemperature.put(u.id, 1f);
             return;
         }
         unitsTemperature.put(u.id, a);
