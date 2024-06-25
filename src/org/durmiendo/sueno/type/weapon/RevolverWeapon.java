@@ -59,8 +59,7 @@ public class RevolverWeapon extends Weapon {
         super.draw(unit, mount);
 
         RevolverWeaponMount rwm = (RevolverWeaponMount) mount;
-        if (unit.isPlayer()) drawCartridgeses(rwm, unit.x, unit.y + 4f + unit.hitSize / 2f);
-
+        if (unit.isPlayer()) drawCartridgeses(rwm, unit.x, unit.y + unit.hitSize);
     }
 
     public void drawCartridgeses(RevolverWeaponMount rwm, float x, float y) {

@@ -3,6 +3,8 @@ package org.durmiendo.sueno.graphics;
 import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
+import arc.graphics.g2d.Lines;
 import arc.graphics.g2d.TextureAtlas;
 import arc.math.Mathf;
 import mindustry.entities.Effect;
@@ -42,17 +44,9 @@ public class SFx {
         float fin2;
         float fin3;
 
-//        if (fin >= 1f/c1-d1) {
-            fin1 = 1f - (Mathf.floor(fin*c1 - d1) - (fin*c1 - d1) + 1f);
-//        } else fin1 = 0;
-
-//        if (fin >= 1f/c2-d2) {
-            fin2 = 1f - (Mathf.floor(fin*c2 - d2) - (fin*c2 - d2) + 1f);
-//        } else fin2 = 0;
-
-//        if (fin >= 1f/c3-d3) {
-            fin3 = 1f - (Mathf.floor(fin*c3 - d3) - (fin*c3 - d3) + 1f);
-//        } else fin3 = 0;
+        fin1 = 1f - (Mathf.floor(fin*c1 - d1) - (fin*c1 - d1) + 1f);
+        fin2 = 1f - (Mathf.floor(fin*c2 - d2) - (fin*c2 - d2) + 1f);
+        fin3 = 1f - (Mathf.floor(fin*c3 - d3) - (fin*c3 - d3) + 1f);
 
         color(sunColor1);
         stroke(2.3f * (1f-fin1) - 0.1f);
@@ -77,4 +71,40 @@ public class SFx {
             e.lifetime = ((Bullet) e.data).lifetime;
         }
     };
+
+    public static Effect deadSun = new Effect(65, e -> {
+        Draw.color(Color.white);
+        float fin = e.fin();
+
+        e.scaled(7, i -> {
+            stroke(3f * i.fout());
+            Lines.circle(e.x, e.y, 3f + i.fin() * 10f);
+        });
+
+        color(Color.gray);
+
+        randLenVectors(e.id + 1, 8, 2f + 19f * e.finpow(), (x, y) -> {
+            Fill.circle(e.x + x, e.y + y, e.fout() * 7f + 0.5f);
+            Fill.circle(e.x + x / 2f, e.y + y / 2f, e.fout() * 4f);
+        });
+
+
+        color(sunColor1);
+        stroke(2.3f * (1f-fin) - 0.1f);
+        randLenVectors(e.id + 3, 28, 1f + 48f * fin, (x, y) -> {
+            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1.2f + fin * 28f);
+        });
+
+        color(sunColor2);
+        stroke(2.8f * (1f-fin) - 0.1f);
+        randLenVectors(e.id + 4, 22, 1f + 24f * fin, (x, y) -> {
+            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1.1f + fin * 12f);
+        });
+
+        color(sunColor3);
+        stroke(3.7f * (1f-fin) - 0.1f);
+        randLenVectors(e.id + 5, 14, 1f + 18f * fin, (x, y) -> {
+            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + fin * 6f);
+        });
+    });
 }

@@ -7,6 +7,7 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
+import arc.scene.ui.layout.Table;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
@@ -18,7 +19,6 @@ import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
-import mindustry.entities.bullet.MissileBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootAlternate;
@@ -40,6 +40,7 @@ import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.VEffect;
 import org.durmiendo.sueno.entities.abilities.DeathZoneAbility;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
+import org.durmiendo.sueno.entities.bullet.SunBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
 import org.durmiendo.sueno.gen.TimedDestroyc;
 import org.durmiendo.sueno.gen.VoidStriderc;
@@ -699,13 +700,19 @@ public class SUnits {
                 }};
                 maxCartridges = 7;
                 reloadCartridges = 120f;
-                bullet = new MissileBulletType() {{
+                bullet = new SunBulletType() {{
                     trailLength = 12;
                     homingPower = 0;
-                    speed = 1.6f;
-                    damage = 77f;
-                    lifetime = 190f;
+                    speed = 1.1f;
+                    damage = 34f;
+                    lifetime = 245f;
+
+                    hitEffect = despawnEffect = SFx.deadSun;
+
+
                 }
+
+
                 public Color bullet = Color.valueOf("FFF2B3");
                     @Override
                     public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
@@ -716,6 +723,16 @@ public class SUnits {
                     }
                 };
             }
+
+                @Override
+                public void addStats(UnitType u, Table t) {
+                    super.addStats(u, t);
+                    t.row();
+                    t.add("[#FF3A2E]Снаряд поглащает силу вражеских снарядов");
+                    t.row();
+                    t.add("[#8A5BFF]Снаряд имеет гравитацию");
+                }
+
                 @Override
                 protected void shoot(Unit unit, WeaponMount mount, float shootX, float shootY, float rotation) {
                 if (SVars.temperatureController.at(unit) > 0.65f) mount.bullet.damage*=1.2f;

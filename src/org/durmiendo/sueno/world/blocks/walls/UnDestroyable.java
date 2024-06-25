@@ -8,6 +8,8 @@ import arc.scene.ui.layout.Table;
 import arc.util.Align;
 import arc.util.Strings;
 import arc.util.Time;
+import arc.util.io.Reads;
+import arc.util.io.Writes;
 import mindustry.Vars;
 import mindustry.gen.Building;
 import mindustry.graphics.Layer;
@@ -104,6 +106,34 @@ public class UnDestroyable extends Wall {
                 });
 
             }
+        }
+
+
+        @Override
+        public void write(Writes write) {
+            super.write(write);
+            write.bool(isDraw);
+            write.bool(tips);
+            write.f(pos.x);
+            write.f(pos.y);
+        }
+
+        @Override
+        public void read(Reads read) {
+            super.read(read);
+            isDraw = read.bool();
+            tips = read.bool();
+            pos.x = read.f();
+            pos.y = read.f();
+        }
+
+        @Override
+        public void read(Reads read, byte revision) {
+            super.read(read, revision);
+            isDraw = read.bool();
+            tips = read.bool();
+            pos.x = read.f();
+            pos.y = read.f();
         }
     }
 }

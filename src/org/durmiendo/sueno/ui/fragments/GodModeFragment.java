@@ -3,6 +3,7 @@ package org.durmiendo.sueno.ui.fragments;
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
+import arc.graphics.g2d.Draw;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
@@ -16,9 +17,10 @@ import arc.util.Log;
 import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.game.EventType;
+import mindustry.gen.Groups;
 import mindustry.graphics.Drawf;
+import mindustry.graphics.Layer;
 import mindustry.ui.Fonts;
-import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
 import org.durmiendo.sueno.temperature.TemperatureController;
@@ -28,6 +30,8 @@ public class GodModeFragment extends Table {
     public boolean tmp = show;
     public Slider slider;
     private boolean working = true;
+
+    private boolean setUnitT = true;
     public GodModeFragment() {
         super();
         visible(() -> {
@@ -56,13 +60,13 @@ public class GodModeFragment extends Table {
             return;
         }
 
-        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) {
-            label(() -> "[red]Planet is not hielo!").minWidth(300).center();
-            row();
-            label(() -> "[gray]Temperature is only\navailable on hielo").minWidth(300).center();
-            working = false;
-            return;
-        }
+//        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) {
+//            label(() -> "[red]Planet is not hielo!").minWidth(300).center();
+//            row();
+//            label(() -> "[gray]Temperature is only\navailable on hielo").minWidth(300).center();
+//            working = false;
+//            return;
+//        }
         working = true;
 
         check("T stop", TemperatureController.stop, b -> {
@@ -76,6 +80,14 @@ public class GodModeFragment extends Table {
             SVars.temperatureController.temperatureCalculate();
         });
         add(tfu).left();
+        row();
+        CheckBox rch = new CheckBox("T reinit");
+        rch.changed(() -> {
+            rch.setChecked(false);
+            SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
+
+        });
+        add(rch).left();
         row();
 
         table(t -> {
@@ -120,7 +132,6 @@ public class GodModeFragment extends Table {
         Slider s = new Slider(-1, 1, 1 /100f, false);
         label(() -> "Установить T (j): " + Strings.fixed(s.getValue(),2)).left();
         CheckBox ch = new CheckBox("");
-        add(ch).left();
         ch.setChecked(false);
         Events.run(EventType.Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.j)) {
@@ -131,32 +142,53 @@ public class GodModeFragment extends Table {
             ch.setChecked(false);
             setT(s.getValue(), slider1.getValue());
         });
+        add(ch).left();
         row();
         add(s).left();
         row();
+        check("set unit T?", setUnitT, b -> {
+            setUnitT = b;
+        }).left();
+
     }
 
     public boolean f = false;
 
     public Slider slider1;
     public void setT(float v, float r) {
+        float my = Core.input.mouseWorldY() / 8f;
+        float mx = Core.input.mouseWorldX() / 8f;
         if (slider.getValue() > 0) {
-            for (int x = Mathf.ceil(Core.input.mouseWorldX() / 8f - r); x < Mathf.ceil(Core.input.mouseWorldX() / 8f + r); x += 1) {
-                for (int y = Mathf.ceil(Core.input.mouseWorldY() / 8f -r); y < Mathf.ceil(Core.input.mouseWorldY() / 8f + r); y += 1) {
+            for (int x = Mathf.ceil(mx - r); x < Mathf.ceil(mx + r); x += 1) {
+                for (int y = Mathf.ceil(my -r); y < Mathf.ceil(my + r); y += 1) {
                     SVars.temperatureController.set(x, y, v);
                 }
             }
+
+            if (setUnitT) {
+                Groups.unit.each(u -> {
+                    if (
+                            u.tileX() >= Mathf.ceil(mx - r)
+                                    && u.tileY() >= Mathf.ceil(my - r)
+                                    && u.tileX() <= Mathf.ceil(mx + r)
+                                    && u.tileY() <= Mathf.ceil(my + r)
+                    ) SVars.temperatureController.set(u, v);
+                });
+            }
+
         } else {
-            if (SVars.temperatureController.check(Mathf.ceil(Core.input.mouseWorldX() / 8f), Mathf.ceil(Core.input.mouseWorldY() / 8f))) SVars.temperatureController.temperature[Mathf.ceil(Core.input.mouseWorldX() / 8f)][Mathf.ceil(Core.input.mouseWorldY() / 8f)] = v;
+            SVars.temperatureController.set(Mathf.ceil(mx), Mathf.ceil(my), v);
         }
     }
 
     @Override
     public void draw() {
         if (working) {
+            Draw.z(Layer.flyingUnit+1);
             re(slider, true);
 
             re(slider1, false);
+            Draw.reset();
         }
         super.draw();
     }

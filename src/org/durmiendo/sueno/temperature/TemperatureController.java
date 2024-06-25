@@ -14,6 +14,7 @@ import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.content.SPlanets;
+import org.durmiendo.sueno.utils.SLog;
 
 public class TemperatureController {
     public final float freezingDamage = 0.35f;
@@ -96,6 +97,7 @@ public class TemperatureController {
     }
 
     public void init(int w, int h) {
+        SLog.info("TemperatureController init: w = " + w + " h = " + h);
         unitsTemperature.clear();
         temperature = new float[w][h];
         width = w;
@@ -115,7 +117,7 @@ public class TemperatureController {
     }
 
     public void update() {
-        if (Vars.state.isPaused() || Vars.state.isEditor()) return;
+        if (Vars.state.isPaused()) return;
         if (!SPlanets.hielo.equals(Vars.state.rules.planet)) return;
         if (stop) return;
 
@@ -125,7 +127,6 @@ public class TemperatureController {
     }
 
     public void temperatureCalculate() {
-
         for (int i = 0; i < width; i++) {
             System.arraycopy(temperature[i], 0, prev[i], 0, height);
         }
@@ -136,13 +137,13 @@ public class TemperatureController {
                     Point2 offset = Geometry.d4(z);
                     int xx = i + offset.x;
                     int yy = j + offset.y;
-                    if (!check(xx, yy)) continue;
+                    if (!checkf(xx, yy)) continue;
 
                     float td = (prev[i][j] - prev[xx][yy]) * dddd * Time.delta;
                     at(i, j, -td);
                     at(xx, yy, td);
                 }
-                if (check(i,j)) at(i,j, freezingPower * Time.delta);
+                if (checkf(i,j)) at(i,j, freezingPower * Time.delta);
             }
         }
 
@@ -155,7 +156,7 @@ public class TemperatureController {
 
         Groups.unit.each(unit -> {
             int ux = unit.tileX(), uy = unit.tileY();
-            if (check(ux, uy)) {
+            if (checkf(ux, uy)) {
                 if (!unitsTemperature.containsKey(unit.id))
                     unitsTemperature.put(unit.id, standardTemperature);
                 else {
@@ -174,7 +175,7 @@ public class TemperatureController {
 
     /** Returns relative temperature. Use it in math. **/
     public float at(int x, int y) {
-        return check(x, y) ? temperature[x][y] : standardTemperature;
+        return checkf(x, y) ? temperature[x][y] : standardTemperature;
     }
 
     /** Increments relative temperature. Use it in math. **/
@@ -251,11 +252,19 @@ public class TemperatureController {
     }
 
     public boolean check(int x, int y) {
+        return checkf(x, y) && !stop;
+    }
+
+    public boolean checkf(int x, int y) {
         return x > 0 && x < width && y > 0 && y < height;
     }
 
     public void set(int x, int y, float f) {
-        if (!check(x, y)) return;
+        if (!checkf(x, y)) return;
         temperature[x][y] = f;
+    }
+
+    public void set(Unit u, float v) {
+        unitsTemperature.put(u.id, v);
     }
 }
