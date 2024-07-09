@@ -149,7 +149,7 @@ public class GodModeFragment extends Table {
         check("set unit T?", setUnitT, b -> {
             setUnitT = b;
         }).left();
-
+        row();
     }
 
     public boolean f = false;

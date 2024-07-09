@@ -56,6 +56,9 @@ public class Setter {
         SLog.load("celestial body controller (not used)");
         SVars.celestialBodyController = new CelestialBodyController();
 
+//        SLog.load("status effects controller");
+//        SVars.statusEffectsController = new StatusEffectsController();
+
         SLog.load("void strider collapse effect controller");
         VoidStriderCollapseEffectController.init();
     }
@@ -86,7 +89,7 @@ public class Setter {
     private static void loadVars() {
         SLog.load("temperature controller hooks");
         Events.on(EventType.WorldLoadBeginEvent.class, e -> {
-            SVars.temperatureController = new TemperatureController();
+            if (SVars.temperatureController == null) SVars.temperatureController = new TemperatureController();
             SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
         });
 

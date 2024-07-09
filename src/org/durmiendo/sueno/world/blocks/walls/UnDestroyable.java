@@ -17,6 +17,7 @@ import mindustry.type.Category;
 import mindustry.ui.Fonts;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.meta.BuildVisibility;
+import org.durmiendo.sueno.core.SVars;
 
 public class UnDestroyable extends Wall {
 
@@ -92,7 +93,7 @@ public class UnDestroyable extends Wall {
         @Override
         public void draw() {
             super.draw();
-            if (isDraw) {
+            if (isDraw && SVars.dataVisible) {
                 Draw.draw(Layer.end, () -> {
                     if (tips) {
                         Fonts.def.draw("damage: " + Strings.fixed(damage, 2), x+pos.x*8, y+(pos.y+2)*8, Color.red, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);

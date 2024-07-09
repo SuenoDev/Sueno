@@ -10,12 +10,13 @@ import mindustry.gen.Building;
 import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.gen.Unitc;
+import mindustry.type.UnitType;
 import org.durmiendo.sueno.graphics.SEffect;
 import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 
-public class VoidStriderUnitType extends SUnitType {
+public class VoidStriderUnitType extends UnitType {
     public SEffect collapseEffect = SFx.voidStriderCollapseEffect;
     public float collapseRadius = 80f;
     public float priority = -1;

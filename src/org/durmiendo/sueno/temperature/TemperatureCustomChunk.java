@@ -99,7 +99,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         int h = reads.i();
         //SLog.einfo("reading w = @ and h = @", w, h);
 
-        SVars.temperatureController = new TemperatureController();
+        if (SVars.temperatureController == null) SVars.temperatureController = new TemperatureController();
         SVars.temperatureController.init(w, h);
         //SLog.einfo("temperature controller inited");
 

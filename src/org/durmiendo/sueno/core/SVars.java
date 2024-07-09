@@ -7,6 +7,7 @@ import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.files.InternalFileTree;
+import org.durmiendo.sueno.statuses.StatusEffectsController;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.ui.SUI;
 
@@ -24,10 +25,14 @@ public class SVars {
     public static CelestialBodyController celestialBodyController;
     public static WeatherController weathercontroller;
     public static TemperatureController temperatureController;
+    public static StatusEffectsController statusEffectsController;
 
     public static boolean onCampaign;
-    public static boolean debug = true;
     public static Fi mainDirecory = Vars.dataDirectory.child("sueno/");
+
     @SuenoSettings()
     public static boolean extendedLogs = false;
+
+    @SuenoSettings(def = 1)
+    public static boolean dataVisible = true;
 }

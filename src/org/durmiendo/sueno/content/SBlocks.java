@@ -34,11 +34,15 @@ import mindustry.world.meta.Stat;
 import org.durmiendo.sueno.entities.bullet.CopyBulletType;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
+import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
 
+import static arc.graphics.g2d.Draw.color;
+import static arc.graphics.g2d.Lines.*;
+import static arc.math.Angles.randLenVectors;
 import static mindustry.type.ItemStack.with;
 
 public class SBlocks {
@@ -295,6 +299,109 @@ public class SBlocks {
         }};
 
 
+        new MachineGunTurret("[WIP]Т") {{
+            requirements(Category.turret, ItemStack.with(Items.copper, 35));
+            ammo(Items.copper, new BasicBulletType(13f, 44f) {{
+                reload = 90f;
+                lifetime = 15f;
+                drag = 0.01f;
+                scaleLife = false;
+                width = height = 4f;
+
+
+                trailColor = Pal.missileYellow;
+                trailLength = 22;
+                trailWidth = 0.8f;
+                trailSinScl = 1.1f;
+                trailSinMag = 0.37f;
+
+                frontColor = Pal.bulletYellow;
+                backColor = Pal.bulletYellowBack;
+
+                despawnEffect = hitEffect = new Effect(60, e -> {
+                    color(Pal.missileYellow, e.color, e.fin());
+                    stroke(1.9f * e.fout());
+                    randLenVectors(e.id, 4, 128f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 9f, (x, y) -> {
+                        lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fout() * 5f);
+                    });
+
+                    stroke(1.3f * (e.fout() - 0.2f));
+                    circle(e.x, e.y, 0.4f);
+                });
+
+                trailEffect = new Effect(50.0F, (e) -> {
+                    Draw.color(backColor);
+                    Draw.z(Layer.bullet - 1);
+                    Fill.circle(e.x, e.y, e.rotation * e.fout());
+                });
+
+                ammoMultiplier = 1f;
+
+                homingPower = 0.002f;
+                homingRange = 32f;
+
+                weaveMag = 0.3f;
+                weaveScale = 1f;
+                knockback = 0.8f;
+
+                pierce = true;
+                pierceBuilding = true;
+                pierceCap = 2;
+
+                fragAngle = 4f;
+                fragBullets = 2;
+                fragSpread = 3f;
+                fragRandomSpread = 4f;
+                fragBullet = new BasicBulletType(11f, 12f) {{
+                    lifetime = 8f;
+
+
+                    trailColor = Pal.missileYellow;
+                    trailLength = 12;
+                    trailWidth = 0.6f;
+                    trailSinScl = 1f;
+                    trailSinMag = 0.31f;
+
+                    frontColor = Pal.bulletYellow;
+                    backColor = Pal.bulletYellowBack;
+
+                    despawnEffect = hitEffect = new Effect(50, e -> {
+                        color(Pal.missileYellow, e.color, e.fin());
+                        stroke(1.9f * e.fout());
+                        randLenVectors(e.id, 2, 100f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 9f, (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), e.fout() * 5f);
+                        });
+
+                        stroke(1.2f * (e.fout() - 0.2f));
+                        circle(e.x, e.y, 0.3f);
+                    });
+
+                    trailEffect = new Effect(50.0F, (e) -> {
+                        Draw.color(backColor);
+                        Draw.z(Layer.bullet - 1);
+                        Fill.circle(e.x, e.y, e.rotation * e.fout());
+                    });
+
+                    ammoMultiplier = 1f;
+
+                    homingPower = 0.005f;
+                    homingRange = 12f;
+
+                    weaveMag = 0.3f;
+                    weaveScale = 1f;
+                    knockback = 0.8f;
+                }};
+            }});
+
+            size = 4;
+            targetAir = false;
+            recoil = 2f;
+            range = 540f;
+            inaccuracy = 3f;
+            shootCone = 10f;
+            health = 1200;
+            shootSound = Sounds.bang;
+        }};
 
 
 

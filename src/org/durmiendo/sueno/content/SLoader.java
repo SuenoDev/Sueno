@@ -30,6 +30,11 @@ public class SLoader {
 
 
         SLog.mark();
+        SStatusEffects.load();
+        SLog.einfoElapsed("status effects");
+
+
+        SLog.mark();
         SUnits.load();
         SLog.einfoElapsed("units");
 

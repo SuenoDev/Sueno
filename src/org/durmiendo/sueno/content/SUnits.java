@@ -201,6 +201,7 @@ public class SUnits {
                 reload = 19f;
                 bullet = new SRailBulletType(){{
                     lifetime = 10f;
+
                     length = 175f;
                     instability = 0f;
                     damage = 17f;
@@ -394,13 +395,18 @@ public class SUnits {
             }}));
         }
 
+        public Color s = Color.valueOf("FF5A40").a(0.07f);
+            public Color e = Color.valueOf("FF0000").a(0.3f);
             @Override
             public void draw(Unit unit) {
                 super.draw(unit);
                 Draw.draw(Layer.light, () -> {
-                    Draw.color(Colorated.gradient(Color.valueOf("FF5A40").a(0.07f), Color.valueOf("FF0000").a(0.6f), (SVars.temperatureController.at(unit) + 1)/2f));
+                    Draw.color(Colorated.gradient(
+                            s, e, Math.min((SVars.temperatureController.at(unit) - 0.35f), 0f)
+                    ));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
+                    Drawf.light(unit.x, unit.y,56f, e, 0.2f);
                 });
             }
         };
@@ -690,6 +696,7 @@ public class SUnits {
                 reload = 25f;
                 inaccuracy = 2f;
                 rotate = true;
+
                 rotateSpeed = 1.2f;
                 shootSound = Sounds.bang;
                 shootY = 24f;
@@ -839,10 +846,9 @@ public class SUnits {
                     }};
                 }
 
-                public Effect t = new VEffect(400.0F, (e) -> {
+                public final Effect t = new VEffect(400.0F, (e) -> {
                     Object trail$temp = e.data;
-                    if (trail$temp instanceof Trail) {
-                        Trail trail = (Trail)trail$temp;
+                    if (trail$temp instanceof Trail trail) {
                         e.lifetime = (float)trail.length * 1.4F;
                         if (!Vars.state.isPaused()) {
                             trail.shorten();
