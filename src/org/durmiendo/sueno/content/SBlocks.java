@@ -7,9 +7,11 @@ import arc.math.Angles;
 import arc.math.Mathf;
 import mindustry.content.Fx;
 import mindustry.content.Items;
+import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BasicBulletType;
+import mindustry.entities.bullet.BulletType;
 import mindustry.entities.bullet.LaserBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.pattern.ShootBarrel;
@@ -31,7 +33,6 @@ import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Stat;
-import org.durmiendo.sueno.entities.bullet.CopyBulletType;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
@@ -57,7 +58,7 @@ public class SBlocks {
     //floor
     dev, devNone,
     //turrets
-    violence, slice, stab, slash, avoidance,
+    violence, slice, stab, slash, avoidance, adaptation, vengeance,
     //test
     ts, undestroyable;
     public static void load() {
@@ -90,6 +91,79 @@ public class SBlocks {
 
         undestroyable = new UnDestroyable("undestroyable");
 
+
+        vengeance = new ItemTurret("vengeance") {{
+            size = 4;
+            health = 1000;
+            requirements(Category.turret, with(Items.scrap, 10));
+            inaccuracy = 15;
+            range = 15f * 8f;
+            shoot = new ShootBarrel() {{
+                shots = 19;
+                shotDelay = 0.5f;
+                barrels = new float[]{
+                        -2f, 0f, 0f, 0f, 0f, 0f, 2f, 0f, 0f
+                };
+            }};
+
+            reload = 105f;
+
+            ammo(new Object[]{Items.copper, new BasicBulletType(5.6f, 13f) {{
+                    sprite = "mine-bullet";
+                    width = height = 8f;
+                    layer = Layer.scorch;
+                    shootEffect = smokeEffect = Fx.none;
+
+                    backColor =  Pal.lightFlame;
+                    frontColor = Color.white;
+                    mixColorTo = Color.white;
+
+                    hitSound = Sounds.plasmaboom;
+
+                    hitSize = 22f;
+
+                    collidesAir = false;
+
+                    lifetime = 20f;
+
+                    hitEffect = Fx.shootPyraFlame;
+                    keepVelocity = false;
+
+                    shrinkX = shrinkY = 0f;
+
+                    inaccuracy = 2f;
+                    weaveMag = 4f;
+                    weaveScale = 3f;
+                    homingPower = 0.001f;
+                    homingDelay = 30f;
+                    homingRange = 24f;
+                    trailColor = Pal.darkPyraFlame;
+                    trailWidth = 3f;
+                    trailLength = 5;
+                    trailEffect = Fx.fire;
+
+                    splashDamage = 33f;
+                    splashDamageRadius = 32f;
+
+                    fragBullets = 1;
+
+                    fragBullet = new BulletType(4f, 20f){{
+                        ammoMultiplier = 6f;
+                        hitSize = 7f;
+                        lifetime = 18f;
+                        pierce = true;
+                        collidesAir = false;
+                        statusDuration = 60f * 10;
+                        shootEffect = Fx.shootPyraFlame;
+                        hitEffect = Fx.hitFlameSmall;
+                        despawnEffect = Fx.none;
+                        status = StatusEffects.burning;
+                        hittable = false;
+                        makeFire = true;
+                    }};
+            }}});
+        }};
+
         violence = new PowerTurret("violence") {{
             requirements(Category.turret, with(Items.scrap, 10));
             consumePower(4f);
@@ -106,12 +180,11 @@ public class SBlocks {
                 shotDelay = 3f;
             }};
 
-            shootType = new CopyBulletType() {{
-
+            shootType = new BasicBulletType() {{
                 makeFire = true;
-                damage = 0f;
-                speed = 30f;
-                lifetime = 16f;
+                damage = 60f;
+                speed = 18f;
+                lifetime = 30f;
 
                 pierce = true;
                 pierceBuilding = true;
@@ -132,18 +205,8 @@ public class SBlocks {
                 });
 
                 homingRange = 192;
-                homingPower = 0.04f;
-                homingDelay = 2.1f;
-            }
-
-                @Override
-                public void update(Bullet b) {
-                    super.update(b);
-                    if (Mathf.random(0f, 1f) > 0.9f) {
-                        b.vel.setAngle(b.vel.angle() + Mathf.random(-12, 12));
-                    }
-                }
-            };
+                homingPower = 0.08f;
+            }};
         }
             public void setStats() {
                 super.setStats();
@@ -299,7 +362,7 @@ public class SBlocks {
         }};
 
 
-        new MachineGunTurret("[WIP]Т") {{
+        adaptation = new MachineGunTurret("adaptation") {{
             requirements(Category.turret, ItemStack.with(Items.copper, 35));
             ammo(Items.copper, new BasicBulletType(13f, 44f) {{
                 reload = 90f;

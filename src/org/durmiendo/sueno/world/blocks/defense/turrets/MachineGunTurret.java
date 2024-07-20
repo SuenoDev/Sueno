@@ -50,7 +50,7 @@ public class MachineGunTurret extends ItemTurret {
 
         @Override
         public float range() {
-            return 42.22f * 8f;
+            return 34.72f * 8f;
         }
 
         public void draw() {

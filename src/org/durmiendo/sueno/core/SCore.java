@@ -32,6 +32,7 @@ public class SCore extends Mod {
         Log.info("load Sueno settings");
 
         Setter.load();
+
     }
 
     public TextureRegion getRegion(String nameWithoutPrefix) {
