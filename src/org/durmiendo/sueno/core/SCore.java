@@ -5,7 +5,7 @@ import arc.graphics.g2d.TextureRegion;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.mod.Mod;
-import mma.annotations.ModAnnotations;
+import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
 import org.durmiendo.sueno.ui.dialogs.SModsDialog;
 

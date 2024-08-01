@@ -1,7 +1,7 @@
 package org.durmiendo.sueno.content;
 
 import mindustry.gen.EntityMapping;
-import org.durmiendo.sueno.gen.SCall;
+//import org.durmiendo.sueno.gen.SCall;
 import org.durmiendo.sueno.gen.SEntityMapping;
 import org.durmiendo.sueno.utils.SLog;
 
@@ -11,7 +11,7 @@ public class SLoader {
 
 
         SLog.mark();
-        SCall.registerPackets();
+//        SCall.registerPackets();
         SLog.elapsedInfo("packets");
 
 
