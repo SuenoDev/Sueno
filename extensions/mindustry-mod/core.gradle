@@ -15,3 +15,13 @@ project.tasks.jar { Jar jar ->
         copys.include("icon.png")
     }
 }
+
+allprojects.each { Project project ->
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if(details.requested.group == "com.github.Anuken.Arc"){
+                details.useVersion "${rootProject.ext.mindustryVersion}"
+            }
+        }
+    }
+}
