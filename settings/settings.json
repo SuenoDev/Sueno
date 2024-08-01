@@ -9,16 +9,16 @@
         "mindustryVersion": "v146",
 
         "list": [
-            { "zelaux-mod-core-anno": "com.github.Zelaux.ZelauxModCore:annotations:repo-test7" }
+            { "mindustry-mod-core-anno": "com.github.Zelaux.MindustryModCore:annotations:repo-test7" }
         ],
 
         "deps": {
             "compileOnly": [
-                "list:zelaux-mod-core-anno",
+                "list:mindustry-mod-core-anno",
                 "project:annotations"
             ],
             "annotationProcessor": [
-                "list:zelaux-mod-core-anno",
+                "list:mindustry-mod-core-anno",
                 "project:annotations"
             ]
         }
