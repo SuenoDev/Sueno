@@ -19,6 +19,7 @@ import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
+import mindustry.entities.bullet.ExplosionBulletType;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootAlternate;
@@ -34,6 +35,7 @@ import mindustry.graphics.Trail;
 import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 import mindustry.type.unit.ErekirUnitType;
+import mindustry.type.unit.MissileUnitType;
 import mindustry.type.unit.TankUnitType;
 import mindustry.type.weapons.RepairBeamWeapon;
 import org.durmiendo.sueno.core.SVars;
@@ -42,7 +44,6 @@ import org.durmiendo.sueno.entities.abilities.DeathZoneAbility;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
 import org.durmiendo.sueno.entities.bullet.SunBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
-import org.durmiendo.sueno.gen.TimedDestroyc;
 import org.durmiendo.sueno.gen.VoidStriderc;
 import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.graphics.SLayers;
@@ -72,8 +73,6 @@ public class SUnits {
 
     public static @Annotations.EntityDef({Unitc.class, Payloadc.class}) UnitType
             believer;
-
-    public static @Annotations.EntityDef({Unitc.class, ElevationMovec.class, TimedDestroyc.class}) UnitType butterfly;
 
     private static final Vec2 a = new Vec2();
     private static final Vec2 s = new Vec2();
@@ -300,53 +299,43 @@ public class SUnits {
             }}));
         }};
 
-        butterfly = new UnitType("butterfly"){{
-            targetAir = false;
-            hovering = true;
-            speed = 4.6f;
-            maxRange = 5f;
-            outlineColor = Pal.darkOutline;
-            health = 70;
-            homingDelay = 10f;
-            lowAltitude = true;
-            engineSize = 3f;
-            engineColor = trailColor = Pal.lightOrange;
-            engineLayer = Layer.effect;
-            deathExplosionEffect = Fx.none;
-            loopSoundVolume = 0.1f;
-
-            weapons.add(new Weapon(){{
-                shootOnDeath = true;
-                reload = 24f;
-                shootCone = 180f;
-                ejectEffect = Fx.none;
-                shootSound = Sounds.explosion;
-                x = shootY = 0f;
-                mirror = false;
-                bullet = new BulletType(){{
-                    collidesTiles = false;
-                    collides = false;
-                    hitSound = Sounds.explosion;
-
-                    rangeOverride = 30f;
-                    hitEffect = Fx.pulverize;
-                    speed = 0f;
-                    splashDamageRadius = 55f;
-                    instantDisappear = true;
-                    splashDamage = 90f;
-                    killShooter = true;
-                    hittable = false;
-                    collidesAir = true;
-                }};
-            }});
-        }};
-
 
         engross = new UnitType("engross"){{
             hovering = true;
             health = 16000f;
             armor = 27f;
             hitSize = 42.5f;
+            rotateSpeed = 1f;
+            speed = 0.8f;
+
+            engines.add(new UnitEngine(){{
+                x = 0f;
+                y = -17.3f;
+                radius = 6.4f;
+            }});
+
+            parts.add(new SHoverPart(){{
+                x = 8.8f;
+                y = -16.7f;
+                mirror = true;
+                radius = 7f;
+                phase = 63f;
+                stroke = 2f;
+                speed = -0.15f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }}, new SHoverPart(){{
+                x = 16.5f;
+                y = -10.6f;
+                mirror = true;
+                radius = 6f;
+                phase = 90f;
+                stroke = 2.3f;
+                speed = 0.11f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }});
+
 
             weapons.add(new RepairBeamWeapon("sueno-engross-gun"){{
                 mirror = true;
@@ -355,14 +344,55 @@ public class SUnits {
                 range = 48f;
                 shootY = 4.5f;
                 beamWidth = 0.5f;
+                repairSpeed = 1f;
 
                 bullet = new BulletType(){{
                     maxRange = 65f;
                 }};
             }});
 
-            float spawnTime = 60f * 16f;
-            abilities.add(new DeathZoneAbility(butterfly, spawnTime, 40f, 80f));
+            float spawnTime = 60f * 3.8f;
+            abilities.add(new DeathZoneAbility(new MissileUnitType("bomb"){{
+                range = 8f * 2.5f;
+                playerControllable = false;
+                logicControllable = false;
+                speed = 0.24f;
+                rotateSpeed = 2.5f;
+                health = 80f;
+                armor = 3f;
+                lifetime = 24f * 60f;
+                outlineColor = Color.valueOf("353535");
+                engineOffset = 2f;
+                engineSize = 2f;
+
+                homingDelay = 20f;
+
+                weapons.add(new Weapon(){{
+                    shootCone = 360f;
+                    mirror = false;
+                    reload = 1f;
+                    shootOnDeath = true;
+                    bullet = new ExplosionBulletType(140f, 28f){{
+                        collidesAir = true;
+                        suppressionRange = 140f;
+                        shootEffect = new ExplosionEffect(){{
+                            lifetime = 50f;
+                            waveStroke = 5f;
+                            waveLife = 8f;
+                            waveColor = Color.white;
+                            sparkColor = smokeColor = Pal.redSpark;
+                            waveRad = 40f;
+                            smokeSize = 4f;
+                            smokes = 7;
+                            smokeSizeBase = 0f;
+                            sparks = 10;
+                            sparkRad = 40f;
+                            sparkLen = 6f;
+                            sparkStroke = 2f;
+                        }};
+                    }};
+                }});
+            }}, spawnTime, 40f, 80f, 4));
         }};
 
 

@@ -7,6 +7,7 @@ import mindustry.Vars;
 import mindustry.mod.Mod;
 import mma.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
+import org.durmiendo.sueno.ui.dialogs.SModsDialog;
 
 @ModAnnotations.AnnotationSettings(
         rootPackage = "org.durmiendo.sueno",
@@ -32,7 +33,7 @@ public class SCore extends Mod {
         Log.info("load Sueno settings");
 
         Setter.load();
-
+        Vars.ui.mods = new SModsDialog();
     }
 
     public TextureRegion getRegion(String nameWithoutPrefix) {

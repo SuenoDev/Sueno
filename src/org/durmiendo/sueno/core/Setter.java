@@ -22,31 +22,31 @@ public class Setter {
 
         SLog.mark();
         loadVars();
-        SLog.einfoElapsed("vars");
+        SLog.elapsedInfo("vars");
 
         SLog.mark();
         loadControllers();
-        SLog.einfoElapsed("controllers");
+        SLog.elapsedInfo("controllers");
 
         SLog.mark();
         loadUI();
-        SLog.einfoElapsed("ui");
+        SLog.elapsedInfo("ui");
 
         SLog.mark();
         loadRender();
-        SLog.einfoElapsed("render");
+        SLog.elapsedInfo("render");
 
         SLog.mark();
         loadChunks();
-        SLog.einfoElapsed("chunks");
+        SLog.elapsedInfo("chunks");
 
         if (SVars.mainDirecory.child("settings.ulk").exists()) {
             SLog.mark();
             SettingsBuilder.uiBuild();
-            SLog.einfoElapsed("settings");
+            SLog.elapsedInfo("settings");
         }
 
-        SLog.einfoElapsed("load settings finished");
+        SLog.elapsedInfo("load settings finished");
     }
 
     private static void loadControllers() {

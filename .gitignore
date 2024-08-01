@@ -1,9 +1,11 @@
 ### Gradle files
 /.gradle/
+/gradle/
 /build/
 cache/
 javax.annotation.processing.Processor
 artifacts/
+
 
 ### Local files
 /settings/local.json
@@ -21,5 +23,7 @@ artifacts/
 *.aseprite
 *.ase
 
+*.jar
+*.bin
 
 /annotations/build/

@@ -12,7 +12,7 @@ public class SLoader {
 
         SLog.mark();
         SCall.registerPackets();
-        SLog.einfoElapsed("packets");
+        SLog.elapsedInfo("packets");
 
 
         SLog.mark();
@@ -21,33 +21,33 @@ public class SLoader {
         EntityMapping.nameMap.keys().toSeq().each(s -> {
             EntityMapping.nameMap.put("sueno-" + s, EntityMapping.nameMap.get(s));
         });
-        SLog.einfoElapsed("entity mapping");
+        SLog.elapsedInfo("entity mapping");
 
 
         SLog.mark();
         SItems.load();
-        SLog.einfoElapsed("items");
+        SLog.elapsedInfo("items");
 
 
         SLog.mark();
         SStatusEffects.load();
-        SLog.einfoElapsed("status effects");
+        SLog.elapsedInfo("status effects");
 
 
         SLog.mark();
         SUnits.load();
-        SLog.einfoElapsed("units");
+        SLog.elapsedInfo("units");
 
         SLog.mark();
         SBlocks.load();
-        SLog.einfoElapsed("blocks");
+        SLog.elapsedInfo("blocks");
 
 
         SLog.mark();
         SPlanets.load();
-        SLog.einfoElapsed("planets");
+        SLog.elapsedInfo("planets");
 
 
-        SLog.einfoElapsed("load content finished");
+        SLog.elapsedInfo("load content finished");
     }
 }

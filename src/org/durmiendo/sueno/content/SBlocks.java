@@ -61,6 +61,7 @@ public class SBlocks {
     violence, slice, stab, slash, avoidance, adaptation, vengeance,
     //test
     ts, undestroyable;
+
     public static void load() {
 
         demand = new SCoreBlock("demand") {{
