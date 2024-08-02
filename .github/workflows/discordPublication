@@ -1,4 +1,4 @@
-name: Building
+name: DiscordPub
 
 on:
   workflow_dispatch:
