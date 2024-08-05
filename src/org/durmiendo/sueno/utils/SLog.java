@@ -82,7 +82,7 @@ public class SLog {
     private static String getCaller(int i) {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
         StackTraceElement caller = trace[i];
-        caller.getClassName()
+        caller.getClassName()ж
         String[] classFullName = caller.getClassName().split("\\.");
         String className = classFullName[classFullName.length - 1];
         int line = caller.getLineNumber();
