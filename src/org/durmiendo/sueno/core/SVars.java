@@ -5,7 +5,6 @@ import mindustry.Vars;
 import mindustry.mod.Mods;
 import org.durmiendo.sap.SuenoSettings;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.files.InternalFileTree;
 import org.durmiendo.sueno.statuses.StatusEffectsController;
 import org.durmiendo.sueno.temperature.TemperatureController;
@@ -23,7 +22,6 @@ public class SVars {
 
     //controllers
     public static CelestialBodyController celestialBodyController;
-    public static WeatherController weathercontroller;
     public static TemperatureController temperatureController;
     public static StatusEffectsController statusEffectsController;
 

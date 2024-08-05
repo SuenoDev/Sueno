@@ -51,7 +51,6 @@ public class Setter {
 
     private static void loadControllers() {
         SLog.load("weather controller (not used)");
-        SVars.weathercontroller = new WeatherController();
 
         SLog.load("celestial body controller (not used)");
         SVars.celestialBodyController = new CelestialBodyController();
