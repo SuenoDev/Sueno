@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.utils;
 
+import arc.struct.ObjectMap;
 import arc.util.Log;
 import arc.util.Time;
 import org.durmiendo.sueno.core.SVars;
@@ -10,6 +11,12 @@ public class SLog {
     public static int layer = 0;
     private static void log(String msg, Object... args) {
         Log.info(msg, args);
+    }
+
+    public static void elapsedRunnable(Runnable runnable, String msg) {
+        mark();
+        runnable.run();
+        elapsedInfo(msg);
     }
 
     public static void infoFld(Object o, String field) {

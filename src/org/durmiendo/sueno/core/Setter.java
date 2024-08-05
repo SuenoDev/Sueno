@@ -7,7 +7,6 @@ import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.controllers.WeatherController;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
@@ -28,9 +27,7 @@ public class Setter {
         loadControllers();
         SLog.elapsedInfo("controllers");
 
-        SLog.mark();
-        loadUI();
-        SLog.elapsedInfo("ui");
+        SLog.elapsedRunnable(Setter::loadUI, "ui");
 
         SLog.mark();
         loadRender();
