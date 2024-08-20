@@ -18,9 +18,11 @@ import arc.util.Strings;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
+import mindustry.gen.Icon;
 import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.ui.Fonts;
+import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
 import org.durmiendo.sueno.temperature.TemperatureController;
@@ -35,17 +37,22 @@ public class GodModeFragment extends Table {
     public GodModeFragment() {
         super();
         visible(() -> {
-            if (Core.input.keyTap(KeyCode.slash)) {
-                show = !show;
-                if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
-                else touchable(() -> Touchable.enabled);
-            }
-            if (show != tmp) {
-                build();
-                tmp = show;
-            }
-            return show;
+            if (Core.input.keyTap(KeyCode.slash)) return shower(true);
+            else return shower(false);
         });
+    }
+
+    public boolean shower(boolean o) {
+        if (o) {
+            show = !show;
+            if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
+            else touchable(() -> Touchable.enabled);
+        }
+        if (show != tmp) {
+            build();
+            tmp = show;
+        }
+        return show;
     }
 
     public void build() {
@@ -57,6 +64,9 @@ public class GodModeFragment extends Table {
         if (SVars.temperatureController == null) {
             label(() -> "[red]T controller is null!").minWidth(300).center();
             working = false;
+            button("rebuild", () -> {
+                shower(true);
+            });
             return;
         }
 
@@ -69,9 +79,7 @@ public class GodModeFragment extends Table {
 //        }
         working = true;
 
-        check("T stop", TemperatureController.stop, b -> {
-            TemperatureController.stop = !TemperatureController.stop;
-        }).left();
+
         row();
         CheckBox tfu = new CheckBox("T forced update");
         tfu.changed(() -> {
@@ -150,6 +158,7 @@ public class GodModeFragment extends Table {
             setUnitT = b;
         }).left();
         row();
+        button(Icon.refresh, Styles.cleari, this::build).left();
     }
 
     public boolean f = false;

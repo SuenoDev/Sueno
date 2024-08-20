@@ -7,24 +7,29 @@ import mindustry.Vars;
 import mindustry.mod.Mod;
 import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
-import org.durmiendo.sueno.ui.dialogs.SModsDialog;
+import org.durmiendo.sueno.settings.SettingsBuilder;
+
 
 @ModAnnotations.AnnotationSettings(
         rootPackage = "org.durmiendo.sueno",
         modInfoPath = "res/mod.json",
         classPrefix = "S"
 )
-public class SCore extends Mod {
-    public SCore(){
-        SVars.extendedLogs = true;//Core.settings.getBool("extended-logs");
+public class Sueno extends Mod {
+    public Sueno() {
         SVars.core = this;
     }
 
     @Override
-    public void loadContent(){
+    public void loadContent() {
         SVars.sueno = Vars.mods.getMod(getClass());
         Log.info("load Sueno content");
+
+//        if (SVars.mainDirecory.child("settings.ulk").exists())
+            SettingsBuilder.load();
+
         SLoader.load();
+
     }
 
     @Override
@@ -33,7 +38,7 @@ public class SCore extends Mod {
         Log.info("load Sueno settings");
 
         Setter.load();
-        Vars.ui.mods = new SModsDialog();
+
     }
 
     public TextureRegion getRegion(String nameWithoutPrefix) {

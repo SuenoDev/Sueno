@@ -9,10 +9,10 @@ public class SLoader {
     public static void load() {
         SLog.mark();
 
-
-        SLog.mark();
+// no packet in this mod
+//        SLog.mark();
         //SCall.registerPackets();
-        SLog.elapsedInfo("packets");
+//        SLog.elapsedInfo("packets");
 
 
         SLog.mark();

@@ -2,24 +2,23 @@ package org.durmiendo.sueno.ui;
 
 
 import arc.Core;
-import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.TextureAtlas;
-import arc.input.KeyCode;
-import arc.math.Angles;
+import arc.Events;
 import arc.math.Mathf;
-import arc.scene.ui.Image;
+import arc.scene.ui.ImageButton;
+import arc.scene.ui.TextButton;
+import arc.scene.ui.layout.Cell;
+import arc.util.Time;
 import mindustry.Vars;
-import mindustry.entities.Effect;
+import mindustry.game.EventType;
+import mindustry.gen.Icon;
 import mindustry.ui.Styles;
-import org.durmiendo.sueno.graphics.SEffect;
-import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
+import mindustry.ui.dialogs.BaseDialog;
+import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.ui.dialogs.CBDialog;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
+import org.durmiendo.sueno.ui.elements.Switch;
 import org.durmiendo.sueno.ui.fragments.GodModeFragment;
-import org.durmiendo.sueno.ui.scene.BufferRegionDrawable;
 
 public class SUI {
     public static final boolean enableVoidStriderCollapseEffectDebugUI = true;
@@ -39,48 +38,72 @@ public class SUI {
         Vars.ui.planet = planet;
         Vars.ui.paused = new SPausedDialog(); // right?
 
-
-
-
+        GodModeFragment g = new GodModeFragment();
+        g.build();
 
         Vars.ui.hudGroup.fill(t -> {
             t.left();
-            t.add(new GodModeFragment());
+            t.table(f -> {
+                f.background(Core.atlas.drawable("sueno-black75"));
+                ImageButton a = new ImageButton(Icon.move, Styles.clearNonei);
+                a.dragged((x, y) -> {
+                    t.x += Core.input.deltaX();
+                    t.y += Core.input.deltaY();
+                });
+                f.add(a).left();
+                f.button(Icon.upOpen, Styles.cleari, () -> {
+                    g.shower(true);
+                }).left();
+                Switch s = new Switch(Icon.pause);
+                s.click(b -> {
+                    TemperatureController.stop = !TemperatureController.stop;
+                });
+                s.left();
+            }).left().minWidth(g.getWidth());
+            t.row();
+            t.table(f -> {
+                f.add(g);
+            });
         });
 
-        voidStriderCollapseEffectDebugUI: {
-            if (!enableVoidStriderCollapseEffectDebugUI)
-                break voidStriderCollapseEffectDebugUI;
-            Vars.ui.hudGroup.fill(t -> {
-                t.right();
-                t.add(new Image(VoidStriderCollapseEffectController.uiDrawable
-                        = new BufferRegionDrawable(VoidStriderCollapseEffectController.effectsBuffer))).visible(() -> Core.input.keyDown(KeyCode.semicolon));
-                t.row();
-                SEffect effect = new SEffect(30, e -> {
-                    Draw.color(Color.white);
-                    float fin = e.life / e.effect.lifeTime;
-                    float scale = fin < 0.8f ? 1f - fin : fin / 4f;
+        Events.on(EventType.WorldLoadEndEvent.class, e -> {
+            g.shower(true);
+        });
+    }
 
-                    TextureAtlas.AtlasRegion region = Core.atlas.find("sueno-void-strider-collapse-effect");
-                    Draw.rect(region, e.x, e.y, region.width * scale, region.height * scale);
-                });
-                Effect bulbs = new Effect(30f, e -> {
-                    Color c = new Color(0.05f, 0.05f, 0.3f);
+    public void warning(String text, float timer) {
+        BaseDialog d = new WarningDialog(timer);
+        d.cont.add(text).row();
 
-                    Angles.randLenVectors(e.id, e.fin(), 40, 80, (x, y, i, o) -> {
-                        Color cc = c.cpy();
-                        cc.b *= (Mathf.angle(x, y) + o) % 1;
-                        Draw.color(cc);
-                        Lines.lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), i * 64f);
-                    });
-                });
-                t.button("create effect", Styles.cleart, () -> {
-                    bulbs.at(Vars.player.x, Vars.player.y);
-                    VoidStriderCollapseEffectController.at(Vars.player.x, Vars.player.y, effect);
-                }).width(200);
-            });
+        d.show();
+    }
+
+    private static class WarningDialog extends BaseDialog {
+        public Cell<TextButton> button;
+        public float timer;
+        public WarningDialog(float timer) {
+            super("@warning");
+            timer = this.timer * timer;
+            buttons.defaults().size(210, 64f);
+            button = buttons.button(getTimer(), Icon.left, this::hide).size(210f, 64f);
+            button.get().setDisabled(true);
+            addCloseListener();
         }
 
+        @Override
+        public void draw() {
+            super.draw();
+            timer -= Time.delta;
+            if (timer <= 0f) {
+                button.get().setDisabled(false);
+                button.get().setText(Core.bundle.get("back"));
+            } else {
+                button.get().setText(getTimer());
+            }
+        }
 
+        public String getTimer() {
+            return "[gray]" + Core.bundle.get("back") + " [white]" + Mathf.ceil(timer/60f) + "s.";
+        }
     }
 }

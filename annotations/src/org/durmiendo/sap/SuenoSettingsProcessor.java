@@ -73,30 +73,64 @@ public class SuenoSettingsProcessor extends BaseProc {
 
                 Log.info("@ @", fullVarName, kind);
                 switch (kind) {
-                    case BYTE:
-                    case SHORT:
+                    case BYTE: {
+                        uiBuildSpec.addCode(Strings.format(
+                                "  s.sliderPref(arc.Core.bundle.get(\"@\"), @, @, @, @, v -> {\n" +
+                                        "    @ = v;\n" +
+                                        "    arc.Core.settings.put(\"@\", v);\n" +
+                                        "    return v;\n" +
+                                        "  });\n",
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, varName));
+                        loadSpec.addCode(Strings.format(
+                                "  @ = arc.Core.settings.getByte(\"@\", @);\n", fullVarName, anno.def()
+                        ));
+                    } break;
+                    case SHORT: {
+                        uiBuildSpec.addCode(Strings.format(
+                                "  s.sliderPref(arc.Core.bundle.get(\"@\"), @, @, @, @, v -> {\n" +
+                                        "    @ = v;\n" +
+                                        "    arc.Core.settings.put(\"@\", v);\n" +
+                                        "    return v;\n" +
+                                        "  });\n",
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, varName));
+                        loadSpec.addCode(Strings.format(
+                                "  @ = arc.Core.settings.getShort(\"@\", @);\n", fullVarName, anno.def()
+                        ));
+                    } break;
                     case INT: {
                         uiBuildSpec.addCode(Strings.format(
                                 "  s.sliderPref(arc.Core.bundle.get(\"@\"), @, @, @, @, v -> {\n" +
                                         "    @ = v;\n" +
+                                        "    arc.Core.settings.put(\"@\", v);\n" +
                                         "    return v;\n" +
                                         "  });\n",
-                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName));
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, varName));
+                        loadSpec.addCode(Strings.format(
+                                "  @ = arc.Core.settings.getInt(\"@\", @);\n", fullVarName, anno.def()
+                        ));
                     } break;
                     case BOOLEAN:{
                         uiBuildSpec.addCode(Strings.format(
                                 "  s.checkPref(arc.Core.bundle.get(\"@\"), @, v -> {\n" +
                                         "    @ = v;\n" +
+                                        "    arc.Core.settings.put(\"@\", v);\n" +
                                         "  });\n",
-                                varName, anno.def() == 1, fullVarName));
+                                varName, anno.def() == 1, fullVarName, varName));
+                        loadSpec.addCode(Strings.format(
+                                "  @ = arc.Core.settings.getBool(\"@\", @);\n", fullVarName, varName, anno.def() == 1
+                        ));
                     } break;
                     case FLOAT:{
                         uiBuildSpec.addCode(Strings.format(
                                 "  s.pref(new org.durmiendo.sueno.ui.dialogs.SliderSetting(arc.Core.bundle.get(\"@\"), @f, @f, @f, @f, v -> {\n" +
                                 "    @ = v;\n" +
+                                "    arc.Core.settings.put(\"@\", v);\n" +
                                 "    return org.durmiendo.sueno.utils.SStrings.fixed(v, @).toString();\n" +
                                 "  }));\n",
-                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, anno.accuracy()));
+                                varName, anno.def(), anno.min(), anno.max(), anno.steep() , fullVarName, varName, anno.accuracy()));
+                        loadSpec.addCode(Strings.format(
+                                "  @ = arc.Core.settings.getFloat(\"@\", @f);\n", fullVarName, varName, anno.def()
+                        ));
                     } break;
                     default: {
                         uiBuildSpec.addCode(Strings.format("arc.util.Log.warn(\"generating settings for @ is not supported (@)\");\n", kind, varName));
@@ -105,6 +139,8 @@ public class SuenoSettingsProcessor extends BaseProc {
                 uiBuildSpec.addCode(Strings.format("org.durmiendo.sueno.utils.SLog.einfo(\"created \" + arc.Core.bundle.get(\"@\") + \" setting\");\n", varName));
             }
             uiBuildSpec.addCode("});");
+
+
 
             builderClass.addMethod(uiBuildSpec.build());
             builderClass.addMethod(loadSpec.build());

@@ -9,6 +9,7 @@ import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
 import mindustry.entities.Effect;
+import mindustry.entities.UnitSorts;
 import mindustry.entities.bullet.ArtilleryBulletType;
 import mindustry.entities.bullet.BasicBulletType;
 import mindustry.entities.bullet.BulletType;
@@ -32,11 +33,14 @@ import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
+import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
+import org.durmiendo.sueno.entities.bullet.AreaLaserBullet;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
+import org.durmiendo.sueno.world.blocks.defense.turrets.SirenTurret;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
@@ -58,7 +62,7 @@ public class SBlocks {
     //floor
     dev, devNone,
     //turrets
-    violence, slice, stab, slash, avoidance, adaptation, vengeance,
+    violence, slice, stab, slash, avoidance, adaptation, vengeance, siren,
     //test
     ts, undestroyable;
 
@@ -92,6 +96,37 @@ public class SBlocks {
 
         undestroyable = new UnDestroyable("undestroyable");
 
+
+        siren = new SirenTurret("siren") {{
+            requirements(Category.turret, with(Items.scrap, 10));
+            consumePower(12f);
+            size = 6;
+            health = 1000;
+            reload = 50f;
+            inaccuracy = 12;
+            range = 54f * 8f;
+
+            unitSort = UnitSorts.strongest;
+            shootSound = Sounds.none;
+            loopSoundVolume = 1f;
+            loopSound = Sounds.laserbeam;
+
+            shootWarmupSpeed = 0.08f;
+            shootCone = 360f;
+
+            aimChangeSpeed = 0.9f;
+            rotateSpeed = 0.9f;
+
+            shootY = 0.5f;
+            outlineColor = Pal.darkOutline;
+            envEnabled |= Env.space;
+
+            shootType = new AreaLaserBullet(){{
+                buildingDamageMultiplier = 0.3f;
+                hitColor = Color.valueOf("fda981");
+
+            }};
+        }};
 
         vengeance = new ItemTurret("vengeance") {{
             size = 4;

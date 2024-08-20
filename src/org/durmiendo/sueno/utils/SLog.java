@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.utils;
 
-import arc.struct.ObjectMap;
 import arc.util.Log;
 import arc.util.Time;
 import org.durmiendo.sueno.core.SVars;
@@ -13,7 +12,7 @@ public class SLog {
         Log.info(msg, args);
     }
 
-    public static void elapsedRunnable(Runnable runnable, String msg) {
+    public static void loadTime(Runnable runnable, String msg) {
         mark();
         runnable.run();
         elapsedInfo(msg);
@@ -36,24 +35,24 @@ public class SLog {
     }
 
     public static void einfo(String msg) {
-        log("[cyan]@[white] @: " + msg, getVert(), getCaller(3));
+        if (SVars.extendedLogs) log("[cyan]@[white] @: " + msg, getVert(), getCaller());
     }
 
 
     public static void info(String msg) {
-        log("[cyan]@[white] @: " + msg, getVert(), getCaller(3));
+        log("[cyan]@[white] @: " + msg, getVert(), getCaller());
     }
 
     public static void info(String msg, Object... args) {
-        log("[cyan]@[white] @: " + msg, getVert(), getCaller(3), args);
+        log("[cyan]@[white] @: " + msg, getVert(), getCaller(), args);
     }
 
     public static void load(String msg) {
-        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(3), msg);
+        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg);
     }
 
     public static void load(String msg, Object... args) {
-        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(3), msg, args);
+        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg, args);
     }
 
     public static void elapsedInfo(String msg) {
@@ -79,14 +78,19 @@ public class SLog {
         }
     }
 
-    private static String getCaller(int i) {
+    private static String getCaller() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        StackTraceElement caller = trace[i];
-        caller.getClassName();
-        String[] classFullName = caller.getClassName().split("\\.");
-        String className = classFullName[classFullName.length - 1];
-        int line = caller.getLineNumber();
-        return className + ":" + line;
+        byte i = 0;
+        for (StackTraceElement caller : trace) {
+            i++;
+            if (i < 4) continue;
+            if (SLog.class.getName().equals(caller.getClassName())) continue;
+            String[] classFullName = caller.getClassName().split("\\.");
+            String className = classFullName[classFullName.length - 1];
+            int line = caller.getLineNumber();
+            return className + ":" + line;
+        }
+        return "unknown:??";
     }
 
     public static String getVert() {

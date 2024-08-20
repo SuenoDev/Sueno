@@ -1,8 +1,10 @@
 package org.durmiendo.sueno.core;
 
+import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
@@ -10,6 +12,7 @@ import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
+import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
@@ -19,35 +22,49 @@ public class Setter {
     public static void load() {
         SLog.mark();
 
-        SLog.mark();
-        loadVars();
-        SLog.elapsedInfo("vars");
+        SLog.loadTime(Setter::loadVars, "vars");
+        SLog.loadTime(Setter::loadControllers, "controllers");
+        SLog.loadTime(Setter::loadUI, "ui");
+        SLog.loadTime(Setter::loadRender, "renderer");
+        SLog.loadTime(Setter::loadChunks, "chunks");
+        SLog.loadTime(Setter::loadCompatibility, "compatibility");
 
-        SLog.mark();
-        loadControllers();
-        SLog.elapsedInfo("controllers");
 
-        SLog.elapsedRunnable(Setter::loadUI, "ui");
+//        if (SVars.mainDirecory.child("settings.ulk").exists())
+            SLog.loadTime(SettingsBuilder::uiBuild, "settings");
 
-        SLog.mark();
-        loadRender();
-        SLog.elapsedInfo("render");
-
-        SLog.mark();
-        loadChunks();
-        SLog.elapsedInfo("chunks");
-
-        if (SVars.mainDirecory.child("settings.ulk").exists()) {
-            SLog.mark();
-            SettingsBuilder.uiBuild();
-            SLog.elapsedInfo("settings");
-        }
 
         SLog.elapsedInfo("load settings finished");
     }
 
+    private static void loadCompatibility() {
+        String ver = "sueno-version";
+        String bld = "sueno-builder";
+        String oldVersion = Core.settings.getString(ver, "null");
+        String oldBuilder = Core.settings.getString(bld, "null");
+
+        String[] builder = SVars.internalFileTree.child("data/builder").readString().split("/");
+        Core.settings.put(bld, builder[0]);
+        String currentVersion = Vars.mods.getMod(Sueno.class).meta.version + "/" + builder[1];
+        Core.settings.put(ver, currentVersion);
+        Core.settings.saveValues();
+
+
+
+        if (SVars.versionWarning && (!((oldVersion.equals(currentVersion) || oldVersion.equals("null")) && (oldBuilder.equals(builder[0]) || oldBuilder.equals("null"))))) {
+            Events.on(EventType.ClientLoadEvent.class, e -> {
+                Time.runTask(10f, () -> {
+                    SVars.ui.warning("Attention, backward compatibility may not be supported in different versions and builders", 3f);
+                });
+            });
+        }
+    }
+
     private static void loadControllers() {
-        SLog.load("weather controller (not used)");
+        SLog.load("touch input processor");
+        SVars.input = new SuenoInputProcessor();
+        Core.input.addProcessor(SVars.input);
+
 
         SLog.load("celestial body controller (not used)");
         SVars.celestialBodyController = new CelestialBodyController();
