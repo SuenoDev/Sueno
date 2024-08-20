@@ -1,40 +1,40 @@
 package org.durmiendo.sueno.ui.elements;
 
 import arc.func.Boolc;
+import arc.graphics.Color;
 import arc.scene.style.Drawable;
 import arc.scene.ui.Image;
 import arc.scene.ui.ImageButton;
-import arc.scene.ui.layout.Cell;
+import arc.util.Scaling;
 
-import static arc.Core.scene;
+import static mindustry.ui.Styles.*;
 
 public class Switch extends ImageButton {
-    private Image image;
-    private Cell imageCell;
     private SwitchStyle style;
     private boolean enabled = false;
     public Boolc listener;
+    public Image image;
 
     public Switch(Drawable icon){
-        this(icon, scene.getStyle(SwitchStyle.class));
+        this(icon, styleDefault);
     }
 
     public Switch(Drawable icon, SwitchStyle style){
-        super(icon);
+        super(icon, style);
         clearChildren();
-        image(icon).pad(4);
+        add(image = new Image(icon, Scaling.stretch)).pad(4f);
+        image.color.set(Color.gray);
         setSize(getPrefWidth(), getPrefHeight());
+        clicked(() -> {
+            enabled = !enabled;
+            listener.get(enabled);
+            if (enabled) image.color.set(Color.yellow);
+            else image.color.set(Color.gray);
+        });
     }
 
     public void click(Boolc l){
         listener = l;
-    }
-
-    @Override
-    public void fireClick() {
-        super.fireClick();
-        enabled = !enabled;
-        listener.get(enabled);
     }
 
     @Override
@@ -44,45 +44,22 @@ public class Switch extends ImageButton {
 
     @Override
     public void setStyle(ButtonStyle style){
-        if(!(style instanceof SwitchStyle)) throw new IllegalArgumentException("style must be a CheckBoxStyle.");
+        if(!(style instanceof SwitchStyle)) style = styleDefault;
         super.setStyle(style);
         this.style = (SwitchStyle) style;
     }
 
-    @Override
-    public void draw(){
-        Drawable checkbox = null;
-        if(isDisabled()){
-            if(enabled && style.checkboxOnDisabled != null)
-                checkbox = style.checkboxOnDisabled;
-            else
-                checkbox = style.checkboxOffDisabled;
-        }
-        if(checkbox == null){
-            if(enabled && isOver() && style.checkboxOnOver != null)
-                checkbox = style.checkboxOnOver;
-            else if(enabled && style.checkboxOn != null)
-                checkbox = style.checkboxOn;
-            else if(isOver() && style.checkboxOver != null && !isDisabled())
-                checkbox = style.checkboxOver;
-            else
-                checkbox = style.checkboxOff;
-        }
-        image.setDrawable(checkbox);
-        super.draw();
-    }
-
-    public Image getImage(){
-        return image;
-    }
-
-    public Cell getImageCell(){
-        return imageCell;
-    }
 
     public static class SwitchStyle extends ImageButton.ImageButtonStyle{
-        public Drawable checkboxOn, checkboxOff;
-        /** Optional. */
-        public Drawable checkboxOver, checkboxOnDisabled, checkboxOffDisabled, checkboxOnOver;
+
     }
+
+    public static SwitchStyle styleDefault = new SwitchStyle(){{
+        down = flatDown;
+        up = none;
+        over = flatOver;
+        disabled = none;
+        imageDisabledColor = Color.gray;
+        imageUpColor = Color.white;
+    }};
 }

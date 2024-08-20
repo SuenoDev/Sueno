@@ -45,21 +45,28 @@ public class SUI {
             t.left();
             t.table(f -> {
                 f.background(Core.atlas.drawable("sueno-black75"));
+
+
                 ImageButton a = new ImageButton(Icon.move, Styles.clearNonei);
                 a.dragged((x, y) -> {
                     t.x += Core.input.deltaX();
                     t.y += Core.input.deltaY();
                 });
                 f.add(a).left();
-                f.button(Icon.upOpen, Styles.cleari, () -> {
+                f.button(Icon.upOpen, Styles.clearNonei, () -> {
                     g.shower(true);
                 }).left();
+
+
                 Switch s = new Switch(Icon.pause);
                 s.click(b -> {
                     TemperatureController.stop = !TemperatureController.stop;
                 });
-                s.left();
+                f.add(s).left();
+
             }).left().minWidth(g.getWidth());
+
+
             t.row();
             t.table(f -> {
                 f.add(g);

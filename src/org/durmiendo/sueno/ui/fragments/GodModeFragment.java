@@ -25,7 +25,6 @@ import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
-import org.durmiendo.sueno.temperature.TemperatureController;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
@@ -78,7 +77,6 @@ public class GodModeFragment extends Table {
 //            return;
 //        }
         working = true;
-
 
         row();
         CheckBox tfu = new CheckBox("T forced update");
