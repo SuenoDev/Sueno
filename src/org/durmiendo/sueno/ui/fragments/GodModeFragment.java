@@ -7,8 +7,8 @@ import arc.graphics.g2d.Draw;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
-import arc.scene.event.Touchable;
 import arc.scene.ui.CheckBox;
+import arc.scene.ui.ImageButton;
 import arc.scene.ui.Label;
 import arc.scene.ui.Slider;
 import arc.scene.ui.layout.Table;
@@ -25,60 +25,93 @@ import mindustry.ui.Fonts;
 import mindustry.ui.Styles;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.Colorated;
+import org.durmiendo.sueno.temperature.TemperatureController;
+import org.durmiendo.sueno.ui.elements.Switch;
+import org.durmiendo.sueno.utils.SLog;
 
 public class GodModeFragment extends Table {
     public boolean show = false;
-    public boolean tmp = show;
     public Slider slider;
     private boolean working = true;
-
+    private boolean draw = false;
     private boolean setUnitT = true;
     public GodModeFragment() {
         super();
-        visible(() -> {
-            if (Core.input.keyTap(KeyCode.slash)) return shower(true);
-            else return shower(false);
+        Events.on(EventType.WorldLoadEndEvent.class, l -> {
+            build(0);
+        });
+        Events.run(EventType.Trigger.draw, () -> {
+            if (working) {
+                Draw.z(Layer.flyingUnit-1);
+
+                Draw.reset();
+            }
+        });
+        visible(() -> show);
+    }
+
+
+    float sizeUI = 40f;
+    public void create() {
+        Vars.ui.hudGroup.fill(k -> {
+            k.left();
+            k.table(t -> {
+                t.table(f -> {
+                    f.background(Core.atlas.drawable("sueno-black75"));
+                    ImageButton a = new ImageButton(Icon.move, Styles.clearNonei);
+                    a.dragged((x, y) -> {
+                        k.x += Core.input.deltaX();
+                        k.y += Core.input.deltaY();
+                    });
+                    f.add(a).left().size(sizeUI);
+                    f.button(Icon.upOpen, Styles.clearNonei, () -> {
+                        show = !show;
+                    }).left().size(sizeUI);
+
+
+                    Switch s = new Switch(Icon.pause);
+                    s.click(b -> {
+                        TemperatureController.stop = !TemperatureController.stop;
+                    });
+                    f.add(s).left().size(sizeUI);
+
+                    Switch s2 = new Switch(Icon.eyeSmall);
+                    s2.click(b -> {
+                        draw = !draw;
+                    });
+                    f.add(s2).left().size(sizeUI);
+
+                    f.button(Icon.refreshSmall, Styles.clearNonei, () -> build(0)).left().size(sizeUI);
+                    f.button(Icon.terminal, Styles.clearNonei, () -> build(1)).left().size(sizeUI);
+
+                }).left().minWidth(getWidth());
+                t.row();
+                t.table(f -> {
+                    f.add(this).left();
+                }).left();
+            });
         });
     }
 
-    public boolean shower(boolean o) {
-        if (o) {
-            show = !show;
-            if (touchable == Touchable.disabled) touchable(() -> Touchable.enabled);
-            else touchable(() -> Touchable.enabled);
-        }
-        if (show != tmp) {
-            build();
-            tmp = show;
-        }
-        return show;
-    }
-
-    public void build() {
+    public void build(int page) {
         clear();
         background(Core.atlas.drawable("sueno-black75"));
-        label(() -> "[gold]The God mode").minWidth(300).center();
+        add("").minWidth(sizeUI*6).left();
         row();
 
-        if (SVars.temperatureController == null) {
-            label(() -> "[red]T controller is null!").minWidth(300).center();
-            working = false;
-            button("rebuild", () -> {
-                shower(true);
-            });
+        if (page == 1) {
+            for (int s : SLog.data.keys().toArray().toArray()) {
+                label(() -> SLog.data.get(s)).left();
+                row();
+            }
             return;
         }
-
-//        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) {
-//            label(() -> "[red]Planet is not hielo!").minWidth(300).center();
-//            row();
-//            label(() -> "[gray]Temperature is only\navailable on hielo").minWidth(300).center();
-//            working = false;
-//            return;
-//        }
+        if (SVars.temperatureController == null) {
+            label(() -> "[red]T controller is null!").center();
+            working = false;
+            return;
+        }
         working = true;
-
-        row();
         CheckBox tfu = new CheckBox("T forced update");
         tfu.changed(() -> {
             tfu.setChecked(false);
@@ -91,13 +124,12 @@ public class GodModeFragment extends Table {
         rch.changed(() -> {
             rch.setChecked(false);
             SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
-
         });
         add(rch).left();
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", SVars.temperatureController.stop ? 0 : SVars.temperatureController.time)).left();
+            label(() -> Strings.format("T update: @ms", TemperatureController.stop ? 0 : SVars.temperatureController.time)).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
@@ -117,38 +149,31 @@ public class GodModeFragment extends Table {
             }).left();
         });
         row();
-        Label lb = new Label("Кисть T: 0");
+        Label lb = new Label("visible T: 0");
         slider = new Slider(0, 100, 1, false);
         slider.changed(() -> {
-            lb.setText("Кисть T: " + slider.getValue());
+            lb.setText("visible T: " + slider.getValue());
         });
         add(lb).left();
         row();
         add(slider).left();
         row();
-        Label lb1 = new Label("Радиус T: 0");
+        Label lb1 = new Label("range T: 0");
         slider1 = new Slider(0, 30, 0.5f, false);
         slider1.changed(() -> {
-            lb1.setText("Радиус T: " + slider1.getValue());
+            lb1.setText("range T: " + slider1.getValue());
         });
         add(lb1).left();
         row();
         add(slider1).left();
         row();
         Slider s = new Slider(-1, 1, 1 /100f, false);
-        label(() -> "Установить T (j): " + Strings.fixed(s.getValue(),2)).left();
-        CheckBox ch = new CheckBox("");
-        ch.setChecked(false);
+        label(() -> "set T (j): " + Strings.fixed(s.getValue(),2)).left();
         Events.run(EventType.Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.j)) {
                 setT(s.getValue(), slider1.getValue());
             }
         });
-        ch.changed(() -> {
-            ch.setChecked(false);
-            setT(s.getValue(), slider1.getValue());
-        });
-        add(ch).left();
         row();
         add(s).left();
         row();
@@ -156,7 +181,6 @@ public class GodModeFragment extends Table {
             setUnitT = b;
         }).left();
         row();
-        button(Icon.refresh, Styles.cleari, this::build).left();
     }
 
     public boolean f = false;
@@ -191,11 +215,12 @@ public class GodModeFragment extends Table {
     @Override
     public void draw() {
         if (working) {
-            Draw.z(Layer.flyingUnit+1);
-            re(slider, true);
+            Draw.draw(Layer.flyingUnit-1, () -> {
+                re(slider, true);
 
-            re(slider1, false);
-            Draw.reset();
+                re(slider1, false);
+                Draw.reset();
+            });
         }
         super.draw();
     }

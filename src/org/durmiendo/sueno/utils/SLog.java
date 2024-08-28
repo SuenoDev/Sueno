@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.utils;
 
+import arc.struct.IntMap;
 import arc.util.Log;
 import arc.util.Time;
 import org.durmiendo.sueno.core.SVars;
@@ -10,6 +11,14 @@ public class SLog {
     public static int layer = 0;
     private static void log(String msg, Object... args) {
         Log.info(msg, args);
+    }
+    public static IntMap<String> data = new IntMap<>();
+
+    public static void visi(String msg, int id) {
+        data.put(id, msg);
+    }
+    public static void unvisi(int id) {
+        data.remove(id);
     }
 
     public static void loadTime(Runnable runnable, String msg) {

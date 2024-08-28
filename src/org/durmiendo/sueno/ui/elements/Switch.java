@@ -19,17 +19,26 @@ public class Switch extends ImageButton {
         this(icon, styleDefault);
     }
 
+    public Switch(Drawable icon, boolean enabled){
+        this(icon, styleDefault);
+        this.enabled = enabled;
+    }
+
+    public boolean isPressed(){
+        return enabled;
+    }
+
     public Switch(Drawable icon, SwitchStyle style){
         super(icon, style);
         clearChildren();
+        table(i -> {
+
+        });
         add(image = new Image(icon, Scaling.stretch)).pad(4f);
-        image.color.set(Color.gray);
         setSize(getPrefWidth(), getPrefHeight());
         clicked(() -> {
             enabled = !enabled;
             listener.get(enabled);
-            if (enabled) image.color.set(Color.yellow);
-            else image.color.set(Color.gray);
         });
     }
 
@@ -49,6 +58,11 @@ public class Switch extends ImageButton {
         this.style = (SwitchStyle) style;
     }
 
+    @Override
+    public void draw() {
+        super.draw();
+
+    }
 
     public static class SwitchStyle extends ImageButton.ImageButtonStyle{
 

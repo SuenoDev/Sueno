@@ -436,7 +436,7 @@ public class SUnits {
                     ));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
-                    Drawf.light(unit.x, unit.y,56f, e, 0.2f);
+                    Drawf.light(unit.x, unit.y,56f, e, 0.4f);
                 });
             }
         };

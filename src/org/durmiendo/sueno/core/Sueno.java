@@ -29,7 +29,6 @@ public class Sueno extends Mod {
             SettingsBuilder.load();
 
         SLoader.load();
-
     }
 
     @Override

@@ -2,22 +2,16 @@ package org.durmiendo.sueno.ui;
 
 
 import arc.Core;
-import arc.Events;
 import arc.math.Mathf;
-import arc.scene.ui.ImageButton;
 import arc.scene.ui.TextButton;
 import arc.scene.ui.layout.Cell;
 import arc.util.Time;
 import mindustry.Vars;
-import mindustry.game.EventType;
 import mindustry.gen.Icon;
-import mindustry.ui.Styles;
 import mindustry.ui.dialogs.BaseDialog;
-import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.ui.dialogs.CBDialog;
 import org.durmiendo.sueno.ui.dialogs.SPausedDialog;
 import org.durmiendo.sueno.ui.dialogs.SPlanetDialog;
-import org.durmiendo.sueno.ui.elements.Switch;
 import org.durmiendo.sueno.ui.fragments.GodModeFragment;
 
 public class SUI {
@@ -39,43 +33,7 @@ public class SUI {
         Vars.ui.paused = new SPausedDialog(); // right?
 
         GodModeFragment g = new GodModeFragment();
-        g.build();
-
-        Vars.ui.hudGroup.fill(t -> {
-            t.left();
-            t.table(f -> {
-                f.background(Core.atlas.drawable("sueno-black75"));
-
-
-                ImageButton a = new ImageButton(Icon.move, Styles.clearNonei);
-                a.dragged((x, y) -> {
-                    t.x += Core.input.deltaX();
-                    t.y += Core.input.deltaY();
-                });
-                f.add(a).left();
-                f.button(Icon.upOpen, Styles.clearNonei, () -> {
-                    g.shower(true);
-                }).left();
-
-
-                Switch s = new Switch(Icon.pause);
-                s.click(b -> {
-                    TemperatureController.stop = !TemperatureController.stop;
-                });
-                f.add(s).left();
-
-            }).left().minWidth(g.getWidth());
-
-
-            t.row();
-            t.table(f -> {
-                f.add(g);
-            });
-        });
-
-        Events.on(EventType.WorldLoadEndEvent.class, e -> {
-            g.shower(true);
-        });
+        g.create();
     }
 
     public void warning(String text, float timer) {
