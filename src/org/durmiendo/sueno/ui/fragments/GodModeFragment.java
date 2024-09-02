@@ -43,7 +43,6 @@ public class GodModeFragment extends Table {
         Events.run(EventType.Trigger.draw, () -> {
             if (working) {
                 Draw.z(Layer.flyingUnit-1);
-
                 Draw.reset();
             }
         });
@@ -133,7 +132,7 @@ public class GodModeFragment extends Table {
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
-                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-1);
+//                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-1);
                 return Strings.format("T at:[#@] @",
                         Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+1) / 2f),
                         Strings.fixed(SVars.temperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
@@ -141,7 +140,7 @@ public class GodModeFragment extends Table {
             }).left();
             row();
             label(() -> {
-                if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
+//                if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
                         Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.temperatureAt(Vars.player.unit())+1) / 2f)),
                         Strings.fixed(SVars.temperatureController.temperatureAt(Vars.player.unit()), 2));
@@ -247,7 +246,7 @@ public class GodModeFragment extends Table {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-rr.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+ rr.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                    float t = SVars.temperatureController.temperatureAt(x, y);
+                    float t = SVars.temperatureController.at(x, y);
                     String s;
                     s = Strings.fixed(t, 2);
                     Color c;

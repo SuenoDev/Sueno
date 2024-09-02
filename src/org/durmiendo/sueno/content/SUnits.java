@@ -425,8 +425,10 @@ public class SUnits {
             }}));
         }
 
-        public Color s = Color.valueOf("FF5A40").a(0.07f);
-            public Color e = Color.valueOf("FF0000").a(0.3f);
+        public Color
+                s = Color.valueOf("FF5A40").a(0.07f),
+                e = Color.valueOf("FF0000").a(0.23f);
+
             @Override
             public void draw(Unit unit) {
                 super.draw(unit);
@@ -455,8 +457,8 @@ public class SUnits {
             weapons.add(new Weapon("sueno-singe-weapon"){{
                 y = -1.25f;
                 layerOffset = 0.0001f;
-                reload = 6.4f;
-                shootY = 4.5f;
+                reload = 9.4f;
+                shootY = 3.65f;
                 recoil = 1f;
                 rotate = true;
                 rotateSpeed = 4f;
@@ -466,10 +468,11 @@ public class SUnits {
                 heatColor = Color.valueOf("f9350f");
                 cooldownTime = 30f;
                 bullet = new SRailBulletType(){{
+
                     lifetime = 10f;
                     length = 210f;
                     instability = 80f;
-                    damage = 12f;
+                    damage = 15f;
                     hitColor = Color.valueOf("feb380");
                     pierceDamageFactor = 0.8f;
                     spread = 4f;
@@ -487,14 +490,17 @@ public class SUnits {
                         });
                     });
 
-                    shootEffect = new Effect(10, e -> color(e.color));
+                    shootEffect = new Effect(10, e -> {
+                        color(e.color);
+                    });
 
+                    Color c = Color.valueOf("f9350f");
                     lineEffect = new Effect(23f, e -> {
                         if(!(e.data instanceof Vec2 v)) return;
                         Fx.rand.setSeed(e.id);
-                        Color c = Color.valueOf("f9350f");
+
                         c.a = 0.5f;
-                        for(int i = 0; i < 10; i++){
+                        for(int i = 0; i < 10; i++) {
                             Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
                             stroke(e.fout() * 1.6f + 0.6f);
                             color(c);
@@ -503,6 +509,27 @@ public class SUnits {
                             color(e.color);
                             Lines.lineAngleCenter(e.x + Fx.v.x, e.y + Fx.v.y, e.rotation + e.finpow(), e.foutpowdown() * 12f * Fx.rand.random(0.5f, 1f) + 0.3f);
                         }
+
+                        for (int i = 0; i < 5; i++) {
+                            Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
+                            stroke(e.fout() * 1.6f + 0.6f);
+                            color(c);
+                            Drawf.tri(e.x + Fx.v.x, e.y + Fx.v.y,e.foutpowdown() * 6.4f * Fx.rand.random(0.5f, 1f) + 0.3f,e.foutpowdown() * 3f * Fx.rand.random(0.5f, 1f) + 0.3f, e.rotation + e.finpow() + 90);
+                            stroke(e.fout() * 1.2f + 0.2f);
+                            color(e.color);
+                            Drawf.tri(e.x + Fx.v.x, e.y + Fx.v.y,e.foutpowdown() * 6.4f * Fx.rand.random(0.5f, 1f) + 0.3f,e.foutpowdown() * 3f * Fx.rand.random(0.5f, 1f) + 0.2f, e.rotation + e.finpow() + 90);
+                        }
+
+                        for (int i = 0; i < 5; i++) {
+                            Fx.v.trns(e.rotation, Fx.rand.random(8f, v.dst(e.x, e.y) - 8f));
+                            stroke(e.fout() * 1.6f + 0.6f);
+                            color(c);
+                            Drawf.tri(e.x + Fx.v.x, e.y + Fx.v.y,e.foutpowdown() * 6.4f * Fx.rand.random(0.5f, 1f) + 0.3f,e.foutpowdown() * 3f * Fx.rand.random(0.5f, 1f) + 0.3f, e.rotation + e.finpow() - 90);
+                            stroke(e.fout() * 1.2f + 0.2f);
+                            color(e.color);
+                            Drawf.tri(e.x + Fx.v.x, e.y + Fx.v.y,e.foutpowdown() * 6.4f * Fx.rand.random(0.5f, 1f) + 0.3f,e.foutpowdown() * 3f * Fx.rand.random(0.5f, 1f) + 0.2f, e.rotation + e.finpow() - 90);
+                        }
+
                         stroke(e.fout() * 1.2f + 0.6f);
                         e.scaled(14f, b -> {
                             stroke(b.fout() * 1.8f);
@@ -609,7 +636,7 @@ public class SUnits {
                         speed = 17.4f;
                         damage = 77f;
                         lifetime = 26f;
-                        width = 4.3f;
+                        width = 7.3f;
                         hitColor = Color.valueOf("ffdab7");
                         shootEffect = smokeEffect = Fx.none;
                         hitEffect = new Effect(30f, e -> {
@@ -624,10 +651,18 @@ public class SUnits {
                             });
                         });
 
+
+                        trailEffect = new Effect(30f, e -> {
+                            color(e.color);
+                            Drawf.tri(e.x + Mathf.cosDeg(e.rotation) * 32f * e.fin(), e.y + Mathf.sinDeg(e.rotation) * 32f * e.fin(), 3 * e.foutpowdown(), 3 * e.foutpowdown(), e.rotation);
+                        });
+                        trailChance = 0.3f;
+                        trailRotation = true;
+
                         despawnEffect = new Effect(30f, e -> {
                             color(fromColor, e.color, e.fin());
                             stroke(2f * e.fout());
-                            randLenVectors(e.id, 12, 65f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 20f, (x, y) -> {
+                            randLenVectors(e.id, 12, 125f * e.fin(), e.rotation+Mathf.randomSeed(e.id,-3f, 3f), 20f, (x, y) -> {
                                 lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
                             });
                         });
@@ -746,7 +781,16 @@ public class SUnits {
 
                     hitEffect = despawnEffect = SFx.deadSun;
 
-
+                    trailChance = 0.4f;
+                    trailInterval = 44f;
+                    trailRotation = true;
+                    trailEffect = new Effect(48f, e -> {
+                        color(e.color);
+                        stroke(0.6f * e.foutpowdown());
+                        randLenVectors(e.id+1, 2, 1.9f, (x, y) -> {
+                            Lines.lineAngle(e.x + x + Mathf.cosDeg(e.rotation) * e.fin() * 8f, e.y + y + Mathf.sinDeg(e.rotation) * e.fin() * 8f, e.rotation-180f, 4.6f * e.foutpowdown());
+                        });
+                    });
                 }
 
 

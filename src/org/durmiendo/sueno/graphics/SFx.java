@@ -27,15 +27,14 @@ public class SFx {
         Draw.rect(region, e.x, e.y, r * scale, r * scale);
     });
 
-    private static final float c1 = 7.9f;
-    private static final float c2 = 6.1f;
-    private static final float c3 = 5.5f;
-    private static final float d1 = 1f;
-    private static final float d2 = 1/3f;
-    private static final float d3 = 2/3f;
-    private static final Color sunColor1 = arc.graphics.Color.valueOf("FFF2B3");
-    private static final Color sunColor2 = arc.graphics.Color.valueOf("D9C283");
-    private static final Color sunColor3 = Color.valueOf("D3A068");
+    private static final float c1 = 7.9f, c2 = 6.1f, c3 = 5.5f,
+            d1 = 1f, d2 = 1/3f, d3 = 2/3f;
+
+    private static final Color
+            sunColor1 = Color.valueOf("FFF2B3"),
+            sunColor2 = Color.valueOf("D9C283"),
+            sunColor3 = Color.valueOf("D3A068");
+
     public static Effect sun = new Effect(10, e -> {
         Draw.color(Color.white);
         float fin = e.fin();
@@ -72,7 +71,7 @@ public class SFx {
         }
     };
 
-    public static Effect deadSun = new Effect(65, e -> {
+    public static Effect deadSun = new Effect(42f, e -> {
         Draw.color(Color.white);
         float fin = e.fin();
 

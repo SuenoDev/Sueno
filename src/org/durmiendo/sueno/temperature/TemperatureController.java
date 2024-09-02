@@ -13,7 +13,6 @@ import mindustry.gen.Unit;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import org.durmiendo.sap.SuenoSettings;
-import org.durmiendo.sueno.content.SPlanets;
 import org.durmiendo.sueno.utils.SLog;
 
 public class TemperatureController {
@@ -118,7 +117,7 @@ public class TemperatureController {
 
     public void update() {
         if (Vars.state.isPaused()) return;
-        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) return;
+//        if (!SPlanets.hielo.equals(Vars.state.rules.planet)) return;
         if (stop) return;
 
         long startTime = Time.millis();
