@@ -13,13 +13,15 @@ public class SunBulletType extends BasicBulletType {
     public void update(Bullet b) {
         super.update(b);
         Groups.bullet.each(bb -> {
-            if (bb.team != b.team) {
+            boolean ins = bb.type instanceof SubSunBulletType;
+            if (bb.team != b.team || ins) {
                 float d = Mathf.dst(bb.x, bb.y, b.x, b.y);
                 if (d < 96f) {
                     float a = Mathf.atan2(b.x - bb.x, b.y - bb.y);
-                    bb.vel.add(Mathf.cos(a) / (d / 14f) / 2.2f * Time.delta, Mathf.sin(a) / (d / 14f) / 1.4f * Time.delta);
+                    d += 1.2f;
+                    bb.vel.add(Mathf.cos(a) / (d / 16f) / 2.4f * Time.delta, Mathf.sin(a) / (d / 16f) / 2.4f * Time.delta);
                 }
-                if (d < 4f && b.damage < damageLimit) {
+                if (d < 4f && b.damage < damageLimit && !ins) {
                     b.damage += bb.damage * damageAbsorption;
                     bb.remove();
                 }

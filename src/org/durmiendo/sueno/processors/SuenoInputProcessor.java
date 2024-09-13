@@ -31,12 +31,12 @@ public class SuenoInputProcessor implements InputProcessor {
         if (!active.isEmpty()) {
             Vars.player.shooting(false);
         }
-        listeners.forEach(l -> {
+        for (ObjectMap.Entry<Area, WorldListener> l : listeners) {
             if (l.key.insidePoint(tmp.x, tmp.y)) {
                 active.add(l.value);
                 l.value.apply(tmp.x, tmp.y, (byte) 1);
             }
-        });
+        }
         return InputProcessor.super.touchDown(screenX, screenY, pointer, button);
     }
 

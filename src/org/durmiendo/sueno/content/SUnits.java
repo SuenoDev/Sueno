@@ -42,6 +42,7 @@ import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.entities.VEffect;
 import org.durmiendo.sueno.entities.abilities.DeathZoneAbility;
 import org.durmiendo.sueno.entities.bullet.SRailBulletType;
+import org.durmiendo.sueno.entities.bullet.SubSunBulletType;
 import org.durmiendo.sueno.entities.bullet.SunBulletType;
 import org.durmiendo.sueno.entities.part.SHoverPart;
 import org.durmiendo.sueno.gen.VoidStriderc;
@@ -198,6 +199,7 @@ public class SUnits {
                 x = 0f;
                 y = 0f;
                 reload = 19f;
+                
                 bullet = new SRailBulletType(){{
                     lifetime = 10f;
 
@@ -438,7 +440,7 @@ public class SUnits {
                     ));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
-                    Drawf.light(unit.x, unit.y,56f, e, 0.4f);
+                    Drawf.light(unit.x, unit.y,56f, e, 1f);
                 });
             }
         };
@@ -788,18 +790,31 @@ public class SUnits {
                         color(e.color);
                         stroke(0.6f * e.foutpowdown());
                         randLenVectors(e.id+1, 2, 1.9f, (x, y) -> {
-                            Lines.lineAngle(e.x + x + Mathf.cosDeg(e.rotation) * e.fin() * 8f, e.y + y + Mathf.sinDeg(e.rotation) * e.fin() * 8f, e.rotation-180f, 4.6f * e.foutpowdown());
+                            Lines.lineAngle(e.x + x + Mathf.cosDeg(e.rotation) * e.fin() * 8f, e.y + y + Mathf.sinDeg(e.rotation) * e.fin() * 8f, e.rotation-180f + Mathf.randomSeed(e.id+2, -22f, 22f), 4.6f * e.foutpowdown());
                         });
                     });
                 }
+                public final BasicBulletType subBulletType = new SubSunBulletType() {{
+                    damage = 45;
+                    speed = 2.1f;
+                    bullet = Color.valueOf("FFF2B3");
+                    lifetime = 320f;
+                    sprite = "sueno-large-orb";
+                    trailWidth = 1f;
+                    trailLength = 14;
+                    homingPower = 0.01f;
 
-
+                }};
                 public Color bullet = Color.valueOf("FFF2B3");
                     @Override
                     public Bullet create(Entityc owner, Entityc shooter, Team team, float x, float y, float angle, float damage, float velocityScl, float lifetimeScl, Object data, Mover mover, float aimX, float aimY) {
                         Bullet b = super.create(owner, shooter, team, x, y, angle, damage, velocityScl, lifetimeScl, data, mover, aimX, aimY);
                         SFx.sun.create(x, y, 0, bullet, b);
 
+                        subBulletType.create(owner, team, x + Mathf.cosDeg(angle + 45f) * 16f, y + Mathf.sinDeg(angle + 45f) * 16f, angle - 45f);
+                        subBulletType.create(owner, team, x + Mathf.cosDeg(angle + 125f) * 20f, y + Mathf.sinDeg(angle + 125f) * 20f, angle - 125f);
+                        subBulletType.create(owner, team, x + Mathf.cosDeg(angle + 265f) * 24f, y + Mathf.sinDeg(angle + 265f) * 24f, angle - 265f);
+//
                         return b;
                     }
                 };
