@@ -97,6 +97,14 @@ public class Setter {
                 Vars.renderer.effectBuffer.blit(SShaders.deadShader);
             });
         });
+
+        SLog.load("normal shader");
+        Events.run(EventType.Trigger.drawOver, () -> {
+            Draw.drawRange(42f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+                Vars.renderer.effectBuffer.end();
+                Vars.renderer.effectBuffer.blit(SShaders.normalShader);
+            });
+        });
     }
 
     private static void loadVars() {

@@ -27,4 +27,11 @@ void main(){
     if(texture2D(u_texture, T).a < 0.9 && maxed.a > 0.9){
         gl_FragColor = vec4(maxed.rgb, maxed.a * 100.0);
     }
+
+
+//    if (coords.x/8 > 60.5 && coords.x/8 < 70.5 && coords.y/8 > 60.5 && coords.y/8 < 70.5) {
+//        gl_FragColor = texture2D(u_texture, T);
+//    } else {
+//        gl_FragColor = end;
+//    }
 }

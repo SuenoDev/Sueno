@@ -1,10 +1,13 @@
 package org.durmiendo.sueno.world.blocks.storage;
 
+import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.util.Time;
+import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 public class SCoreBlock extends CoreBlock {
@@ -20,10 +23,17 @@ public class SCoreBlock extends CoreBlock {
         solid = true;
     }
 
+    @Override
+    public void drawBase(Tile tile) {
+        super.drawBase(tile);
+        Draw.z(42);
+        Draw.rect("sueno-demand-normal11", tile.drawx(), tile.drawy());
+    }
+
     public class CoreBuild extends CoreBlock.CoreBuild implements Heated {
         @Override
         public void updateTile() {
-            if (!SVars.temperatureController.stop) {
+            if (!TemperatureController.stop) {
                 for (int x = tileX()-Mathf.floor(size/2f); x < tileX()-Mathf.floor(size/2f)+size; x++) {
                     for (int y = tileY()-Mathf.floor(size/2f); y < tileY()-Mathf.floor(size/2f)+size; y++) {
                         SVars.temperatureController.at(x, y, heatPower * Time.delta);

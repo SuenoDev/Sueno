@@ -16,6 +16,7 @@ public class SShaders {
      */
     public static VoidSpaceShader voidSpaceShader = new VoidSpaceShader();
     public static DeadShader deadShader = new DeadShader();
+    public static NormalShader normalShader = new NormalShader();
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
 
     public static class VoidSpaceShader extends Shader{
@@ -55,6 +56,24 @@ public class SShaders {
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_invsize", 1f/Core.camera.width, 1f/Core.camera.height);
+        }
+    }
+
+    public static class NormalShader extends Shader{
+        public NormalShader(){
+            super(
+                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/normal.frag")
+            );
+        }
+
+        @Override
+        public void apply(){
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
+            setUniformf("u_lightPos", Core.input.mouseWorldX(), Core.input.mouseWorldY());
         }
     }
 

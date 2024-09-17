@@ -8,6 +8,7 @@ import arc.math.Mathf;
 import arc.math.geom.Rect;
 import arc.math.geom.Vec2;
 import arc.scene.ui.layout.Table;
+import arc.util.Time;
 import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.ai.types.BuilderAI;
@@ -859,7 +860,21 @@ public class SUnits {
                     ha.hd.capacity*=ph*0.5f;
                 }
             });
-        }};
+        }
+
+            @Override
+            public void update(Unit unit) {
+                super.update(unit);
+                Groups.bullet.each(bb -> {
+                    float d = bb.dst(unit);
+                    if (bb.team != unit.team && d < 8f * 5f) {
+                        float a = Mathf.atan2(unit.x() - bb.x, unit.y() - bb.y);
+                        d += 1.8f;
+                        bb.vel.add(Mathf.cos(a) / (d / 16f) / 2.4f * Time.delta, Mathf.sin(a) / (d / 16f) / 2.4f * Time.delta);
+                    }
+                });
+            }
+        };
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
 
