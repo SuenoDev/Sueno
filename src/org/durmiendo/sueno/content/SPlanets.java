@@ -3,7 +3,6 @@ package org.durmiendo.sueno.content;
 
 import arc.graphics.Color;
 import mindustry.content.Items;
-import mindustry.content.Planets;
 import mindustry.game.Team;
 import mindustry.graphics.Pal;
 import mindustry.graphics.g3d.HexMesh;
@@ -14,10 +13,13 @@ import org.durmiendo.sueno.maps.planet.HieloPlanetGenerator;
 
 
 public class SPlanets {
-    public static Planet hielo;
+    public static Planet hielo, hole;
 
     public static void load() {
-        hielo = new Planet("hielo", Planets.sun, 1f, 2) {
+        hole = new Planet("hole", null, 0) {
+
+        };
+        hielo = new Planet("hielo", hole, 1f, 2) {
             {
                 generator = new HieloPlanetGenerator();
                 meshLoader = () -> new HexMesh(this, 5);

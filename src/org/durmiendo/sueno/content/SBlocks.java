@@ -36,11 +36,13 @@ import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
 import org.durmiendo.sueno.entities.bullet.AreaLaserBullet;
+import org.durmiendo.sueno.world.blocks.DBlock;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SirenTurret;
+import org.durmiendo.sueno.world.blocks.distribution.Monorail;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
@@ -67,6 +69,20 @@ public class SBlocks {
     ts, undestroyable;
 
     public static void load() {
+
+        new Monorail("monorail") {{
+            requirements(Category.effect, with(Items.scrap, 10));
+            size = 1;
+            health = 100;
+
+        }};
+
+        new DBlock("core") {{
+            requirements(Category.effect, with(Items.scrap, 99999));
+            size = 5;
+            health = 16000;
+            armor = 8f;
+        }};
 
         demand = new SCoreBlock("demand") {{
             requirements(Category.effect, with(Items.scrap, 10));

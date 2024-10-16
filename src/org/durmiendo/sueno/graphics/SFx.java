@@ -27,6 +27,16 @@ public class SFx {
         Draw.rect(region, e.x, e.y, r * scale, r * scale);
     });
 
+    public static Effect destroy = new Effect(150f, e -> {
+        Draw.color(e.color);
+
+        Mathf.rand.setSeed(e.id);
+        stroke(e.foutpowdown()*0.7f);
+        randLenVectors(e.id, 2, 42f*e.fin()+1.3f, e.rotation, 100f, (x,y) -> {
+            Lines.lineAngle(e.x+x,e.y+y,e.rotation+Mathf.random(20,-20f)*e.fin()*4f,7.5f*e.foutpowdown());
+        });
+    });
+
     private static final float c1 = 7.9f, c2 = 6.1f, c3 = 5.5f,
             d1 = 1f, d2 = 1/3f, d3 = 2/3f;
 

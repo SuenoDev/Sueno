@@ -879,14 +879,14 @@ public class SUnits {
         voidStrider = new VoidStriderUnitType("void-strider"){{
 
             outlineColor = Color.valueOf("141414");
-            speed = 0.75f;
+            speed = 1.1f;
             hitSize = 26f;
             stepShake = 0.2f;
-            rotateSpeed = 1.2f;
+            rotateSpeed = 2.2f;
             health = 12000f;
             armor = 38f;
             legCount = 4;
-            legBaseOffset = 5f;
+            legBaseOffset = 1.7f;
             legGroupSize = 2;
             legMoveSpace = 1.5f;
             legForwardScl = 1.2f;
@@ -925,7 +925,7 @@ public class SUnits {
 
                     trailColor = Color.valueOf("ffffff");
                     trailLength = 9;
-                    trailWidth = 1.75f;
+                    trailWidth = 1.8f;
                     trailSinScl = 2.5f;
                     trailSinMag = 0.5f;
                     trailEffect = Fx.none;

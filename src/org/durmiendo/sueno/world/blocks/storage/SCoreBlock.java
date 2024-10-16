@@ -27,7 +27,7 @@ public class SCoreBlock extends CoreBlock {
     public void drawBase(Tile tile) {
         super.drawBase(tile);
         Draw.z(42);
-        Draw.rect("sueno-demand-normal11", tile.drawx(), tile.drawy());
+        Draw.rect("sueno-demand-normal13", tile.drawx(), tile.drawy());
     }
 
     public class CoreBuild extends CoreBlock.CoreBuild implements Heated {

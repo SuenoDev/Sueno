@@ -96,6 +96,8 @@ public class Setter {
                 Vars.renderer.effectBuffer.end();
                 Vars.renderer.effectBuffer.blit(SShaders.deadShader);
             });
+
+
         });
 
         SLog.load("normal shader");

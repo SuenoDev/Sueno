@@ -4,6 +4,7 @@ import arc.Core;
 import arc.graphics.Gl;
 import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
+import arc.struct.ObjectMap;
 import arc.util.Time;
 import mindustry.graphics.Shaders;
 import org.durmiendo.sueno.core.SVars;
@@ -15,9 +16,29 @@ public class SShaders {
      * shader in layer = 112 (SLayers.voidspace)
      */
     public static VoidSpaceShader voidSpaceShader = new VoidSpaceShader();
+    public static ContractionShader contractionShader = new ContractionShader();
     public static DeadShader deadShader = new DeadShader();
+    public static IceShader iceShader = new IceShader();
     public static NormalShader normalShader = new NormalShader();
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
+
+    public static class IceShader extends Shader{
+        public IceShader(){
+            super(
+                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/ice.frag")
+            );
+        }
+
+        @Override
+        public void apply(){
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
+            setUniformf("u_time", Time.time);
+        }
+    }
 
     public static class VoidSpaceShader extends Shader{
         public VoidSpaceShader(){
@@ -29,13 +50,43 @@ public class SShaders {
 
         @Override
         public void apply(){
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
+            setUniformf("u_time", Time.time);
+        }
+    }
+
+    public static class ContractionShader extends Shader{
+        public ContractionShader(){
+            super(
+                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/contraction.frag")
+            );
+        }
+        public ObjectMap<String, Float> uniforms = new ObjectMap<>();
+
+        public void set(String uf, float v){
+            uniforms.put(uf, v);
+        }
+
+        public void apply(){
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_campos", Core.camera.position.x - Core.camera.width / 2, Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_resolution", Core.camera.width, Core.camera.height);
             setUniformf("u_time", Time.time);
             setUniformf("u_campos", Core.camera.position.x, Core.camera.position.y);
-            setUniformf("u_ccampos", Core.camera.position);
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
             setUniformf("u_time", Time.time);
+            for (String uf : uniforms.keys()) {
+                setUniformf(uf, uniforms.get(uf));
+            }
+
+//            setUniformf("u_per", 1f);
         }
     }
 
