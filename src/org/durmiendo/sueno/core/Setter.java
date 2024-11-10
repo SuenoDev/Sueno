@@ -13,6 +13,7 @@ import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
+
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
@@ -28,6 +29,7 @@ public class Setter {
         SLog.loadTime(Setter::loadRender, "renderer");
         SLog.loadTime(Setter::loadChunks, "chunks");
         SLog.loadTime(Setter::loadCompatibility, "compatibility");
+
 
 
 //        if (SVars.mainDirecory.child("settings.ulk").exists())

@@ -2,6 +2,7 @@ package org.durmiendo.sueno.graphics;
 
 import arc.Core;
 import arc.graphics.Gl;
+import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.struct.ObjectMap;
@@ -111,20 +112,39 @@ public class SShaders {
     }
 
     public static class NormalShader extends Shader{
+        public FrameBuffer tb = new FrameBuffer(Core.graphics.getWidth(), Core.graphics.getHeight());
+        public FrameBuffer nb = new FrameBuffer(Core.graphics.getWidth(), Core.graphics.getHeight());
         public NormalShader(){
             super(
                     Shaders.getShaderFi("screenspace.vert"),
                     SVars.internalFileTree.child("shaders/normal.frag")
             );
+
+//            try {
+//                Field f = Renderer.class.getDeclaredField("lights");
+//                f.setAccessible(true);
+//                f.set(Vars.renderer, new RLightRenderer());
+//                f.setAccessible(false);
+//            } catch (Exception e) {
+//                Log.err(e);
+//            }
         }
 
         @Override
         public void apply(){
+            tb.getTexture().bind(0);
+            nb.getTexture().bind(1);
+            setUniformi("u_normal", 1);
+            setUniformi("u_texture", 0);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_lightPos", Core.input.mouseWorldX(), Core.input.mouseWorldY());
+            setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
+            setUniformf("u_surefacePos", 80, 80);
+            setUniformf("u_lightColor", 1, 1, 1, 1);
+
         }
     }
 
