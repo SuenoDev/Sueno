@@ -4,20 +4,25 @@ import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.gl.FrameBuffer;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
+import mindustry.graphics.Layer;
+import mindustry.graphics.Shaders;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
-
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
+
+import static org.durmiendo.sueno.core.SVars.fb;
+import static org.durmiendo.sueno.core.SVars.nb;
 
 public class Setter {
     public static void load() {
@@ -84,6 +89,13 @@ public class Setter {
     }
 
     private static void loadRender() {
+//        SLog.load("test shader");
+//        Events.run(EventType.Trigger.drawOver, () -> {
+//            Draw.drawRange(Layer.flyingUnit, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+//                Vars.renderer.effectBuffer.end();
+//                Vars.renderer.effectBuffer.blit(SShaders.blackHoleShader);
+//            });
+//        });
         SLog.load("void space shader");
         Events.run(EventType.Trigger.drawOver, () -> {
             Draw.drawRange(SLayers.voidspace, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
@@ -102,12 +114,36 @@ public class Setter {
 
         });
 
-        SLog.load("normal shader");
-        Events.run(EventType.Trigger.drawOver, () -> {
-            Draw.drawRange(42f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
-                Vars.renderer.effectBuffer.end();
-                Vars.renderer.effectBuffer.blit(SShaders.normalShader);
+//
+//        SLog.load("normals");
+
+        fb = new FrameBuffer();
+        nb = new FrameBuffer();
+        fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        Events.on(EventType.ResizeEvent.class, e -> {
+            fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+            nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        });
+
+        Events.run(EventType.Trigger.draw, () -> {
+            Draw.draw(Layer.min, () -> {
+                fb.begin(Color.clear);
             });
+
+            Draw.draw(Layer.light-0.1f,() -> {
+                fb.end();
+                fb.blit(Shaders.screenspace);
+            });
+
+            Draw.drawRange(Layer.light+1, () -> {
+                nb.begin(Color.clear);
+            }, () -> {
+                nb.end();
+                nb.blit(SShaders.normalShader);
+            });
+
+
         });
     }
 

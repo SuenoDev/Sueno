@@ -1,6 +1,7 @@
 package org.durmiendo.sueno.core;
 
 import arc.files.Fi;
+import arc.graphics.gl.FrameBuffer;
 import mindustry.Vars;
 import mindustry.mod.Mods;
 import org.durmiendo.sap.SuenoSettings;
@@ -20,6 +21,9 @@ public class SVars {
     public static SUI ui = new SUI();
     /** JAR files accessor. **/
     public static InternalFileTree internalFileTree = new InternalFileTree(Sueno.class);
+
+    public static FrameBuffer nb;
+    public static FrameBuffer fb;
 
     //controllers
     public static CelestialBodyController celestialBodyController;

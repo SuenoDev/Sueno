@@ -3,6 +3,7 @@ package org.durmiendo.sueno.world.blocks.storage;
 import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.util.Time;
+import mindustry.graphics.Layer;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.Env;
@@ -28,7 +29,7 @@ public class SCoreBlock extends CoreBlock {
     @Override
     public void drawBase(Tile tile) {
         super.drawBase(tile);
-        Draw.z(42);
+        Draw.z(Layer.light+1f);
         Draw.rect("sueno-demand-normal17", tile.drawx(), tile.drawy());
     }
 

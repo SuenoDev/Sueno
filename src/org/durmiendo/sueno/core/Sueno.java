@@ -8,6 +8,7 @@ import mindustry.mod.Mod;
 import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
 import org.durmiendo.sueno.settings.SettingsBuilder;
+import org.durmiendo.sueno.utils.SLog;
 
 
 @ModAnnotations.AnnotationSettings(
@@ -17,6 +18,7 @@ import org.durmiendo.sueno.settings.SettingsBuilder;
 )
 public class Sueno extends Mod {
     public Sueno() {
+        SLog.info("Sueno");
         SVars.core = this;
     }
 
@@ -25,8 +27,7 @@ public class Sueno extends Mod {
         SVars.sueno = Vars.mods.getMod(getClass());
         Log.info("load Sueno content");
 
-//        if (SVars.mainDirecory.child("settings.ulk").exists())
-            SettingsBuilder.load();
+        SettingsBuilder.load();
 
         SLoader.load();
     }
@@ -37,7 +38,7 @@ public class Sueno extends Mod {
         Log.info("load Sueno settings");
 
         Setter.load();
-
+        
     }
 
     public TextureRegion getRegion(String nameWithoutPrefix) {

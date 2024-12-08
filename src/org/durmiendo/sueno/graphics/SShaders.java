@@ -2,7 +2,6 @@ package org.durmiendo.sueno.graphics;
 
 import arc.Core;
 import arc.graphics.Gl;
-import arc.graphics.gl.FrameBuffer;
 import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.struct.ObjectMap;
@@ -12,15 +11,12 @@ import org.durmiendo.sueno.core.SVars;
 
 
 public class SShaders {
-
-    /**
-     * shader in layer = 112 (SLayers.voidspace)
-     */
     public static VoidSpaceShader voidSpaceShader = new VoidSpaceShader();
     public static ContractionShader contractionShader = new ContractionShader();
     public static DeadShader deadShader = new DeadShader();
     public static IceShader iceShader = new IceShader();
     public static NormalShader normalShader = new NormalShader();
+    public static BlackHoleShader blackHoleShader = new BlackHoleShader();
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
 
     public static class IceShader extends Shader{
@@ -38,6 +34,20 @@ public class SShaders {
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_time", Time.time);
+        }
+    }
+
+    public static class BlackHoleShader extends Shader{
+        public BlackHoleShader(){
+            super(
+                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/black-hole.frag")
+            );
+        }
+
+        @Override
+        public void apply(){
+            super.apply();
         }
     }
 
@@ -112,8 +122,6 @@ public class SShaders {
     }
 
     public static class NormalShader extends Shader{
-        public FrameBuffer tb = new FrameBuffer(Core.graphics.getWidth(), Core.graphics.getHeight());
-        public FrameBuffer nb = new FrameBuffer(Core.graphics.getWidth(), Core.graphics.getHeight());
         public NormalShader(){
             super(
                     Shaders.getShaderFi("screenspace.vert"),
@@ -132,19 +140,17 @@ public class SShaders {
 
         @Override
         public void apply(){
-            tb.getTexture().bind(0);
-            nb.getTexture().bind(1);
-            setUniformi("u_normal", 1);
-            setUniformi("u_texture", 0);
+            SVars.fb.getTexture().bind(1);
+            SVars.nb.getTexture().bind(2);
+            setUniformi("u_normal", 2);
+            setUniformi("u_textures", 1);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_lightPos", Core.input.mouseWorldX(), Core.input.mouseWorldY());
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
-            setUniformf("u_surefacePos", 80, 80);
-            setUniformf("u_lightColor", 1, 1, 1, 1);
-
+            setUniformf("u_lightColor", 1f, 1f, 1f, 1f);
         }
     }
 
