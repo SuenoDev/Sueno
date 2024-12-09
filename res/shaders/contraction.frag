@@ -57,7 +57,7 @@ void main(){
     vec4 col = texture2D(u_texture, T);
     vec4 color = vec4(col);
 
-    if (col.a > 0) {
+    if (col.a > 0.) {
         vec2 st = coords/5.2;
         // st += st * abs(sin(u_time*0.1)*3.0);
         color.rgb = vec3(0.0);

@@ -12,7 +12,6 @@ import mindustry.graphics.Layer;
 import mindustry.graphics.Shaders;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.SLayers;
 import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
@@ -96,23 +95,23 @@ public class Setter {
 //                Vars.renderer.effectBuffer.blit(SShaders.blackHoleShader);
 //            });
 //        });
-        SLog.load("void space shader");
-        Events.run(EventType.Trigger.drawOver, () -> {
-            Draw.drawRange(SLayers.voidspace, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
-                Vars.renderer.effectBuffer.end();
-                Vars.renderer.effectBuffer.blit(SShaders.voidSpaceShader);
-            });
-        });
-
-        SLog.load("dead zone shader");
-        Events.run(EventType.Trigger.drawOver, () -> {
-            Draw.drawRange(SLayers.deadZone, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
-                Vars.renderer.effectBuffer.end();
-                Vars.renderer.effectBuffer.blit(SShaders.deadShader);
-            });
-
-
-        });
+//        SLog.load("void space shader");
+//        Events.run(EventType.Trigger.drawOver, () -> {
+//            Draw.drawRange(SLayers.voidspace, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+//                Vars.renderer.effectBuffer.end();
+//                Vars.renderer.effectBuffer.blit(SShaders.voidSpaceShader);
+//            });
+//        });
+//
+//        SLog.load("dead zone shader");
+//        Events.run(EventType.Trigger.drawOver, () -> {
+//            Draw.drawRange(SLayers.deadZone, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
+//                Vars.renderer.effectBuffer.end();
+//                Vars.renderer.effectBuffer.blit(SShaders.deadShader);
+//            });
+//
+//
+//        });
 
 //
 //        SLog.load("normals");
