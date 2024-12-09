@@ -1,6 +1,4 @@
 #define HIGHP
-#define ALPHA 0.6
-
 //uniform sampler2D u_normal;
 uniform sampler2D u_textures;
 uniform sampler2D u_texture;
@@ -24,15 +22,15 @@ void main() {
 
     vec3 N = normalize(normal);
     vec3 LightDir = lightPos.xyz-surfacePos.xyz;
-    float D = length(LightDir);
+    float D = length(LightDir)/1024.;
     vec3 L = normalize(LightDir);
 
     vec3 Diffuse = (u_lightColor.rgb * u_lightColor.a) * max(dot(N, L), 0.0);
 //    gl_FragColor = vec4(Diffuse, texture2D(u_texture, T).a * ALPHA);
-    vec3 Ambient = vec3(0.12, 0.12, 0.2);
-//    float Attenuation = 1.0 / (.4 + 3*D + 20*D*D);
+    vec3 Ambient = vec3(0.22, 0.22, 0.3);
+    float Attenuation = 1.0 / (.4 + 3*D + 20*D*D);
 
-    vec3 Intensity = Ambient + Diffuse*1.5;// * Attenuation;
+    vec3 Intensity = Ambient + Diffuse * Attenuation;
     vec3 FinalColor = texture2D(u_textures, T).rgb * Intensity;
-    gl_FragColor = vec4(FinalColor,  texture2D(u_texture, T).a * ALPHA);
+    gl_FragColor = vec4(FinalColor,  texture2D(u_texture, T).a);
 }

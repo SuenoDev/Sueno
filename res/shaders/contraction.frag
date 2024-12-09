@@ -38,7 +38,7 @@ float dvnoise (in vec2 st) {
 float fbm(vec2 x) {
     float v = 0.0;
     float a = 0.5;
-    vec2 shift = vec2(300);
+    vec2 shift = vec2(300.0);
     for (int i = 0; i < 8; ++i) {
         v += a * dvnoise(x);
         x = x * 2.0 + shift;

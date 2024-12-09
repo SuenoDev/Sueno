@@ -20,7 +20,7 @@ float iqnoise(in vec2 x){
     vec2 p = floor(x);
     vec2 f = fract(x);
 
-    float k = 44;
+    float k = 44.;
 
     float va = 0.0;
     float wt = 0.0;
@@ -28,7 +28,7 @@ float iqnoise(in vec2 x){
     for( int i=-3; i<=3; i++ )
     {
         vec2 g = vec2( float(i),float(j) );
-        vec3 o = hash3( p + g )*vec3(1,1,1.0);
+        vec3 o = hash3( p + g )*vec3(1.,1.,1.0);
         vec2 r = g - f + o.xy;
         float d = dot(r,r);
         float ww = pow( 1.0-smoothstep(0.0,1.414,sqrt(d)), k );

@@ -74,18 +74,18 @@ void main(){
     vec2 coords = (T * u_texsize) + u_offset;
 
     vec4 color = texture2D(u_texture, T);
-    if (color.a > 0) {
+    if (color.a > 0.) {
         float noise = (fbm1(vec2(coords / 5.6 + vec2(u_time/150.0))) + 1.12) / 2.0;
         float cnoise = (fbm2(vec2(coords / 3.4 + vec2(u_time/65.0)) + 12.0) + 1.0) / 2.0;
 
         vec3 c1 = vec3(0, 0.086274509803, 0.086274509803);
-        vec3 c2 = vec3(0.83921568627, 0.27843137254, 1);
+        vec3 c2 = vec3(0.83921568627, 0.27843137254, 1.);
 
         vec3 ctmp = mix(c1, c2, cnoise);
 
         color.rgb *= noise * ctmp;
-        float l = len((noise*cnoise + noise)/2.0)/1.2;
-        color.a = pow(.9, l/5);
+        float l = len((vec3(noise)*cnoise + vec3(noise))/2.0)/1.2;
+        color.a = pow(.9, l/5.);
         color.rgb *= 0.3*l*l;
     }
 
