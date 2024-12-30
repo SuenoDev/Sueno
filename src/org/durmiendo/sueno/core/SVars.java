@@ -23,6 +23,7 @@ public class SVars {
     public static InternalFileTree internalFileTree = new InternalFileTree(Sueno.class);
 
     public static FrameBuffer nb;
+    public static FrameBuffer rnb;
     public static FrameBuffer fb;
 
     //controllers

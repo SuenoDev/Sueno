@@ -18,6 +18,7 @@ import org.durmiendo.sueno.utils.SLog;
 )
 public class Sueno extends Mod {
     public Sueno() {
+        SLog.init();
         SLog.info("Sueno");
         SVars.core = this;
     }

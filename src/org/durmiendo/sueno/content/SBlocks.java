@@ -3,8 +3,9 @@ package org.durmiendo.sueno.content;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
-import arc.math.Angles;
+import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
+import arc.math.geom.Vec2;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -28,7 +29,6 @@ import mindustry.type.ItemStack;
 import mindustry.world.Block;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
 import mindustry.world.blocks.environment.Floor;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
@@ -42,6 +42,7 @@ import org.durmiendo.sueno.world.blocks.TemperatureSource;
 import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SirenTurret;
+import org.durmiendo.sueno.world.blocks.defense.turrets.VioTurret;
 import org.durmiendo.sueno.world.blocks.distribution.Monorail;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
@@ -111,7 +112,6 @@ public class SBlocks {
         }};
 
         undestroyable = new UnDestroyable("undestroyable");
-
 
         siren = new SirenTurret("siren") {{
             requirements(Category.turret, with(Items.scrap, 10));
@@ -216,53 +216,162 @@ public class SBlocks {
             }}});
         }};
 
-        violence = new PowerTurret("violence") {{
+        violence = new VioTurret("violence") {{
             requirements(Category.turret, with(Items.scrap, 10));
-            consumePower(4f);
+            consumePower(9f);
             size = 6;
             health = 1000;
-            reload = 50f;
-            inaccuracy = 12;
+            reload = 12;
+            inaccuracy = 2;
             range = 54f * 8f;
-
-
 
             shoot = new ShootPattern() {{
                 shots = 1;
                 shotDelay = 3f;
             }};
 
-            shootType = new BasicBulletType() {{
-                makeFire = true;
+            addb(new BasicBulletType() {{
                 damage = 60f;
-                speed = 18f;
+                speed = 20f;
                 lifetime = 30f;
 
                 pierce = true;
                 pierceBuilding = true;
 
-                trailColor = Color.valueOf("c02f2f");
+                trailColor = Color.valueOf("d23732");
+                Color efc = Color.valueOf("ff9fba");
                 trailLength = 12;
-
-                trailChance = 0.1f;
-                trailInterval = 0.1f;
+                trailChance = 0.2f;
+                trailInterval = 1f;
                 trailWidth = 0.7f;
-                trailEffect = new Effect(30.0F, (e) -> {
-                    Draw.color(Color.valueOf("7a1a1a"), Color.valueOf("5a0a0a"), e.fin());
-                    Angles.randLenVectors((long)e.id, 1, 2.0F + e.fin() * 9.0F, (x, y) -> {
-                        Fill.circle(e.x + x, e.y + y, 0.12F + e.fslope() * 1.5F);
+                trailRotation = true;
+
+                Vec2[] t = new Vec2[] {
+                        new Vec2(),
+                        new Vec2(),
+                        new Vec2(),
+                        new Vec2(),
+                        new Vec2(),
+                };
+
+                trailEffect = new Effect(22f, e -> {
+                    float ef = e.foutpowdown();
+                    float fe = e.finpow();
+                    float f  = e.fin();
+
+
+                    t[0].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+0, -20,   20)).scl(17 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+5 , -2, 2)*ef, Mathf.randomSeed(e.id+6 , -2, 2)*ef).add(Mathf.cosDeg(e.rotation)*f*72.4f, Mathf.sinDeg(e.rotation)*f*72.4f);
+                    t[1].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+1, -40,   40)).scl(14 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+7 , -2, 2)*fe, Mathf.randomSeed(e.id+8 , -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*32.1f, Mathf.sinDeg(e.rotation)*f*32.1f);
+                    t[2].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+2, -360, 360)).scl(10 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+9 , -2, 2)*fe, Mathf.randomSeed(e.id+10, -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*26.8f, Mathf.sinDeg(e.rotation)*f*26.8f);
+                    t[3].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+3, -40,   40)).scl(6  * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+11, -2, 2)*fe, Mathf.randomSeed(e.id+12, -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*20.5f, Mathf.sinDeg(e.rotation)*f*20.5f);
+                    t[4].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+4, -20,   20)).scl(3  * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+13, -2, 2)*ef, Mathf.randomSeed(e.id+14, -2, 2)*ef).add(Mathf.cosDeg(e.rotation)*f*10.3f, Mathf.sinDeg(e.rotation)*f*10.3f);
+
+
+                    Draw.color(trailColor);
+                    Lines.stroke(0.7f * ef);
+                    Lines.line(t[0].x, t[0].y, t[1].x, t[1].y);
+                    Lines.stroke(1.6f * ef);
+                    Lines.line(t[1].x, t[1].y, t[2].x, t[2].y);
+                    Lines.stroke(1.4f * ef);
+                    Lines.line(t[2].x, t[2].y, t[3].x, t[3].y);
+                    Lines.stroke(0.8f * ef);
+                    Lines.line(t[3].x, t[3].y, t[4].x, t[4].y);
+
+                    Draw.color(efc);
+                    Lines.stroke(0.1f * ef);
+                    Lines.line(t[0].x, t[0].y, t[1].x, t[1].y);
+                    Lines.stroke(0.6f * ef);
+                    Lines.line(t[1].x, t[1].y, t[2].x, t[2].y);
+                    Lines.stroke(0.4f * ef);
+                    Lines.line(t[2].x, t[2].y, t[3].x, t[3].y);
+                    Lines.stroke(0.2f * ef);
+                    Lines.line(t[3].x, t[3].y, t[4].x, t[4].y);
+
+                    Draw.reset();
+                });
+
+                despawnEffect = hitEffect = new Effect(70f, e -> {
+                    Draw.color(trailColor);
+                    randLenVectors(e.id, 10, 32, (x, y) -> {
+                        Fill.circle(x * e.finpow() + e.x, y * e.finpow() + e.y, 4f * e.foutpowdown());
                     });
-                    Draw.color();
-                    Drawf.light(e.x, e.y, 20.0F * e.fslope(), Pal.lightFlame, 1F);
+
+                    Draw.color(efc);
+                    for (int i = 0; i < 8; i++) {
+                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+20, 11, 16) * e.foutpowdown(), Mathf.randomSeed(e.id+i+10, 22, 26) * Mathf.sqrt(Mathf.sqrt(e.finpow())), Mathf.randomSeed(e.id+i, 0, 360));
+                    }
+
+                    for (int i = 0; i < 4; i++) {
+                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+40, 22, 27) * e.foutpowdown(), Mathf.randomSeed(e.id+i+30, 13, 17) * Mathf.sqrt(Mathf.sqrt(e.finpow())), e.rotation + Mathf.randomSeed(e.id+i, -30, 30) - 180);
+                    }
+
+                    for (int i = 0; i < 6; i++) {
+                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+60, 11, 15) * e.foutpowdown(), Mathf.randomSeed(e.id+i+50, 36, 41) * Mathf.sqrt(Mathf.sqrt(e.finpow())), e.rotation + Mathf.randomSeed(e.id+i, -20, 20));
+                    }
+
+                    Draw.reset();
                 });
 
                 homingRange = 192;
                 homingPower = 0.08f;
-            }};
+
+                fragBullets = 8;
+                fragRandomSpread = 10;
+                fragAngle = 10;
+                fragSpread = 10;
+                fragLifeMin = 0.6f;
+                fragLifeMax = 1f;
+                fragOnHit = true;
+                fragBullet = new BasicBulletType() {{
+                    despawnEffect = hitEffect = new Effect(40f, e -> {
+                        Draw.color(Color.blue);
+                        Lines.lineAngle(e.x, e.y, e.rotation, Mathf.randomSeed(e.id+1, 8, 32));
+                        Draw.reset();
+                    });
+                }};
+            }}, 2f);
+//            addb(new BasicBulletType() {{
+//                damage = 60f;
+//                speed = 18f;
+//                lifetime = 30f;
+//
+//                pierce = true;
+//                pierceBuilding = true;
+//
+//                trailColor = Color.valueOf("00ff00");
+//                trailLength = 12;
+//
+//                trailChance = 0.1f;
+//                trailInterval = 0.1f;
+//                trailWidth = 0.7f;
+//                trailEffect = trailEffect;
+//
+//                homingRange = 192;
+//                homingPower = 0.08f;
+//            }}, 2);
+//            addb(new BasicBulletType() {{
+//                damage = 60f;
+//                speed = 18f;
+//                lifetime = 30f;
+//
+//                pierce = true;
+//                pierceBuilding = true;
+//
+//                trailColor = Color.valueOf("ff0000");
+//                trailLength = 12;
+//
+//                trailChance = 0.1f;
+//                trailInterval = 0.1f;
+//                trailWidth = 0.7f;
+//                trailEffect = trailEffect;
+//
+//                homingRange = 192;
+//                homingPower = 0.08f;
+//            }}, 2);
         }
             public void setStats() {
                 super.setStats();
-                this.stats.add(Stat.abilities, "[#aa2828]Насилие порождает насилие");
+                this.stats.add(Stat.abilities, "[#aa2828]Да прольется кровь");
             }
         };
 

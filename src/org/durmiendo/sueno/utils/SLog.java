@@ -1,16 +1,25 @@
 package org.durmiendo.sueno.utils;
 
+import arc.Events;
 import arc.struct.IntMap;
 import arc.util.Log;
 import arc.util.Time;
+import mindustry.game.EventType;
 import org.durmiendo.sueno.core.SVars;
 
 import java.lang.reflect.Field;
 
 public class SLog {
+    public static void init() {
+        Events.run(EventType.Trigger.update, () -> {
+            timer -= Time.delta;
+        });
+    }
     public static int layer = 0;
+
     private static void log(String msg, Object... args) {
         Log.info(msg, args);
+
     }
     public static IntMap<String> data = new IntMap<>();
 
@@ -19,6 +28,21 @@ public class SLog {
     }
     public static void unvisi(int id) {
         data.remove(id);
+    }
+
+    public static float timer;
+    public static void tInfo(String msg, float time) {
+        if (SVars.extendedLogs && timer <= 0) {
+            info(msg);
+            timer = time;
+        }
+    }
+
+    public static void tInfo(Object msg, float time) {
+        if (SVars.extendedLogs && timer <= 0) {
+            info(msg.toString());
+            timer = time;
+        }
     }
 
     public static void loadTime(Runnable runnable, String msg) {

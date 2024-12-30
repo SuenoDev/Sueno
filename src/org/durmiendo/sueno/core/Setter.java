@@ -20,8 +20,7 @@ import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
 
-import static org.durmiendo.sueno.core.SVars.fb;
-import static org.durmiendo.sueno.core.SVars.nb;
+import static org.durmiendo.sueno.core.SVars.*;
 
 public class Setter {
     public static void load() {
@@ -118,11 +117,14 @@ public class Setter {
 
         fb = new FrameBuffer();
         nb = new FrameBuffer();
+        rnb = new FrameBuffer();
         fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
         nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
         Events.on(EventType.ResizeEvent.class, e -> {
             fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
             nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+            rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
         });
 
         Events.run(EventType.Trigger.draw, () -> {
@@ -136,13 +138,17 @@ public class Setter {
             });
 
             Draw.drawRange(Layer.light+1, () -> {
+                rnb.begin(Color.black);
+            }, () -> {
+                rnb.end();
+            });
+
+            Draw.drawRange(Layer.light+2, () -> {
                 nb.begin(Color.clear);
             }, () -> {
                 nb.end();
                 nb.blit(SShaders.normalShader);
             });
-
-
         });
     }
 
