@@ -240,6 +240,7 @@ public class SBlocks {
 
                 trailColor = Color.valueOf("d23732");
                 Color efc = Color.valueOf("ff9fba");
+                Color efcc = Color.valueOf("b42f41");
                 trailLength = 12;
                 trailChance = 0.2f;
                 trailInterval = 1f;
@@ -290,45 +291,24 @@ public class SBlocks {
                     Draw.reset();
                 });
 
-                despawnEffect = hitEffect = new Effect(70f, e -> {
+
+                despawnEffect = hitEffect = new Effect(32f, e -> {
+
                     Draw.color(trailColor);
-                    randLenVectors(e.id, 10, 32, (x, y) -> {
-                        Fill.circle(x * e.finpow() + e.x, y * e.finpow() + e.y, 4f * e.foutpowdown());
-                    });
-
+                    for (int i = 0; i < 7; i++) {
+                        Drawf.tri(e.x, e.y, 10 * e.foutpowdown(), 38 * e.finpow(), i * 360f / 7f);
+                    }
                     Draw.color(efc);
-                    for (int i = 0; i < 8; i++) {
-                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+20, 11, 16) * e.foutpowdown(), Mathf.randomSeed(e.id+i+10, 22, 26) * Mathf.sqrt(Mathf.sqrt(e.finpow())), Mathf.randomSeed(e.id+i, 0, 360));
+                    for (int i = 0; i < 7; i++) {
+                        Drawf.tri(e.x, e.y, 6 * e.foutpowdown(), 32 * e.finpow(), i * 360f / 7f);
                     }
 
-                    for (int i = 0; i < 4; i++) {
-                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+40, 22, 27) * e.foutpowdown(), Mathf.randomSeed(e.id+i+30, 13, 17) * Mathf.sqrt(Mathf.sqrt(e.finpow())), e.rotation + Mathf.randomSeed(e.id+i, -30, 30) - 180);
-                    }
-
-                    for (int i = 0; i < 6; i++) {
-                        Drawf.tri(e.x, e.y, Mathf.randomSeed(e.id+i+60, 11, 15) * e.foutpowdown(), Mathf.randomSeed(e.id+i+50, 36, 41) * Mathf.sqrt(Mathf.sqrt(e.finpow())), e.rotation + Mathf.randomSeed(e.id+i, -20, 20));
-                    }
 
                     Draw.reset();
                 });
 
                 homingRange = 192;
                 homingPower = 0.08f;
-
-                fragBullets = 8;
-                fragRandomSpread = 10;
-                fragAngle = 10;
-                fragSpread = 10;
-                fragLifeMin = 0.6f;
-                fragLifeMax = 1f;
-                fragOnHit = true;
-                fragBullet = new BasicBulletType() {{
-                    despawnEffect = hitEffect = new Effect(40f, e -> {
-                        Draw.color(Color.blue);
-                        Lines.lineAngle(e.x, e.y, e.rotation, Mathf.randomSeed(e.id+1, 8, 32));
-                        Draw.reset();
-                    });
-                }};
             }}, 2f);
 //            addb(new BasicBulletType() {{
 //                damage = 60f;
