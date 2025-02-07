@@ -10,6 +10,8 @@ import arc.graphics.gl.Shader;
 import arc.math.Mathf;
 import org.durmiendo.sueno.core.SVars;
 
+import java.nio.FloatBuffer;
+
 public class SBatch extends SortedSpriteBatch {
     public static final VertexAttribute rot = new VertexAttribute(1, "a_rotation");
     public static final int VERTEX_SIZE = 2 + 1 + 2 + 1 + 1;
@@ -26,6 +28,8 @@ public class SBatch extends SortedSpriteBatch {
         this(size, null);
     }
 
+
+
     public SBatch(int size, Shader defaultShader){
         super();
         shader = cs();
@@ -38,40 +42,48 @@ public class SBatch extends SortedSpriteBatch {
                 VertexAttribute.mixColor,
                 rot
         );
+
+        if (size > 0) {
+            buffer = mesh.getVerticesBuffer();
+        }
     }
+
 
     protected Shader getShader(){
         return customShader == null ? shader : customShader;
     }
+    protected FloatBuffer buffer;
 
     @Override
     protected void flush(){
         flushRequests();
-        if(idx == 0) return;
-
+        if (idx == 0) return;
         getShader().bind();
         setupMatrices();
 
         if(customShader != null && apply){
             customShader.apply();
         }
-        shader.setUniformi("u_texture", 3);
-        shader.setUniformi("u_normal", 4);
 
         Gl.depthMask(false);
-        int spritesInBatch = idx / SPRITE_SIZE;
-        if(spritesInBatch > maxSpritesInBatch) maxSpritesInBatch = spritesInBatch;
-        int count = spritesInBatch * 6;
+        int count = idx / SPRITE_SIZE * 6;
 
         blending.apply();
 
-        lastTexture.bind(3);
-        if (lastNormalTexture != null) lastNormalTexture.bind(4);
+        lastTexture.bind();
+        if (lastNormalTexture != null)
+            lastNormalTexture.bind();
         Mesh mesh = this.mesh;
-        mesh.setVertices(vertices, 0, idx);
-        mesh.getIndicesBuffer().position(0);
-        mesh.getIndicesBuffer().limit(count);
+        //calling buffer() marks it as dirty, so it gets reuploaded upon render
+        mesh.getVerticesBuffer();
+
+        buffer.position(0);
+        buffer.limit(idx);
+
         mesh.render(getShader(), Gl.triangles, 0, count);
+
+        buffer.limit(buffer.capacity());
+        buffer.position(0);
 
         idx = 0;
     }

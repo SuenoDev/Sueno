@@ -57,12 +57,7 @@ public class SspriteCache extends SpriteCache {
         this(size, cacheSize, createDefaultShader(), useIndices);
     }
 
-    /**
-     * Creates a cache with the specified size and OpenGL ES 2.0 shader.
-     * @param size The maximum number of images this cache can hold. The memory required to hold the images is allocated up front.
-     * Max of 8191 if indices are used.
-     * @param useIndices If true, indexed geometry will be used.
-     */
+
     public SspriteCache(int size, int cacheSize, Shader shader, boolean useIndices){
         this.shader = shader;
 
