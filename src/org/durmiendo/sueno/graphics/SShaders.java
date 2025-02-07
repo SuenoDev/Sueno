@@ -140,17 +140,18 @@ public class SShaders {
 
         @Override
         public void apply(){
-            SVars.fb.getTexture().bind(1);
-            SVars.nb.getTexture().bind(2);
-            setUniformi("u_normal", 2);
-            setUniformi("u_textures", 1);
+//            SVars.fb.getTexture().bind(1);
+//            SVars.nb.getTexture().bind(2);
+//            setUniformi("u_normal", 2);
+//            setUniformi("u_textures", 1);
+
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_lightPos", Core.input.mouseWorldX(), Core.input.mouseWorldY());
             setUniformf("u_resolution", Core.graphics.getWidth(), Core.graphics.getHeight());
-            setUniformf("u_lightColor", 1f, 1f, 1f, 1f);
+            setUniformf("u_lightColor", 0.4f, 1f, 0.65f, 1f);
         }
     }
 
@@ -161,6 +162,11 @@ public class SShaders {
                     SVars.internalFileTree.child("shaders/void-strider-collapse-effect.vert"),
                     SVars.internalFileTree.child("shaders/void-strider-collapse-effect.frag")
             );
+        }
+
+        @Override
+        public void bind() {
+            super.bind();
         }
 
         @Override

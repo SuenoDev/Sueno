@@ -21,7 +21,6 @@ import mindustry.entities.pattern.ShootPattern;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
-import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
@@ -231,7 +230,7 @@ public class SBlocks {
             }};
 
             addb(new BasicBulletType() {{
-                damage = 60f;
+                damage = 180f;
                 speed = 20f;
                 lifetime = 30f;
 
@@ -292,43 +291,44 @@ public class SBlocks {
                 });
 
 
-                despawnEffect = hitEffect = new Effect(32f, e -> {
+//                despawnEffect = hitEffect = new Effect(16f, e -> {
+//                    Draw.color(trailColor);
+//                    for (int i = 0; i < 7; i++) {
+//                        Drawf.tri(e.x, e.y, 7 * e.foutpowdown(), 22 * e.finpow(), i * 360f / 7f);
+//                    }
+//                    Draw.color(efc);
+//                    for (int i = 0; i < 7; i++) {
+//                        Drawf.tri(e.x, e.y, 4 * e.foutpowdown(), 18 * e.finpow(), i * 360f / 7f);
+//                    }
+//
+//                    Draw.reset();
+//                });
 
-                    Draw.color(trailColor);
-                    for (int i = 0; i < 7; i++) {
-                        Drawf.tri(e.x, e.y, 10 * e.foutpowdown(), 38 * e.finpow(), i * 360f / 7f);
-                    }
-                    Draw.color(efc);
-                    for (int i = 0; i < 7; i++) {
-                        Drawf.tri(e.x, e.y, 6 * e.foutpowdown(), 32 * e.finpow(), i * 360f / 7f);
-                    }
-
-
-                    Draw.reset();
-                });
-
+                despawnEffect = hitEffect = Fx.none;
                 homingRange = 192;
                 homingPower = 0.08f;
-            }}, 2f);
-//            addb(new BasicBulletType() {{
-//                damage = 60f;
-//                speed = 18f;
-//                lifetime = 30f;
-//
-//                pierce = true;
-//                pierceBuilding = true;
-//
-//                trailColor = Color.valueOf("00ff00");
-//                trailLength = 12;
-//
-//                trailChance = 0.1f;
-//                trailInterval = 0.1f;
-//                trailWidth = 0.7f;
-//                trailEffect = trailEffect;
-//
-//                homingRange = 192;
-//                homingPower = 0.08f;
-//            }}, 2);
+            }}, 1f);
+            addb(new BasicBulletType() {{
+                damage = 60f;
+                speed = 9f;
+                lifetime = 50f;
+
+                pierce = false;
+                pierceBuilding = false;
+
+                trailColor = Color.valueOf("d23732");
+                Color efc = Color.valueOf("ff9fba");
+                Color efcc = Color.valueOf("b42f41");
+                trailLength = 5;
+
+                trailChance = 0.1f;
+                trailInterval = 0.1f;
+                trailWidth = 0.7f;
+                trailEffect = trailEffect;
+
+                homingRange = 8*20;
+                homingPower = 3f;
+            }}, 0);
 //            addb(new BasicBulletType() {{
 //                damage = 60f;
 //                speed = 18f;

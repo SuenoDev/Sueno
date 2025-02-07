@@ -1,9 +1,8 @@
 package org.durmiendo.sueno.world.blocks.storage;
 
-import arc.graphics.g2d.Draw;
+import arc.Core;
 import arc.math.Mathf;
 import arc.util.Time;
-import mindustry.graphics.Layer;
 import mindustry.world.Tile;
 import mindustry.world.blocks.storage.CoreBlock;
 import mindustry.world.meta.Env;
@@ -24,13 +23,20 @@ public class SCoreBlock extends CoreBlock {
         solid = true;
     }
 
+    @Override
+    public void load() {
+        super.load();
 
+        SVars.textureToNormal.put(
+                Core.atlas.find("sueno-demand"),
+                Core.atlas.find("sueno-demand-normal")
+        );
+    }
 
     @Override
     public void drawBase(Tile tile) {
         super.drawBase(tile);
-        Draw.z(Layer.light+1f);
-        Draw.rect("sueno-demand-normal17", tile.drawx(), tile.drawy());
+//        Draw.rect("sueno-demand-normal17", tile.drawx(), tile.drawy());
     }
 
     public class CoreBuild extends CoreBlock.CoreBuild implements Heated {

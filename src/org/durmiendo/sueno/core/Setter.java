@@ -2,29 +2,25 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.Color;
-import arc.graphics.g2d.Draw;
-import arc.graphics.gl.FrameBuffer;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
-import mindustry.graphics.Layer;
-import mindustry.graphics.Shaders;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.SShaders;
+import org.durmiendo.sueno.graphics.SBatch;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
+import org.durmiendo.sueno.ui.fragments.SMenuFragment;
 import org.durmiendo.sueno.utils.SLog;
-
-import static org.durmiendo.sueno.core.SVars.*;
 
 public class Setter {
     public static void load() {
         SLog.mark();
+
+
 
         SLog.loadTime(Setter::loadVars, "vars");
         SLog.loadTime(Setter::loadControllers, "controllers");
@@ -115,41 +111,44 @@ public class Setter {
 //
 //        SLog.load("normals");
 
-        fb = new FrameBuffer();
-        nb = new FrameBuffer();
-        rnb = new FrameBuffer();
-        fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-        nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-        rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-        Events.on(EventType.ResizeEvent.class, e -> {
-            fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-            nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-            rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-        });
+        Core.batch = new SBatch();
+        Vars.ui.menufrag = new SMenuFragment();
 
-        Events.run(EventType.Trigger.draw, () -> {
-            Draw.draw(Layer.min, () -> {
-                fb.begin(Color.clear);
-            });
+//        fb = new FrameBuffer();
+//        nb = new FrameBuffer();
+//        rnb = new FrameBuffer();
+//        fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//        nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//        rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//        Events.on(EventType.ResizeEvent.class, e -> {
+//            fb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//            nb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//            rnb.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+//        });
+//
+//        Events.run(EventType.Trigger.draw, () -> {
+//            Draw.draw(Layer.min, () -> {
+//                fb.begin(Color.clear);
+//            });
+//
+//            Draw.draw(Layer.light-0.1f,() -> {
+//                fb.end();
+//                fb.blit(Shaders.screenspace);
+//            });
 
-            Draw.draw(Layer.light-0.1f,() -> {
-                fb.end();
-                fb.blit(Shaders.screenspace);
-            });
+//            Draw.drawRange(Layer.light+1, () -> {
+//                rnb.begin(Color.black);
+//            }, () -> {
+//                rnb.end();
+//            });
 
-            Draw.drawRange(Layer.light+1, () -> {
-                rnb.begin(Color.black);
-            }, () -> {
-                rnb.end();
-            });
-
-            Draw.drawRange(Layer.light+2, () -> {
-                nb.begin(Color.clear);
-            }, () -> {
-                nb.end();
-                nb.blit(SShaders.normalShader);
-            });
-        });
+//            Draw.drawRange(Layer.light+2, () -> {
+//                nb.begin(Color.clear);
+//            }, () -> {
+//                nb.end();
+//                nb.blit(SShaders.normalShader);
+//            });
+//        });
     }
 
     private static void loadVars() {

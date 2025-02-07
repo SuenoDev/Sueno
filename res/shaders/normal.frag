@@ -11,7 +11,6 @@ varying vec2 v_texCoords;
 
 void main() {
     vec2 T = v_texCoords.xy;
-//    gl_FragColor = vec4(texture2D(u_texture, T).rgb * texture2D(u_textures, T).rgb, texture2D(u_textures, T).a * ALPHA);
     vec2 coords = (T * u_texsize) + u_offset;
     vec3 normal = vec3(texture2D(u_texture, T).r*2.-1.,(texture2D(u_texture, T).b*2.-1.),texture2D(u_texture, T).g);
 
@@ -26,7 +25,6 @@ void main() {
     vec3 L = normalize(LightDir);
 
     vec3 Diffuse = (u_lightColor.rgb * u_lightColor.a) * max(dot(N, L), 0.0);
-//    gl_FragColor = vec4(Diffuse, texture2D(u_texture, T).a * ALPHA);
     vec3 Ambient = vec3(0.22, 0.22, 0.3);
     float Attenuation = 1.0 / (.4 + 3.*D + 20.*D*D);
 
