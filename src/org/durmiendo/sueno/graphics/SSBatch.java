@@ -185,7 +185,7 @@ public class SSBatch extends Batch {
                 getShader().setUniformf("u_normaluse", 2);
                 getShader().setUniformi("u_normal", 2);
             } else {
-                getShader().setUniformf("u_normaluse", 0);
+                getShader().setUniformf("u_normaluse", 0.3f);
             }
             getShader().setUniformf("u_rotation", rot);
 //        }
@@ -468,7 +468,7 @@ public class SSBatch extends Batch {
                           vec4 t = texture2D(u_texture, v_texCoords);
                           vec4 n = texture2D(u_normal, v_texCoords);
                           vec4 c = t;
-                          c.r = u_rotation/360.;
+                          c.rgb *= u_normaluse;
                           //if (u_normaluse > 1.0) c.rgb = n.rgb;
                           gl_FragColor = v_color * mix(c, vec4(v_mix_color.rgb, c.a), v_mix_color.a);
                         }"""
