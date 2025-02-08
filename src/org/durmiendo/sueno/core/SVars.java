@@ -1,7 +1,7 @@
 package org.durmiendo.sueno.core;
 
 import arc.files.Fi;
-import arc.graphics.g2d.TextureRegion;
+import arc.graphics.Texture;
 import arc.struct.ObjectMap;
 import mindustry.Vars;
 import mindustry.mod.Mods;
@@ -23,7 +23,7 @@ public class SVars {
     /** JAR files accessor. **/
     public static InternalFileTree internalFileTree = new InternalFileTree(Sueno.class);
 
-    public static ObjectMap<TextureRegion, TextureRegion> textureToNormal = new ObjectMap<>();
+    public static ObjectMap<Texture, Texture> textureToNormal = new ObjectMap<>();
 
 //    public static FrameBuffer nb;
 //    public static FrameBuffer rnb;

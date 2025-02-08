@@ -2,18 +2,18 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
+import arc.graphics.g2d.Draw;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.SBatch;
+import org.durmiendo.sueno.graphics.SSBatch;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
-import org.durmiendo.sueno.ui.fragments.SMenuFragment;
 import org.durmiendo.sueno.utils.SLog;
 
 public class Setter {
@@ -32,7 +32,7 @@ public class Setter {
 
 
 //        if (SVars.mainDirecory.child("settings.ulk").exists())
-            SLog.loadTime(SettingsBuilder::uiBuild, "settings");
+        SLog.loadTime(SettingsBuilder::uiBuild, "settings");
 
 
         SLog.elapsedInfo("load settings finished");
@@ -83,6 +83,21 @@ public class Setter {
     }
 
     private static void loadRender() {
+        Events.on(EventType.ClientLoadEvent.class, e -> {
+            Time.runTask(10, () -> {
+                SVars.textureToNormal.put(
+                        Core.atlas.find("sueno-demand").texture,
+                        Core.atlas.find("sueno-demand-normal").texture
+                );
+//                Dialog d = new Dialog("h");
+//                d.cont.add(SVars.textureToNormal.get(Core.atlas.find("sueno-demand").texture) + "");
+//                d.addCloseButton();
+//                d.show();
+                Draw.batch(new SSBatch());
+            });
+        });
+
+
 //        SLog.load("test shader");
 //        Events.run(EventType.Trigger.drawOver, () -> {
 //            Draw.drawRange(Layer.flyingUnit, 1f, () -> Vars.renderer.effectBuffer.begin(Color.clear), () -> {
@@ -110,9 +125,6 @@ public class Setter {
 
 //
 //        SLog.load("normals");
-
-        Core.batch = new SBatch();
-        Vars.ui.menufrag = new SMenuFragment();
 
 //        fb = new FrameBuffer();
 //        nb = new FrameBuffer();

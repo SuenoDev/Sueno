@@ -7,6 +7,7 @@ import mindustry.Vars;
 import mindustry.mod.Mod;
 import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
+import org.durmiendo.sueno.graphics.SBatch;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.utils.SLog;
 

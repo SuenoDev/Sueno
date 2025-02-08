@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.world.blocks.storage;
 
-import arc.Core;
 import arc.math.Mathf;
 import arc.util.Time;
 import mindustry.world.Tile;
@@ -26,11 +25,6 @@ public class SCoreBlock extends CoreBlock {
     @Override
     public void load() {
         super.load();
-
-        SVars.textureToNormal.put(
-                Core.atlas.find("sueno-demand"),
-                Core.atlas.find("sueno-demand-normal")
-        );
     }
 
     @Override

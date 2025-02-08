@@ -1,6 +1,5 @@
 package org.durmiendo.sueno.graphics;
 
-
 import arc.Core;
 import arc.graphics.*;
 import arc.graphics.g2d.Batch;
@@ -11,18 +10,18 @@ import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.struct.IntIntMap;
 import arc.util.Structs;
+import org.durmiendo.sueno.core.SVars;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.RecursiveAction;
 
-public class SBatch extends Batch {
-    //xy + color + uv + mix_color + rotation
-    public static final int VERTEX_SIZE = 2 + 1 + 2 + 1 + 1;
+public class SSBatch extends Batch {
+    //xy + color + uv + mix_color
+    public static final int VERTEX_SIZE = 2 + 1 + 2 + 1;
     public static final int SPRITE_SIZE = 4 * VERTEX_SIZE;
-    public static final VertexAttribute rot = new VertexAttribute(1, "a_rotation");
-
+    protected float rot = 0;
 
     static ForkJoinHolder commonPool;
 
@@ -72,15 +71,15 @@ public class SBatch extends Batch {
     /** The maximum number of sprites rendered in one batch so far. **/
     int maxSpritesInBatch = 0;
 
-    public SBatch(){
+    public SSBatch(){
         this(4096, null);
     }
 
-    public SBatch(int size){
+    public SSBatch(int size){
         this(size, null);
     }
 
-    public SBatch(int size, Shader defaultShader){
+    public SSBatch(int size, Shader defaultShader){
         // 32767 is max vertex index, so 32767 / 4 vertices per sprite = 8191 sprites max.
         if(size > 8191) throw new IllegalArgumentException("Can't have more than 8191 sprites per batch: " + size);
 
@@ -91,8 +90,7 @@ public class SBatch extends Batch {
                     VertexAttribute.position,
                     VertexAttribute.color,
                     VertexAttribute.texCoords,
-                    VertexAttribute.mixColor,
-                    rot
+                    VertexAttribute.mixColor
             );
 
             vertices = new float[size * SPRITE_SIZE];
@@ -174,15 +172,22 @@ public class SBatch extends Batch {
         int count = spritesInBatch * 6;
 
         blending.apply();
-        lastTexture.bind();
-//        if(customShader != null && apply){
+//        lastTexture.bind();
+//        if(customShader != null && apply) {
 //            lastTexture.bind();
+//        }
 //        } else {
-//            lastTexture.bind(0);
-//            getShader().setUniformi("u_texture", 0);
-//            Texture n = SVars.textureToNormal.get(lastTexture);
-//            if (n != null) n.bind(1);
-//            getShader().setUniformi("u_normal", 1);
+            lastTexture.bind(1);
+            getShader().setUniformi("u_texture", 1);
+            Texture n = SVars.textureToNormal.get(lastTexture);
+            if (n != null) {
+                n.bind(2);
+                getShader().setUniformf("u_normaluse", 2);
+                getShader().setUniformi("u_normal", 2);
+            } else {
+                getShader().setUniformf("u_normaluse", 0);
+            }
+            getShader().setUniformf("u_rotation", rot);
 //        }
 
 
@@ -212,45 +217,45 @@ public class SBatch extends Batch {
         }
     }
 
-    protected float[] tmp;
+//    protected float[] tmp;
 
     @Override
     protected void draw(Texture texture, float[] spriteVertices, int offset, int count){
 //        count = (count * 28 / 24);
-        tmp = new float[spriteVertices.length * 28/24];
-        tmp[offset + 0] = spriteVertices[offset + 0];
-        tmp[offset + 1] = spriteVertices[offset + 1];
-        tmp[offset + 2] = spriteVertices[offset + 2];
-        tmp[offset + 3] = spriteVertices[offset + 3];
-        tmp[offset + 4] = spriteVertices[offset + 4];
-        tmp[offset + 5] = spriteVertices[offset + 5];
-        tmp[offset + 6] = 0;
-
-        tmp[offset + 7] = spriteVertices[offset + 6];
-        tmp[offset + 8] = spriteVertices[offset + 7];
-        tmp[offset + 9] = spriteVertices[offset + 8];
-        tmp[offset + 10] = spriteVertices[offset + 9];
-        tmp[offset + 11] = spriteVertices[offset + 10];
-        tmp[offset + 12] = spriteVertices[offset + 11];
-        tmp[offset + 13] = 0;
-
-        tmp[offset + 14] = spriteVertices[offset + 12];
-        tmp[offset + 15] = spriteVertices[offset + 13];
-        tmp[offset + 16] = spriteVertices[offset + 14];
-        tmp[offset + 17] = spriteVertices[offset + 15];
-        tmp[offset + 18] = spriteVertices[offset + 16];
-        tmp[offset + 19] = spriteVertices[offset + 17];
-        tmp[offset + 20] = 0;
-
-        tmp[offset + 21] = spriteVertices[offset + 18];
-        tmp[offset + 22] = spriteVertices[offset + 19];
-        tmp[offset + 23] = spriteVertices[offset + 20];
-        tmp[offset + 24] = spriteVertices[offset + 21];
-        tmp[offset + 25] = spriteVertices[offset + 22];
-        tmp[offset + 26] = spriteVertices[offset + 23];
-        tmp[offset + 27] = 0;
-
-        spriteVertices = tmp;
+//        tmp = new float[spriteVertices.length * 28/24];
+//        tmp[offset + 0] = spriteVertices[offset + 0];
+//        tmp[offset + 1] = spriteVertices[offset + 1];
+//        tmp[offset + 2] = spriteVertices[offset + 2];
+//        tmp[offset + 3] = spriteVertices[offset + 3];
+//        tmp[offset + 4] = spriteVertices[offset + 4];
+//        tmp[offset + 5] = spriteVertices[offset + 5];
+//        tmp[offset + 6] = 0;
+//
+//        tmp[offset + 7] = spriteVertices[offset + 6];
+//        tmp[offset + 8] = spriteVertices[offset + 7];
+//        tmp[offset + 9] = spriteVertices[offset + 8];
+//        tmp[offset + 10] = spriteVertices[offset + 9];
+//        tmp[offset + 11] = spriteVertices[offset + 10];
+//        tmp[offset + 12] = spriteVertices[offset + 11];
+//        tmp[offset + 13] = 0;
+//
+//        tmp[offset + 14] = spriteVertices[offset + 12];
+//        tmp[offset + 15] = spriteVertices[offset + 13];
+//        tmp[offset + 16] = spriteVertices[offset + 14];
+//        tmp[offset + 17] = spriteVertices[offset + 15];
+//        tmp[offset + 18] = spriteVertices[offset + 16];
+//        tmp[offset + 19] = spriteVertices[offset + 17];
+//        tmp[offset + 20] = 0;
+//
+//        tmp[offset + 21] = spriteVertices[offset + 18];
+//        tmp[offset + 22] = spriteVertices[offset + 19];
+//        tmp[offset + 23] = spriteVertices[offset + 20];
+//        tmp[offset + 24] = spriteVertices[offset + 21];
+//        tmp[offset + 25] = spriteVertices[offset + 22];
+//        tmp[offset + 26] = spriteVertices[offset + 23];
+//        tmp[offset + 27] = 0;
+//
+//        spriteVertices = tmp;
 
         if(sort && !flushing){
             if(numRequests + count - offset >= this.requests.length) expandRequests();
@@ -295,6 +300,8 @@ public class SBatch extends Batch {
 
     }
 
+
+
     @Override
     protected void draw(TextureRegion region, float x, float y, float originX, float originY, float width, float height, float rotation){
         if(sort && !flushing){
@@ -319,6 +326,7 @@ public class SBatch extends Batch {
             Texture texture = region.texture;
             if (texture != lastTexture) {
                 switchTexture(texture);
+                this.rot = rotation;
             } else if (idx == vertices.length) {
                 flush();
             }
@@ -327,7 +335,7 @@ public class SBatch extends Batch {
             int idx = this.idx;
             this.idx += SPRITE_SIZE;
 
-            if (!Mathf.zero(rotation)) {
+            if(!Mathf.zero(rotation)){
                 //bottom left and top right corner points relative to origin
                 float worldOriginX = x + originX;
                 float worldOriginY = y + originY;
@@ -363,32 +371,28 @@ public class SBatch extends Batch {
                 vertices[idx + 3] = u;
                 vertices[idx + 4] = v;
                 vertices[idx + 5] = mixColor;
-                vertices[idx + 6] = rotation;
 
-                vertices[idx + 7] = x2;
-                vertices[idx + 8] = y2;
-                vertices[idx + 9] = color;
-                vertices[idx + 10] = u;
-                vertices[idx + 11] = v2;
-                vertices[idx + 12] = mixColor;
-                vertices[idx + 13] = rotation;
+                vertices[idx + 6] = x2;
+                vertices[idx + 7] = y2;
+                vertices[idx + 8] = color;
+                vertices[idx + 9] = u;
+                vertices[idx + 10] = v2;
+                vertices[idx + 11] = mixColor;
 
-                vertices[idx + 14] = x3;
-                vertices[idx + 15] = y3;
-                vertices[idx + 16] = color;
-                vertices[idx + 17] = u2;
-                vertices[idx + 18] = v2;
-                vertices[idx + 19] = mixColor;
-                vertices[idx + 20] = rotation;
+                vertices[idx + 12] = x3;
+                vertices[idx + 13] = y3;
+                vertices[idx + 14] = color;
+                vertices[idx + 15] = u2;
+                vertices[idx + 16] = v2;
+                vertices[idx + 17] = mixColor;
 
-                vertices[idx + 21] = x4;
-                vertices[idx + 22] = y4;
-                vertices[idx + 23] = color;
-                vertices[idx + 24] = u2;
-                vertices[idx + 25] = v;
-                vertices[idx + 26] = mixColor;
-                vertices[idx + 27] = rotation;
-            } else {
+                vertices[idx + 18] = x4;
+                vertices[idx + 19] = y4;
+                vertices[idx + 20] = color;
+                vertices[idx + 21] = u2;
+                vertices[idx + 22] = v;
+                vertices[idx + 23] = mixColor;
+            }else{
                 float fx2 = x + width;
                 float fy2 = y + height;
                 float u = region.u;
@@ -405,31 +409,27 @@ public class SBatch extends Batch {
                 vertices[idx + 3] = u;
                 vertices[idx + 4] = v;
                 vertices[idx + 5] = mixColor;
-                vertices[idx + 6] = rotation;
 
-                vertices[idx + 7] = x;
-                vertices[idx + 8] = fy2;
-                vertices[idx + 9] = color;
-                vertices[idx + 10] = u;
-                vertices[idx + 11] = v2;
-                vertices[idx + 12] = mixColor;
-                vertices[idx + 13] = rotation;
+                vertices[idx + 6] = x;
+                vertices[idx + 7] = fy2;
+                vertices[idx + 8] = color;
+                vertices[idx + 9] = u;
+                vertices[idx + 10] = v2;
+                vertices[idx + 11] = mixColor;
 
-                vertices[idx + 14] = fx2;
-                vertices[idx + 15] = fy2;
-                vertices[idx + 16] = color;
-                vertices[idx + 17] = u2;
-                vertices[idx + 18] = v2;
-                vertices[idx + 19] = mixColor;
-                vertices[idx + 20] = rotation;
+                vertices[idx + 12] = fx2;
+                vertices[idx + 13] = fy2;
+                vertices[idx + 14] = color;
+                vertices[idx + 15] = u2;
+                vertices[idx + 16] = v2;
+                vertices[idx + 17] = mixColor;
 
-                vertices[idx + 21] = fx2;
-                vertices[idx + 22] = y;
-                vertices[idx + 23] = color;
-                vertices[idx + 24] = u2;
-                vertices[idx + 25] = v;
-                vertices[idx + 26] = mixColor;
-                vertices[idx + 27] = rotation;
+                vertices[idx + 18] = fx2;
+                vertices[idx + 19] = y;
+                vertices[idx + 20] = color;
+                vertices[idx + 21] = u2;
+                vertices[idx + 22] = v;
+                vertices[idx + 23] = mixColor;
             }
         }
     }
@@ -441,16 +441,13 @@ public class SBatch extends Batch {
                         attribute vec4 a_color;
                         attribute vec2 a_texCoord0;
                         attribute vec4 a_mix_color;
-                        attribute float a_rotation;
                         uniform mat4 u_projTrans;
                         varying vec4 v_color;
                         varying vec4 v_mix_color;
                         varying vec2 v_texCoords;
-                        varying float v_rotation;
 
                         void main(){
                            v_color = a_color;
-                           v_rotation = a_rotation;
                            v_color.a = v_color.a * (255.0/254.0);
                            v_mix_color = a_mix_color;
                            v_mix_color.a *= (255.0/254.0);
@@ -462,15 +459,17 @@ public class SBatch extends Batch {
                         varying lowp vec4 v_color;
                         varying lowp vec4 v_mix_color;
                         varying highp vec2 v_texCoords;
-                        varying highp float v_rotation;
+                        uniform float u_rotation;
+                        uniform float u_normaluse;
                         uniform highp sampler2D u_texture;
                         uniform highp sampler2D u_normal;
 
                         void main(){
                           vec4 t = texture2D(u_texture, v_texCoords);
-                          vec4 n = texture2D(u_texture, v_texCoords);
-                          vec4 c = t;// * n;
-                          //c.a = t.a;
+                          vec4 n = texture2D(u_normal, v_texCoords);
+                          vec4 c = t;
+                          c.r = u_rotation/360.;
+                          //if (u_normaluse > 1.0) c.rgb = n.rgb;
                           gl_FragColor = v_color * mix(c, vec4(v_mix_color.rgb, c.a), v_mix_color.a);
                         }"""
         );
