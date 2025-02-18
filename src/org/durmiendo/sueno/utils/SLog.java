@@ -3,6 +3,7 @@ package org.durmiendo.sueno.utils;
 import arc.Events;
 import arc.struct.IntMap;
 import arc.util.Log;
+import arc.util.Strings;
 import arc.util.Time;
 import mindustry.game.EventType;
 import org.durmiendo.sueno.core.SVars;
@@ -18,9 +19,9 @@ public class SLog {
     public static int layer = 0;
 
     private static void log(String msg, Object... args) {
-        Log.info(msg, args);
-
+        if (SVars.extendedLogs) Log.info(msg, args);
     }
+
     public static IntMap<String> data = new IntMap<>();
 
     public static void visi(String msg, int id) {
@@ -32,18 +33,26 @@ public class SLog {
 
     public static float timer;
     public static void tInfo(String msg, float time) {
-        if (SVars.extendedLogs && timer <= 0) {
+        if (timer <= 0) {
             info(msg);
             timer = time;
         }
     }
 
     public static void tInfo(Object msg, float time) {
-        if (SVars.extendedLogs && timer <= 0) {
+        if (timer <= 0) {
             info(msg.toString());
             timer = time;
         }
     }
+
+    public static void dInfo(Object msg) {
+        if (timer <= 0) {
+            info(msg.toString());
+            timer = 3;
+        }
+    }
+
 
     public static void loadTime(Runnable runnable, String msg) {
         mark();
@@ -55,7 +64,7 @@ public class SLog {
         Class c = o.getClass();
         try {
             Field f = c.getField(field);
-            Log.info(field + " " + f.get(o));
+            log(field + " " + f.get(o));
         } catch (NoSuchFieldException | IllegalAccessException ignored) {}
     }
 
@@ -68,7 +77,7 @@ public class SLog {
     }
 
     public static void einfo(String msg) {
-        if (SVars.extendedLogs) log("[cyan]@[white] @: " + msg, getVert(), getCaller());
+        log("[cyan]@[white] @: " + msg, getVert(), getCaller());
     }
 
 
@@ -81,39 +90,54 @@ public class SLog {
     }
 
     public static void load(String msg) {
-        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg);
+        log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg);
     }
 
     public static void load(String msg, Object... args) {
-        if (SVars.extendedLogs) log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg, args);
+        log("[cyan]@[white] @: loading @[gray]...[white]", getVert(), getCaller(), msg, args);
     }
 
     public static void elapsedInfo(String msg) {
-        if (SVars.extendedLogs) {
-            Log.info("[cyan]@[white]", getVert());
-            layer-=1;
-            Log.info("[cyan]@`->[white] " + msg + "[gray], load time is [orange]" + Time.elapsed() + "ms[white]", getVert());
+        log("[cyan]@[white]", getVert());
+        layer-=1;
+        log("[cyan]@`->[white] " + msg + "[gray], load time is [orange]" + Time.elapsed() + "ms[white]", getVert());
+    }
+
+    public static void err(String msg) {
+        String err = Strings.format("[red]@: @", getCaller(), msg);
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < err.length()-4; i++) {
+            b.append("=");
         }
+        String a = b.toString();
+        log("[red]@[white]", a);
+        log(err + "[white]");
+        log("[red]@[white]", a);
     }
 
     public static void mark() {
-        if (SVars.extendedLogs) {
-            line();
-            Time.mark();
-        }
+        line();
+        Time.mark();
     }
 
     public static void line() {
-        if (SVars.extendedLogs) {
-            if (layer == 0) Log.info("[cyan],---------------<  [yellow]Sueno[cyan]  >-------------------[white]");
-            if (layer > 0) Log.info("[cyan]@,----------------------------------[white]", getVert());
-            layer+=1;
+        if (layer == 0) {
+            log("[cyan],---<  [yellow]Sueno[white]");
         }
+        if (layer > 0) {
+            StringBuilder b = new StringBuilder();
+            for (int i = 0; i < 40 - layer*2; i++) {
+                b.append("-");
+            }
+            String a = b.toString();
+            log("[cyan]@,@[white]", getVert(), a);
+        }
+        layer+=1;
     }
 
     private static String getCaller() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        byte i = 0;
+        short i = 0;
         for (StackTraceElement caller : trace) {
             i++;
             if (i < 4) continue;

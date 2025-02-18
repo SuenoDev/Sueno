@@ -2,13 +2,12 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.g2d.Draw;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.SSBatch;
+import org.durmiendo.sueno.graphics.SBlockRenderer;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
@@ -20,8 +19,6 @@ public class Setter {
     public static void load() {
         SLog.mark();
 
-
-
         SLog.loadTime(Setter::loadVars, "vars");
         SLog.loadTime(Setter::loadControllers, "controllers");
         SLog.loadTime(Setter::loadUI, "ui");
@@ -30,8 +27,6 @@ public class Setter {
         SLog.loadTime(Setter::loadCompatibility, "compatibility");
 
 
-
-//        if (SVars.mainDirecory.child("settings.ulk").exists())
         SLog.loadTime(SettingsBuilder::uiBuild, "settings");
 
 
@@ -44,20 +39,32 @@ public class Setter {
         String oldVersion = Core.settings.getString(ver, "null");
         String oldBuilder = Core.settings.getString(bld, "null");
 
+        SLog.load("oldVer " + oldVersion);
+        SLog.load("oldBuilder " + oldBuilder);
+
         String[] builder = SVars.internalFileTree.child("data/builder").readString().split("/");
-        Core.settings.put(bld, builder[0]);
         String currentVersion = Vars.mods.getMod(Sueno.class).meta.version + "/" + builder[1];
+        SLog.load("curVer " + currentVersion);
+
+        Core.settings.put(bld, builder[0]);
+        SLog.load("curBuilder " + builder[0]);
+
+        SLog.load("verWarning " + SVars.versionWarning);
+
         Core.settings.put(ver, currentVersion);
         Core.settings.saveValues();
 
 
-
-        if (SVars.versionWarning && (!((oldVersion.equals(currentVersion) || oldVersion.equals("null")) && (oldBuilder.equals(builder[0]) || oldBuilder.equals("null"))))) {
-            Events.on(EventType.ClientLoadEvent.class, e -> {
-                Time.runTask(10f, () -> {
-                    SVars.ui.warning("Attention, backward compatibility may not be supported in different versions and builders", 3f);
-                });
-            });
+        if (!((oldVersion.equals(currentVersion) || oldVersion.equals("null")) && (oldBuilder.equals(builder[0]) || oldBuilder.equals("null")))) {
+            SLog.load("ver or builder do not match!");
+            if (SVars.versionWarning) Events.on(EventType.ClientLoadEvent.class,
+                    e -> Time.runTask(10f,
+                            () -> SVars.ui.warning(
+                                    "Attention, backward compatibility may not be supported in different versions and builders",
+                                    3f
+                            )
+                    )
+            );
         }
     }
 
@@ -84,7 +91,6 @@ public class Setter {
 
     private static void loadRender() {
         Events.on(EventType.ClientLoadEvent.class, e -> {
-            Time.runTask(10, () -> {
                 SVars.textureToNormal.put(
                         Core.atlas.find("sueno-demand").texture,
                         Core.atlas.find("sueno-demand-normal").texture
@@ -93,9 +99,14 @@ public class Setter {
 //                d.cont.add(SVars.textureToNormal.get(Core.atlas.find("sueno-demand").texture) + "");
 //                d.addCloseButton();
 //                d.show();
-                Draw.batch(new SSBatch());
-            });
         });
+
+        try {
+            Vars.renderer.getClass().getDeclaredField("blocks").set(Vars.renderer, new SBlockRenderer());
+        } catch (Exception e) {
+            SLog.err("Renderer dont load :(");
+//            throw new RuntimeException(e);
+        }
 
 
 //        SLog.load("test shader");

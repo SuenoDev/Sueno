@@ -185,6 +185,13 @@ project.tasks.jar { Jar jar ->
 
 // collect classes and dex jars
 project.tasks.buildRelease { Jar jar ->
+    File f = file("res/data/builder")
+    String a = f.newReader().readLine();
+    String[] b = a.split('/');
+    int ver = Integer.parseInt(b[1]);
+    ver+=1;
+    f.write(b[0] + '/' + ver);
+
     jar.dependsOn project.tasks.dex
     jar.dependsOn project.tasks.jar
 

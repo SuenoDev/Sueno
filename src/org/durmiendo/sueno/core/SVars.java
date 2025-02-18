@@ -25,10 +25,6 @@ public class SVars {
 
     public static ObjectMap<Texture, Texture> textureToNormal = new ObjectMap<>();
 
-//    public static FrameBuffer nb;
-//    public static FrameBuffer rnb;
-//    public static FrameBuffer fb;
-
     //controllers
     public static CelestialBodyController celestialBodyController;
     public static TemperatureController temperatureController;
@@ -38,10 +34,11 @@ public class SVars {
     public static SuenoInputProcessor input;
 
     public static boolean onCampaign;
-    public static Fi mainDirecory = Vars.dataDirectory.child("sueno/");
+    public static Fi mainDir = Vars.dataDirectory.child("sueno");
+    public static Fi dumpDir = mainDir.child("dump");
 
-    @SuenoSettings()
-    public static boolean extendedLogs = false;
+    @SuenoSettings(def = 1)
+    public static boolean extendedLogs = true;
 
     @SuenoSettings(def = 1)
     public static boolean dataVisible = true;
