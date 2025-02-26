@@ -2,18 +2,25 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.TextureAtlas;
+import arc.graphics.gl.Shader;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
+import org.durmiendo.sueno.graphics.NTexture;
 import org.durmiendo.sueno.graphics.SBlockRenderer;
+import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
+
+import java.lang.reflect.Field;
 
 public class Setter {
     public static void load() {
@@ -26,9 +33,7 @@ public class Setter {
         SLog.loadTime(Setter::loadChunks, "chunks");
         SLog.loadTime(Setter::loadCompatibility, "compatibility");
 
-
         SLog.loadTime(SettingsBuilder::uiBuild, "settings");
-
 
         SLog.elapsedInfo("load settings finished");
     }
@@ -57,14 +62,18 @@ public class Setter {
 
         if (!((oldVersion.equals(currentVersion) || oldVersion.equals("null")) && (oldBuilder.equals(builder[0]) || oldBuilder.equals("null")))) {
             SLog.load("ver or builder do not match!");
-            if (SVars.versionWarning) Events.on(EventType.ClientLoadEvent.class,
-                    e -> Time.runTask(10f,
-                            () -> SVars.ui.warning(
-                                    "Attention, backward compatibility may not be supported in different versions and builders",
-                                    3f
-                            )
-                    )
-            );
+            if (SVars.versionWarning) {
+                Events.on(EventType.ClientLoadEvent.class,
+                        e -> Time.runTask(10f,
+                                () -> SVars.ui.warning(
+                                        "Attention, backward compatibility may not be supported in different versions and builders",
+                                        3f
+                                )
+                        )
+                );
+            } else {
+                SLog.load("attetion dont show, user ");
+            }
         }
     }
 
@@ -90,23 +99,41 @@ public class Setter {
     }
 
     private static void loadRender() {
-        Events.on(EventType.ClientLoadEvent.class, e -> {
-                SVars.textureToNormal.put(
-                        Core.atlas.find("sueno-demand").texture,
-                        Core.atlas.find("sueno-demand-normal").texture
-                );
-//                Dialog d = new Dialog("h");
-//                d.cont.add(SVars.textureToNormal.get(Core.atlas.find("sueno-demand").texture) + "");
-//                d.addCloseButton();
-//                d.show();
-        });
-
         try {
-            Vars.renderer.getClass().getDeclaredField("blocks").set(Vars.renderer, new SBlockRenderer());
+            Field f = Vars.renderer.getClass().getDeclaredField("blocks");
+            f.setAccessible(true);
+            f.set(Vars.renderer, new SBlockRenderer());
         } catch (Exception e) {
             SLog.err("Renderer dont load :(");
 //            throw new RuntimeException(e);
         }
+
+        Events.on(EventType.ClientLoadEvent.class, e -> {
+            SLog.loadTime(() -> {
+                final int[] loaded = {0};
+                Core.atlas.getRegionMap().each((s, atlasRegion) -> {
+                    TextureAtlas.AtlasRegion n = Core.atlas.find(s + "-normal");
+                    if (Core.atlas.isFound(n)) {
+                        loaded[0]++;
+                        SLog.load("normal texture, founded: " + s);
+                        n.texture = new NTexture(atlasRegion.texture, n.texture);
+                    }
+                });
+                SLog.info(loaded[0] + " normal textures loaded!");
+                Draw.shader(SShaders.normalShader, true);
+            }, "normal texture load");
+        });
+
+        Shader[] last = new Shader[1];
+
+        Events.run(EventType.Trigger.drawOver, () -> {
+//            last[0] = Draw.getShader();
+
+        });
+
+        Events.run(EventType.Trigger.uiDrawBegin, () -> Draw.shader(last[0]));
+
+
 
 
 //        SLog.load("test shader");

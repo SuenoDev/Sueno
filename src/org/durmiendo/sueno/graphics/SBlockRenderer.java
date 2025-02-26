@@ -23,10 +23,7 @@ import mindustry.game.EventType.*;
 import mindustry.game.Team;
 import mindustry.game.Teams.BlockPlan;
 import mindustry.gen.Building;
-import mindustry.graphics.CacheLayer;
-import mindustry.graphics.FloorRenderer;
-import mindustry.graphics.Layer;
-import mindustry.graphics.Shaders;
+import mindustry.graphics.*;
 import mindustry.world.Block;
 import mindustry.world.Tile;
 import mindustry.world.blocks.environment.Floor.UpdateRenderState;
@@ -36,7 +33,7 @@ import static arc.Core.camera;
 import static arc.Core.scene;
 import static mindustry.Vars.*;
 
-public class SBlockRenderer{
+public class SBlockRenderer extends BlockRenderer {
     //TODO cracks take up far to much space, so I had to limit it to 7. this means larger blocks won't have cracks - draw tiling mirrored stuff instead?
     public static final int crackRegions = 8, maxCrackSize = 7;
     public static boolean drawQuadtreeDebug = false;
@@ -414,93 +411,85 @@ public class SBlockRenderer{
     }
 
     public void drawBlocks(){
-        Team pteam = player.team();
+        Draw.draw(Layer.block, () -> {
+            SShaders.normalShader.bind();
+            SShaders.normalShader.apply();
+            Team pteam = player.team();
 
-        drawDestroyed();
+            drawDestroyed();
 
-        //draw most tile stuff
-        for(int i = 0; i < tileview.size; i++){
-            Tile tile = tileview.items[i];
-            Block block = tile.block();
-            Building build = tile.build;
+            //draw most tile stuff
+            for (int i = 0; i < tileview.size; i++) {
+                Tile tile = tileview.items[i];
+                Block block = tile.block();
+                Building build = tile.build;
 
-            Draw.z(Layer.block);
-
-            boolean visible = (build == null || !build.inFogTo(pteam));
-
-            //comment wasVisible part for hiding?
-            if(block != Blocks.air && (visible || build.wasVisible)){
-                block.drawBase(tile);
-                Draw.reset();
                 Draw.z(Layer.block);
 
-                if(block.customShadow){
-                    Draw.z(Layer.block - 1);
-                    block.drawShadow(tile);
+                boolean visible = (build == null || !build.inFogTo(pteam));
+
+                //comment wasVisible part for hiding?
+                if (block != Blocks.air && (visible || build.wasVisible)) {
+                    block.drawBase(tile);
+                    Draw.reset();
                     Draw.z(Layer.block);
-                }
 
-                if(build != null){
-                    if(visible){
-                        build.visibleFlags |= (1L << pteam.id);
-                        if(!build.wasVisible){
-                            build.wasVisible = true;
-                            updateShadow(build);
-                            renderer.minimap.update(tile);
-                        }
-                    }
-
-                    if(build.damaged()){
-                        Draw.z(Layer.blockCracks);
-                        build.drawCracks();
+                    if (block.customShadow) {
+                        Draw.z(Layer.block - 1);
+                        block.drawShadow(tile);
                         Draw.z(Layer.block);
                     }
 
-                    if(build.team != pteam){
-                        if(build.block.drawTeamOverlay){
-                            build.drawTeam();
+                    if (build != null) {
+                        if (visible) {
+                            build.visibleFlags |= (1L << pteam.id);
+                            if (!build.wasVisible) {
+                                build.wasVisible = true;
+                                updateShadow(build);
+                                renderer.minimap.update(tile);
+                            }
+                        }
+
+                        if (build.damaged()) {
+                            Draw.z(Layer.blockCracks);
+                            build.drawCracks();
                             Draw.z(Layer.block);
                         }
-                    }else if(renderer.drawStatus && block.hasConsumers){
-                        build.drawStatus();
+
+                        if (build.team != pteam) {
+                            if (build.block.drawTeamOverlay) {
+                                build.drawTeam();
+                                Draw.z(Layer.block);
+                            }
+                        } else if (renderer.drawStatus && block.hasConsumers) {
+                            build.drawStatus();
+                        }
+                    }
+                    Draw.reset();
+                } else if (!visible) {
+                    //TODO here is the question: should buildings you lost sight of remain rendered? if so, how should this information be stored?
+                    //uncomment lines below for buggy persistence
+                    //if(build.wasVisible) updateShadow(build);
+                    //build.wasVisible = false;
+                }
+            }
+
+            if (renderer.lights.enabled()) {
+                //draw lights
+                for (int i = 0; i < lightview.size; i++) {
+                    Tile tile = lightview.items[i];
+                    Building entity = tile.build;
+
+                    if (entity != null) {
+                        entity.drawLight();
+                    } else if (tile.block().emitLight) {
+                        tile.block().drawEnvironmentLight(tile);
+                    } else if (tile.floor().emitLight && tile.block() == Blocks.air) { //only draw floor light under non-solid blocks
+                        tile.floor().drawEnvironmentLight(tile);
                     }
                 }
-                Draw.reset();
-            }else if(!visible){
-                //TODO here is the question: should buildings you lost sight of remain rendered? if so, how should this information be stored?
-                //uncomment lines below for buggy persistence
-                //if(build.wasVisible) updateShadow(build);
-                //build.wasVisible = false;
             }
-        }
-
-        if(renderer.lights.enabled()){
-            //draw lights
-            for(int i = 0; i < lightview.size; i++){
-                Tile tile = lightview.items[i];
-                Building entity = tile.build;
-
-                if(entity != null){
-                    entity.drawLight();
-                }else if(tile.block().emitLight){
-                    tile.block().drawEnvironmentLight(tile);
-                }else if(tile.floor().emitLight && tile.block() == Blocks.air){ //only draw floor light under non-solid blocks
-                    tile.floor().drawEnvironmentLight(tile);
-                }
-            }
-        }
-
-        if(drawQuadtreeDebug){
-            //TODO remove
-            Draw.z(Layer.overlayUI);
-            Lines.stroke(1f, Color.green);
-
-            blockTree.intersect(camera.bounds(Tmp.r1), tile -> {
-                Lines.rect(tile.getHitbox(Tmp.r2));
-            });
-
-            Draw.reset();
-        }
+        });
     }
 
     public void updateShadow(Building build){

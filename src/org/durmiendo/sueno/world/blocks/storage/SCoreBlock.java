@@ -1,5 +1,8 @@
 package org.durmiendo.sueno.world.blocks.storage;
 
+import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.SortedSpriteBatch;
+import arc.graphics.g2d.SpriteBatch;
 import arc.math.Mathf;
 import arc.util.Time;
 import mindustry.world.Tile;
@@ -26,11 +29,12 @@ public class SCoreBlock extends CoreBlock {
     public void load() {
         super.load();
     }
+    public SpriteBatch b = new SortedSpriteBatch();
 
     @Override
     public void drawBase(Tile tile) {
         super.drawBase(tile);
-//        Draw.rect("sueno-demand-normal17", tile.drawx(), tile.drawy());
+        Draw.batch(b, () -> Draw.rect("sueno-demand-normal17", tile.drawx(), tile.drawy()+12));
     }
 
     public class CoreBuild extends CoreBlock.CoreBuild implements Heated {

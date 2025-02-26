@@ -7,7 +7,6 @@ import arc.util.Strings;
 import arc.util.Time;
 import mindustry.game.EventType;
 import org.durmiendo.sueno.core.SVars;
-
 import java.lang.reflect.Field;
 
 public class SLog {

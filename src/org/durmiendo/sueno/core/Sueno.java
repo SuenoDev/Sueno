@@ -7,7 +7,6 @@ import mindustry.Vars;
 import mindustry.mod.Mod;
 import mmc.annotations.ModAnnotations;
 import org.durmiendo.sueno.content.SLoader;
-import org.durmiendo.sueno.graphics.SBatch;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.utils.SLog;
 
@@ -20,12 +19,15 @@ import org.durmiendo.sueno.utils.SLog;
 public class Sueno extends Mod {
     public Sueno() {
         SLog.init();
-        SLog.info("Sueno");
+        SLog.info("Sueno new instance!");
+
         SVars.core = this;
     }
 
     @Override
     public void loadContent() {
+//        Vars.renderer = new SRenderer();
+
         SVars.sueno = Vars.mods.getMod(getClass());
         Log.info("load Sueno content");
 

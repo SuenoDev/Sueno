@@ -127,24 +127,11 @@ public class SShaders {
                     Shaders.getShaderFi("screenspace.vert"),
                     SVars.internalFileTree.child("shaders/normal.frag")
             );
-
-//            try {
-//                Field f = Renderer.class.getDeclaredField("lights");
-//                f.setAccessible(true);
-//                f.set(Vars.renderer, new RLightRenderer());
-//                f.setAccessible(false);
-//            } catch (Exception e) {
-//                Log.err(e);
-//            }
         }
 
         @Override
         public void apply(){
-//            SVars.fb.getTexture().bind(1);
-//            SVars.nb.getTexture().bind(2);
-//            setUniformi("u_normal", 2);
-//            setUniformi("u_textures", 1);
-
+            setUniformi("u_normal", 4);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);
