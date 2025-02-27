@@ -411,9 +411,7 @@ public class SBlockRenderer extends BlockRenderer {
     }
 
     public void drawBlocks(){
-        Draw.draw(Layer.block, () -> {
-            SShaders.normalShader.bind();
-            SShaders.normalShader.apply();
+//        Draw.draw(Layer.block, () -> {
             Team pteam = player.team();
 
             drawDestroyed();
@@ -489,7 +487,7 @@ public class SBlockRenderer extends BlockRenderer {
                     }
                 }
             }
-        });
+//        });
     }
 
     public void updateShadow(Building build){

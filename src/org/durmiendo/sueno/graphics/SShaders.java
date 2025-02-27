@@ -124,14 +124,19 @@ public class SShaders {
     public static class NormalShader extends Shader{
         public NormalShader(){
             super(
-                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/normal.vert"),
                     SVars.internalFileTree.child("shaders/normal.frag")
             );
         }
 
+        public void apply(int n){
+//            setUniformi("u_textures", t);
+            setUniformi("u_normal", n);
+            apply();
+        }
         @Override
         public void apply(){
-            setUniformi("u_normal", 4);
+            setUniformi("u_normal", 1);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);

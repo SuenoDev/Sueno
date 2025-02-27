@@ -3,6 +3,7 @@ package org.durmiendo.sueno.core;
 import arc.files.Fi;
 import arc.graphics.Texture;
 import arc.struct.ObjectMap;
+import arc.struct.ObjectSet;
 import mindustry.Vars;
 import mindustry.mod.Mods;
 import org.durmiendo.sap.SuenoSettings;
@@ -24,6 +25,8 @@ public class SVars {
     public static InternalFileTree internalFileTree = new InternalFileTree(Sueno.class);
 
     public static ObjectMap<Texture, Texture> textureToNormal = new ObjectMap<>();
+    public static ObjectSet<Texture> noNormal = new ObjectSet<>();
+    public static ObjectMap<Texture, String> regions = new ObjectMap<>();
 
     //controllers
     public static CelestialBodyController celestialBodyController;

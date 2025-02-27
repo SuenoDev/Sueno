@@ -2,17 +2,15 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureAtlas;
-import arc.graphics.gl.Shader;
+import arc.graphics.g2d.SortedSpriteBatch;
+import arc.graphics.g2d.TextureRegion;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.graphics.NTexture;
-import org.durmiendo.sueno.graphics.SBlockRenderer;
-import org.durmiendo.sueno.graphics.SShaders;
+import org.durmiendo.sueno.graphics.SBatch;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
@@ -99,39 +97,59 @@ public class Setter {
     }
 
     private static void loadRender() {
-        try {
-            Field f = Vars.renderer.getClass().getDeclaredField("blocks");
-            f.setAccessible(true);
-            f.set(Vars.renderer, new SBlockRenderer());
-        } catch (Exception e) {
-            SLog.err("Renderer dont load :(");
+//        try {
+//            Field f = Vars.renderer.getClass().getDeclaredField("blocks");
+//            f.setAccessible(true);
+//            f.set(Vars.renderer, new SBlockRenderer());
+//        } catch (Exception e) {
+//            SLog.err("Renderer dont load :(");
 //            throw new RuntimeException(e);
-        }
+//        }
 
-        Events.on(EventType.ClientLoadEvent.class, e -> {
-            SLog.loadTime(() -> {
-                final int[] loaded = {0};
-                Core.atlas.getRegionMap().each((s, atlasRegion) -> {
-                    TextureAtlas.AtlasRegion n = Core.atlas.find(s + "-normal");
-                    if (Core.atlas.isFound(n)) {
-                        loaded[0]++;
-                        SLog.load("normal texture, founded: " + s);
-                        n.texture = new NTexture(atlasRegion.texture, n.texture);
+        SLog.loadTime(() -> {
+            final int[] loaded = {0};
+            Core.atlas.getRegionMap().each((s, atlasRegion) -> {
+                SVars.regions.put(atlasRegion.texture, s);
+                TextureRegion n = Core.atlas.find(s + "-normal");
+                if (Core.atlas.isFound(n)) {
+                    loaded[0]++;
+                    SLog.load("normal texture, founded: " + s);
+                    SVars.textureToNormal.put(atlasRegion.texture, n.texture);
+                    atlasRegion.texture = new NTexture(atlasRegion.texture, n.texture);
+                    Core.atlas.getTextures().remove(atlasRegion.texture);
+                    Core.atlas.getTextures().add(n.texture);
+                }
+            });
+            SLog.info(loaded[0] + " normal textures loaded!");
+
+            try {
+                Field[] from = Core.batch.getClass().getFields();
+                SortedSpriteBatch b = new SBatch();
+                for (Field fromField : from) {
+                    try {
+                        Field toField = b.getClass().getField(fromField.getName());
+                        fromField.setAccessible(true);
+                        toField.setAccessible(true);
+                        toField.set(b, fromField.get(Core.batch));
+                    } catch (Exception ee) {
+                        SLog.load(ee.getMessage());
                     }
-                });
-                SLog.info(loaded[0] + " normal textures loaded!");
-                Draw.shader(SShaders.normalShader, true);
-            }, "normal texture load");
-        });
+                }
 
-        Shader[] last = new Shader[1];
-
-        Events.run(EventType.Trigger.drawOver, () -> {
+                Core.batch = b;
+            } catch (Exception e) {
+                SLog.err("Error updating batch: " + e.getMessage());
+            }
+        }, "normal texture load");
+//
+//        Shader[] last = new Shader[1];
+//
+//        Events.run(EventType.Trigger.drawOver, () -> {
 //            last[0] = Draw.getShader();
 
-        });
-
-        Events.run(EventType.Trigger.uiDrawBegin, () -> Draw.shader(last[0]));
+//        });
+//
+//        Events.run(EventType.Trigger.uiDrawBegin, () -> Draw.shader(last[0]));
 
 
 
