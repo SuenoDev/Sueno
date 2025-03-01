@@ -2,7 +2,7 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.g2d.SortedSpriteBatch;
+import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.TextureRegion;
 import arc.util.Time;
 import mindustry.Vars;
@@ -106,7 +106,7 @@ public class Setter {
 //            throw new RuntimeException(e);
 //        }
 
-        SLog.loadTime(() -> {
+        Events.on(EventType.WorldLoadEndEvent.class, ev -> Time.run(120f, () -> SLog.loadTime(() -> {
             final int[] loaded = {0};
             Core.atlas.getRegionMap().each((s, atlasRegion) -> {
                 SVars.regions.put(atlasRegion.texture, s);
@@ -115,6 +115,7 @@ public class Setter {
                     loaded[0]++;
                     SLog.load("normal texture, founded: " + s);
                     SVars.textureToNormal.put(atlasRegion.texture, n.texture);
+                    SVars.regionToUV.put(atlasRegion, new float[]{n.u, n.v, n.u2, n.v2});
                     atlasRegion.texture = new NTexture(atlasRegion.texture, n.texture);
                     Core.atlas.getTextures().remove(atlasRegion.texture);
                     Core.atlas.getTextures().add(n.texture);
@@ -124,7 +125,8 @@ public class Setter {
 
             try {
                 Field[] from = Core.batch.getClass().getFields();
-                SortedSpriteBatch b = new SBatch();
+                Draw.flush();
+                SBatch b = new SBatch();
                 for (Field fromField : from) {
                     try {
                         Field toField = b.getClass().getField(fromField.getName());
@@ -135,12 +137,12 @@ public class Setter {
                         SLog.load(ee.getMessage());
                     }
                 }
-
+                b.create();
                 Core.batch = b;
             } catch (Exception e) {
                 SLog.err("Error updating batch: " + e.getMessage());
             }
-        }, "normal texture load");
+        }, "normal texture load")));
 //
 //        Shader[] last = new Shader[1];
 //

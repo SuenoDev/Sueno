@@ -76,6 +76,8 @@ public class SShaders {
                     SVars.internalFileTree.child("shaders/contraction.frag")
             );
         }
+
+
         public ObjectMap<String, Float> uniforms = new ObjectMap<>();
 
         public void set(String uf, float v){
@@ -129,14 +131,10 @@ public class SShaders {
             );
         }
 
-        public void apply(int n){
-//            setUniformi("u_textures", t);
-            setUniformi("u_normal", n);
-            apply();
-        }
         @Override
         public void apply(){
             setUniformi("u_normal", 1);
+            setUniformi("u_texture", 0);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);
