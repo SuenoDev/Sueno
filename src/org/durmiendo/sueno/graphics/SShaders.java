@@ -133,8 +133,8 @@ public class SShaders {
 
         @Override
         public void apply(){
-            setUniformi("u_normal", 1);
-            setUniformi("u_texture", 0);
+            setUniformi("u_normal", 3);
+//            setUniformi("u_texture", 0);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,
                     Core.camera.position.y - Core.camera.height / 2);

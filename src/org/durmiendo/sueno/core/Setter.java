@@ -10,15 +10,13 @@ import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.graphics.NTexture;
-import org.durmiendo.sueno.graphics.SBatch;
+import org.durmiendo.sueno.graphics.SSortedSpriteBatch;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.temperature.TemperatureCustomChunk;
 import org.durmiendo.sueno.utils.SLog;
-
-import java.lang.reflect.Field;
 
 public class Setter {
     public static void load() {
@@ -124,21 +122,22 @@ public class Setter {
             SLog.info(loaded[0] + " normal textures loaded!");
 
             try {
-                Field[] from = Core.batch.getClass().getFields();
+//                Field[] from = Core.batch.getClass().getFields();
                 Draw.flush();
-                SBatch b = new SBatch();
-                for (Field fromField : from) {
-                    try {
-                        Field toField = b.getClass().getField(fromField.getName());
-                        fromField.setAccessible(true);
-                        toField.setAccessible(true);
-                        toField.set(b, fromField.get(Core.batch));
-                    } catch (Exception ee) {
-                        SLog.load(ee.getMessage());
-                    }
-                }
-                b.create();
-                Core.batch = b;
+                Core.batch = new SSortedSpriteBatch();
+//                SBatch b = new SBatch();
+//                for (Field fromField : from) {
+//                    try {
+//                        Field toField = b.getClass().getField(fromField.getName());
+//                        fromField.setAccessible(true);
+//                        toField.setAccessible(true);
+//                        toField.set(b, fromField.get(Core.batch));
+//                    } catch (Exception ee) {
+//                        SLog.load(ee.getMessage());
+//                    }
+//                }
+//                b.create();
+//                Core.batch = b;
             } catch (Exception e) {
                 SLog.err("Error updating batch: " + e.getMessage());
             }
