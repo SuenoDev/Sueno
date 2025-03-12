@@ -3,10 +3,10 @@
 uniform sampler2D u_normal;
 uniform sampler2D u_texture;
 //uniform sampler2D u_textures;
-uniform vec2 u_texsize;
-uniform vec2 u_offset;
-uniform vec2 u_lightPos;
-uniform vec4 u_lightColor;
+uniform float u_norm;
+//uniform vec2 u_offset;
+//uniform vec2 u_lightPos;
+//uniform vec4 u_lightColor;
 
 varying float v_rotation;
 varying vec2 v_texCoords;
@@ -21,8 +21,16 @@ varying lowp vec4 v_mix_color;
 
 
 void main() {
-    vec4 c = texture2D(u_texture, v_texCoords);
-    gl_FragColor = v_color * mix(c, vec4(v_mix_color.rgb, c.a), v_mix_color.a);
+//    gl_FragColor = vec4(v_texCoords1.x, v_texCoords1.y, 0.0, 0.7);
+
+    if (u_norm == 2.0) {
+        vec4 c = texture2D(u_texture, v_texCoords);
+        gl_FragColor = v_color * mix(c, vec4(v_mix_color.rgb, c.a), v_mix_color.a);
+    } else {
+//        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.7);
+        vec4 c = texture2D(u_texture, v_texCoords1);
+        gl_FragColor = v_color * mix(c, vec4(v_mix_color.rgb, c.a), v_mix_color.a);
+    }
 //    if (true) {
 //
 //    } else {

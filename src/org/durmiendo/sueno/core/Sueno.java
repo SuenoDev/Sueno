@@ -17,9 +17,13 @@ import org.durmiendo.sueno.utils.SLog;
         classPrefix = "S"
 )
 public class Sueno extends Mod {
+
     public Sueno() {
         SLog.init();
         SLog.info("Sueno new instance!");
+
+
+
 
         SVars.core = this;
     }
@@ -28,6 +32,27 @@ public class Sueno extends Mod {
     public void loadContent() {
 //        Vars.renderer = new SRenderer();
 
+
+//        SLog.loadTime(() -> {
+//            final int[] loaded = {0};
+//            Core.atlas.getRegionMap().each((s, atlasRegion) -> {
+//                SVars.regions.put(atlasRegion.texture, s);
+//                TextureRegion n = Core.atlas.find(s + "-normal");
+//                if (Core.atlas.isFound(n)) {
+//                    loaded[0]++;
+//                    SLog.load("normal texture, founded: " + s);
+//                    Core.atlas.getRegionMap().put(s, new RegionsTextures(atlasRegion, n));
+//                }
+//            });
+//            SLog.info(loaded[0] + " normal textures loaded!");
+//
+//            try {
+//                Draw.flush();
+//                Core.batch = new SSortedSpriteBatch();
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        }, "normal texture load");
         SVars.sueno = Vars.mods.getMod(getClass());
         Log.info("load Sueno content");
 

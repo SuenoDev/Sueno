@@ -9,9 +9,7 @@ import arc.graphics.gl.Shader;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.struct.IntIntMap;
-import arc.util.Log;
 import arc.util.Structs;
-import org.durmiendo.sueno.core.SVars;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -57,7 +55,9 @@ public class SSortedSpriteBatch extends SpriteBatch {
 
     public SSortedSpriteBatch() {
         int size = 4096;
+
         projectionMatrix.setOrtho(0, 0, Core.graphics.getWidth(), Core.graphics.getHeight());
+
 
         //xy + color + uv + mix_color + rotation + uv2
         mesh = new Mesh(true, false, size * 4, size * 6,
@@ -68,6 +68,8 @@ public class SSortedSpriteBatch extends SpriteBatch {
                 rot,
                 uvn
         );
+
+        shader = SShaders.normalShader;
 
         set("vertices", new float[SPRITE_SIZEN*4096]);
 
@@ -83,7 +85,9 @@ public class SSortedSpriteBatch extends SpriteBatch {
             indices[i + 5] = j;
         }
         mesh.setIndices(indices);
-        shader = SShaders.normalShader;
+//        customShader = createShader();
+//        customShader = SShaders.normalShader;
+//        apply = true;
 //        setShader(SShaders.normalShader);
     }
 
@@ -108,6 +112,7 @@ public class SSortedSpriteBatch extends SpriteBatch {
         }
         this.sort = sort;
     }
+
 
     @Override
     protected void setShader(Shader shader, boolean apply){
@@ -159,12 +164,6 @@ public class SSortedSpriteBatch extends SpriteBatch {
 //            SLog.dInfo("copyCount: " + copyCount + " " + v.length);
             System.arraycopy(spriteVertices, offset, vertices, idx, copyCount);
             idx += copyCount;
-            if(idx%36!=0) {
-                float[] ff = new float[idx];
-                System.arraycopy(vertices, 0, ff, 0, idx);
-                Log.info(Arrays.toString(ff));
-                Log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
-            }
 
             count -= copyCount;
             while (count > 0) {
@@ -173,12 +172,6 @@ public class SSortedSpriteBatch extends SpriteBatch {
                 copyCount = Math.min(verticesLength, count);
                 System.arraycopy(spriteVertices, offset, vertices, 0, copyCount);
                 idx += copyCount;
-                if(idx%36!=0) {
-                    float[] ff = new float[idx];
-                    System.arraycopy(vertices, 0, ff, 0, idx);
-                    Log.info(Arrays.toString(ff));
-                    Log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
-                }
                 count -= copyCount;
             }
         }
@@ -259,19 +252,19 @@ public class SSortedSpriteBatch extends SpriteBatch {
         }else{
             if (region.texture != lastTexture) {
                 switchTexture(region.texture);
-            } else if (idx == vertices.length) {
+            } else if (idx+SPRITE_SIZEN > vertices.length) {
                 flush();
             }
 
             float[] vertices = this.vertices;
             int idx = this.idx;
             this.idx += SPRITE_SIZEN;
-            if(idx%36!=0) {
-                float[] ff = new float[idx];
-                System.arraycopy(vertices, 0, ff, 0, idx);
-                Log.info(Arrays.toString(ff));
-                Log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
-            }
+//            if(idx%36!=0) {
+//                float[] ff = new float[idx];
+//                System.arraycopy(vertices, 0, ff, 0, idx);
+//                Log.info(Arrays.toString(ff));
+//                Log.info(Arrays.toString(Thread.currentThread().getStackTrace()));
+//            }
 
             if (!Mathf.zero(rotation)) {
                 //bottom left and top right corner points relative to origin
@@ -300,11 +293,26 @@ public class SSortedSpriteBatch extends SpriteBatch {
                 float u2 = region.u2;
                 float v2 = region.v;
 
-                float[] uvns = SVars.regionToUV.get(region); //uv u2v2
-                float un = uvns != null ? uvns[0] : 0;
-                float v2n = uvns != null ? uvns[1]: 0;
-                float u2n = uvns != null ? uvns[2] : 0;
-                float vn = uvns != null ? uvns[3] : 0;
+//                float[] uvns = SVars.regionToUV.get(region); //uv u2v2
+//                if (uvns != null) {
+//                    Log.info("u: " + uvns[0] + " v: " + uvns[1] + " u2: " + uvns[2] + " v2: " + uvns[3]);
+//                }
+//                float un = uvns != null ? uvns[0] : 0;
+//                float v2n = uvns != null ? uvns[1]: 0;
+//                float u2n = uvns != null ? uvns[2] : 0;
+//                float vn = uvns != null ? uvns[3] : 0;
+
+                float un = 0;
+                float v2n = 0;
+                float u2n = 0;
+                float vn = 0;
+
+                if (region instanceof RegionsTextures r) {
+                    un = r.norm.u;
+                    v2n = r.norm.v2;
+                    u2n = r.norm.u2;
+                    vn = r.norm.v;
+                }
 
                 float color = this.colorPacked;
                 float mixColor = this.mixColorPacked;
@@ -357,11 +365,28 @@ public class SSortedSpriteBatch extends SpriteBatch {
                 float u2 = region.u2;
                 float v2 = region.v;
 
-                float[] uvns = SVars.regionToUV.get(region);
-                float un = uvns != null ? uvns[0] : 0;
-                float v2n = uvns != null ? uvns[1]: 0;
-                float u2n = uvns != null ? uvns[2] : 0;
-                float vn = uvns != null ? uvns[3] : 0;
+//                float[] uvns = SVars.regionToUV.get(region);
+//                if (uvns != null) {
+//                    Log.info("u: " + uvns[0] + " v: " + uvns[1] + " u2: " + uvns[2] + " v2: " + uvns[3]);
+//                }
+//                float un = uvns != null ? uvns[0] : 0;
+//                float v2n = uvns != null ? uvns[1]: 0;
+//                float u2n = uvns != null ? uvns[2] : 0;
+//                float vn = uvns != null ? uvns[3] : 0;
+
+
+                float un = 0;
+                float v2n = 0;
+                float u2n = 0;
+                float vn = 0;
+
+                if (region instanceof RegionsTextures r) {
+//                    Log.warn("RegionsTextures");
+                    un = r.norm.u;
+                    v2n = r.norm.v2;
+                    u2n = r.norm.u2;
+                    vn = r.norm.v;
+                };
 
                 float color = this.colorPacked;
                 float mixColor = this.mixColorPacked;
@@ -440,54 +465,39 @@ public class SSortedSpriteBatch extends SpriteBatch {
     protected void flush(){
         flushRequests();
 
-        if (lastTexture instanceof NTexture n) {
-            getShader().bind();
-            setupMatrices();
+        if (idx == 0) return;
 
-            getShader().apply();
+//        Texture n = SVars.textureToNormal.get(lastTexture);
 
-            Gl.depthMask(false);
+        getShader().bind();
+        setupMatrices();
 
-            int spritesInBatch = idx / SPRITE_SIZEN;
-            int count = spritesInBatch * 6;
-
-            blending.apply();
-
-            n.normal.bind(3);
-            n.base.bind();
-
-            Mesh mesh = this.mesh;
-            mesh.setVertices(vertices, 0, idx);
-            mesh.getIndicesBuffer().position(0);
-            mesh.getIndicesBuffer().limit(count);
-            mesh.render(getShader(), Gl.triangles, 0, count);
-
-//            customShader = b;
+        if (vertices[7] != 0 || vertices[8] != 0 || vertices[25] != 0 || vertices[26] != 0) {
+            getShader().setUniformf("u_norm", 0);
+//            Log.info("u: " + vertices[7] + " v: " + vertices[8] + " u2: " + vertices[25] + " v2: " + vertices[26]);
         } else {
-            getShader().bind();
-            setupMatrices();
-
-            if(customShader != null && apply){
-                getShader().apply();
-            }
-
-            Gl.depthMask(false);
-
-            int spritesInBatch = idx / SPRITE_SIZEN;
-            int count = spritesInBatch * 6;
-
-            blending.apply();
-
-            lastTexture.bind();
-
-//            deconstruct();
-
-            Mesh mesh = this.mesh;
-            mesh.setVertices(vertices, 0, idx);
-            mesh.getIndicesBuffer().position(0);
-            mesh.getIndicesBuffer().limit(count);
-            mesh.render(getShader(), Gl.triangles, 0, count);
+            getShader().setUniformf("u_norm", 2);
         }
+        if(customShader != null && apply){
+            getShader().apply();
+        }
+
+        Gl.depthMask(false);
+
+        int spritesInBatch = idx / SPRITE_SIZEN;
+        int count = spritesInBatch * 6;
+
+        blending.apply();
+
+        lastTexture.bind();
+//        if (n != null) n.bind(3);
+
+        Mesh mesh = this.mesh;
+        mesh.setVertices(vertices, 0, idx);
+        mesh.getIndicesBuffer().position(0);
+        mesh.getIndicesBuffer().limit(count);
+        mesh.render(getShader(), Gl.triangles, 0, count);
+
         idx = 0;
     }
 

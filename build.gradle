@@ -5,6 +5,7 @@ project.repositories {
     maven{ url  "https://raw.githubusercontent.com/Zelaux/Repo/master/repository" }
     maven { url "https://www.jitpack.io" }
 
+//    maven { url "https://raw.githubusercontent.com/GlennFolker/glTFrenzyMaven/main"}
 }
 
 project.plugins.apply("java")
@@ -144,6 +145,9 @@ project.tasks.compileJava { JavaCompile task ->
 project.dependencies {
     annotationProcessor "com.github.Anuken:jabel:93fde537c7"
 
+//    implementation 'com.github.Zelaux.ArcLibrary:graphics-g3d:v1.0.6'
+
+//    implementation 'com.github.GlennFolker:glTFrenzy:v146.0.1'
     if (project.ext.deps.implementation != null)
         implementation project.ext.deps.implementation
 

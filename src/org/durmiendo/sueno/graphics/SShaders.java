@@ -19,6 +19,12 @@ public class SShaders {
     public static BlackHoleShader blackHoleShader = new BlackHoleShader();
     public static VoidStriderCollapseEffectShader voidStriderCollapseEffectShader = new VoidStriderCollapseEffectShader();
 
+
+    public static Shader g3d = new Shader(
+            SVars.internalFileTree.child("shaders/3d.vert"),
+            SVars.internalFileTree.child("shaders/3d.frag")
+    );
+
     public static class IceShader extends Shader{
         public IceShader(){
             super(
@@ -133,7 +139,7 @@ public class SShaders {
 
         @Override
         public void apply(){
-            setUniformi("u_normal", 3);
+//            setUniformi("u_normal", 3);
 //            setUniformi("u_texture", 0);
             setUniformf("u_offset",
                     Core.camera.position.x - Core.camera.width / 2,

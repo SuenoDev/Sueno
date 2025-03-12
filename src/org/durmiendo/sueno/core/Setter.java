@@ -2,15 +2,11 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.TextureRegion;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.NTexture;
-import org.durmiendo.sueno.graphics.SSortedSpriteBatch;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
@@ -104,44 +100,8 @@ public class Setter {
 //            throw new RuntimeException(e);
 //        }
 
-        Events.on(EventType.WorldLoadEndEvent.class, ev -> Time.run(120f, () -> SLog.loadTime(() -> {
-            final int[] loaded = {0};
-            Core.atlas.getRegionMap().each((s, atlasRegion) -> {
-                SVars.regions.put(atlasRegion.texture, s);
-                TextureRegion n = Core.atlas.find(s + "-normal");
-                if (Core.atlas.isFound(n)) {
-                    loaded[0]++;
-                    SLog.load("normal texture, founded: " + s);
-                    SVars.textureToNormal.put(atlasRegion.texture, n.texture);
-                    SVars.regionToUV.put(atlasRegion, new float[]{n.u, n.v, n.u2, n.v2});
-                    atlasRegion.texture = new NTexture(atlasRegion.texture, n.texture);
-                    Core.atlas.getTextures().remove(atlasRegion.texture);
-                    Core.atlas.getTextures().add(n.texture);
-                }
-            });
-            SLog.info(loaded[0] + " normal textures loaded!");
+///*        Events.on(EventType.WorldLoadEndEvent.class, ev -> Time.run(120f, () ->*/ SLog.loadTime(() -> {
 
-            try {
-//                Field[] from = Core.batch.getClass().getFields();
-                Draw.flush();
-                Core.batch = new SSortedSpriteBatch();
-//                SBatch b = new SBatch();
-//                for (Field fromField : from) {
-//                    try {
-//                        Field toField = b.getClass().getField(fromField.getName());
-//                        fromField.setAccessible(true);
-//                        toField.setAccessible(true);
-//                        toField.set(b, fromField.get(Core.batch));
-//                    } catch (Exception ee) {
-//                        SLog.load(ee.getMessage());
-//                    }
-//                }
-//                b.create();
-//                Core.batch = b;
-            } catch (Exception e) {
-                SLog.err("Error updating batch: " + e.getMessage());
-            }
-        }, "normal texture load")));
 //
 //        Shader[] last = new Shader[1];
 //

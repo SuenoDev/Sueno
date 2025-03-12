@@ -1,0 +1,42 @@
+# Blender 4.3.2 MTL File: 'None'
+# www.blender.org
+
+newmtl Body.004
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 3
+map_Kd mita/Body.png
+map_d mita/Body.png
+
+newmtl Cloth.004
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 3
+map_Kd mita/cloth.png
+map_d mita/cloth.png
+
+newmtl Face.004
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 3
+map_Kd mita/Face.png
+map_d mita/Face.png
+
+newmtl Hairs.004
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 3
+map_Kd mita/Hair.png
+map_d mita/Hair.png
