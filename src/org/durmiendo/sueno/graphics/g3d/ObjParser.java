@@ -5,10 +5,7 @@ import arc.graphics.Mesh;
 import arc.graphics.Texture;
 import arc.graphics.VertexAttribute;
 import arc.math.geom.Vec3;
-import arc.struct.FloatSeq;
-import arc.struct.ObjectMap;
-import arc.struct.Seq;
-import arc.struct.ShortSeq;
+import arc.struct.*;
 import arc.util.Log;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.utils.SLog;
@@ -17,20 +14,42 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 
 public class ObjParser {
+    public static ObjectMap<String, Obj> loaded = new ObjectMap<>();
     public static float[] vertices;
     public static short[] indices;
     public static Obj.Mtl cur = null;
     public static Seq<String> on = new Seq<>();
 
+    public static int v;
+    public static int i;
+
+    public static Obj load(String s, float scl) {
+        if (loaded.containsKey(s)) return loaded.get(s);
+
+        Obj o = load(s);
+        o.scl = scl;
+        loaded.put(s, o);
+
+        return o;
+    }
+
     public static Obj load(String s) {
-        return loadObj(
+        if (loaded.containsKey(s)) return loaded.get(s);
+
+        Obj o =  loadObj(
                 SVars.internalFileTree.child("models/" + s +".obj").readString(),
                 SVars.internalFileTree.child("models/" + s +".mtl").readString()
         );
+        loaded.put(s, o);
+
+        return o;
     }
 
-    public static Obj loadObj(String obj, String mtl) {
+    private static Obj loadObj(String obj, String mtl) {
         Obj result = new Obj();
+
+        v = 0;
+        i = 0;
 
         ObjectMap<String, Obj.Mtl> mtls = new ObjectMap<>();
 
@@ -78,7 +97,7 @@ public class ObjParser {
             }
         } catch (Exception e) {
             Log.err(e);
-            return null;
+            return Obj.zero;
         }
 
 
@@ -119,6 +138,9 @@ public class ObjParser {
                             vertices = new float[vertexList.size];
                             indices = new short[indexList.size];
 
+                            v+=vertices.length;
+                            i+=indices.length;
+
                             System.arraycopy(vertexList.items, 0, vertices, 0, vertexList.size);
                             System.arraycopy(indexList.items, 0, indices, 0, indexList.size);
 
@@ -134,10 +156,6 @@ public class ObjParser {
                             mesh.getIndicesBuffer().position(0);
                             mesh.getIndicesBuffer().limit(indices.length);
 
-
-//                        positions.clear();
-//                        normals.clear();
-//                        texCoords.clear();
                             vertexList.clear();
                             indexList.clear();
 
@@ -148,16 +166,15 @@ public class ObjParser {
                             mtlo.on = on.get(on.size-2);
                             result.materials.add(mtlo);
                         };
-//                        SLog.info("mtl " + parts[1]);
                         break;
                 }
             }
             runnable.run();
-            SLog.load("loaded " + result.materials.size + " parts of 3d model");
+            SLog.load("loaded " + result.materials.size + " parts of 3d model, " + v + " vertices, " + i + " indices");
             return result;
         } catch (Exception e) {
             Log.err(e);
-            return null;
+            return Obj.zero;
         }
     }
 

@@ -12,36 +12,45 @@ import arc.struct.Seq;
 import org.durmiendo.sueno.graphics.SShaders;
 
 public class Obj {
+    public static Obj zero = new Obj(){
+        public void render(Vec3 pos, Vec3 rot, Mat3D projection, Mat3D transform, Camera3D cam, Vec3 light, Vec3 scale) {}
+    };
+
     public Seq<Material> materials = new Seq<>();
     public Shader shader = SShaders.g3d;
+    public float scl = 1;
 
-    public void render(Vec3 pos, Vec3 rot, Mat3D projection, Mat3D transform, Camera3D cam, Vec3 light, float scale, int target) {
+    public void render(Vec3 pos, Vec3 rot, Mat3D projection, Mat3D transform, Camera3D cam, Vec3 light, Vec3 scale) {
         for (int i = 0; i < materials.size; i++) {
-            if (target != -1 && target != i) continue;
             shader.bind();
 
-            Texture tex = materials.get(i).mtl.texture;
+            Material m = materials.get(i);
+            Texture tex = m.mtl.texture;
             if (tex != null) tex.bind();
 
-            shader.setUniformMatrix4("u_proj", projection.val);
-            shader.setUniformMatrix4("u_trans", transform.val);
-            shader.setUniformf("u_ambient", materials.get(i).mtl.ambient);
-            shader.setUniformf("u_diffuse", materials.get(i).mtl.diffuse);
-            shader.setUniformf("u_specular", materials.get(i).mtl.specular);
-            shader.setUniformf("u_shininess", materials.get(i).mtl.shininess);
-            shader.setUniformi("u_illum", materials.get(i).mtl.illum);
+            apply(projection, transform, m);
+
             shader.setUniformf("u_pos", pos);
             shader.setUniformf("u_rot", rot);
             shader.setUniformf("u_campos", cam.position);
             shader.setUniformf("u_camdir", cam.direction);
             shader.setUniformf("u_lightdir", light);
-            shader.setUniformf("u_scale", scale);
+            shader.setUniformf("u_scale", scale.x * scl, scale.y * scl, scale.z * scl);
 
-            Mesh mesh = materials.get(i).mesh;
-            mesh.bind(shader);
-
-            mesh.render(shader, Gl.triangles);
+            m.mesh.bind(shader);
+            m.mesh.render(shader, Gl.triangles);
         }
+    }
+
+    private void apply(Mat3D projection, Mat3D transform, Material i) {
+        shader.setUniformMatrix4("u_proj", projection.val);
+        shader.setUniformMatrix4("u_trans", transform.val);
+
+        shader.setUniformf("u_ambient", i.mtl.ambient);
+        shader.setUniformf("u_diffuse", i.mtl.diffuse);
+        shader.setUniformf("u_specular", i.mtl.specular);
+        shader.setUniformf("u_shininess", i.mtl.shininess);
+        shader.setUniformi("u_illum", i.mtl.illum);
     }
 
     public static class Material {
@@ -62,7 +71,6 @@ public class Obj {
         public int illum = 1;
 
         public Mtl() {}
-
     }
 }
 

@@ -8,6 +8,7 @@ import mindustry.game.EventType;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
+import org.durmiendo.sueno.graphics.g3d.S3Renderer;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
@@ -91,6 +92,7 @@ public class Setter {
     }
 
     private static void loadRender() {
+        new S3Renderer();
 //        try {
 //            Field f = Vars.renderer.getClass().getDeclaredField("blocks");
 //            f.setAccessible(true);
@@ -187,11 +189,11 @@ public class Setter {
             SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
         });
 
-        SLog.load("Setting maxZoom to 5x");
+        SLog.load("Setting maxZoom to x5 (" + Vars.renderer.maxZoom*5f + ")");
         Vars.renderer.maxZoom *= 5f;
 
-        SLog.load("Setting minZoom to x/5");
-        Vars.renderer.minZoom /= 5f;
+        SLog.load("Setting minZoom to x2 (" + Vars.renderer.minZoom*2f + ")");
+        Vars.renderer.minZoom *= 2f;
     }
 
     private static void loadUI() {

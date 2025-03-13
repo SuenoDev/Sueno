@@ -78,7 +78,7 @@ public class SPlanets {
 
 
                 obj.add(ObjParser.load("hu/hu"));
-                obj.add(ObjParser.load("mita/mita"));
+//                obj.add(ObjParser.load("mita/mita"));
             }
 
 
@@ -100,9 +100,9 @@ public class SPlanets {
                     new Vec3(position).add(0f, -0.5f, -2f),
             };
 
-            float[] scl = new  float[]{
-                    2f,
-                    0.8f
+            Vec3[] scl = new  Vec3[]{
+                    new Vec3(2f, 2f, 2f),
+                    new Vec3(0.8f, 0.8f, 0.8f),
             };
 
             float r = 0;
@@ -127,16 +127,13 @@ public class SPlanets {
 //                SShaders.g3d.setUniformMatrix4("u_trans", transform.val);
                 camDir.set(Vars.renderer.planets.cam.direction).rotate(Vec3.Y, getRotation());
 
-
-
-
-
+//                SLog.dInfo(camDir);
                 for (int i = 0; i < obj.size; i++) {
                     Obj o = obj.get(i);
                     ps[i].x = Mathf.cosDeg(r + 180 * i) * 2f;
                     ps[i].z = Mathf.sinDeg(r + 180 * i) * 2f;
                     rs[i].y = Mathf.degRad * (r + 270f + i*180f);
-                    o.render(ps[i], rs[i], projection, transform, Vars.renderer.planets.cam, lightDir, scl[i], ta);
+                    o.render(ps[i], rs[i], projection, transform, Vars.renderer.planets.cam, lightDir, scl[i]);
                 }
 //                SShaders.g3d.setUniformf("u_lightdir", lightDir);
 //                SShaders.g3d.setUniformf("u_ambientColor", ambientColor.r, ambientColor.g, ambientColor.b);

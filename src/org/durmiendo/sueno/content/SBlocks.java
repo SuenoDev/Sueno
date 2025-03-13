@@ -56,6 +56,8 @@ public class SBlocks {
 
     public static Block
 
+    //blocks
+    rail, mita,
     //cores
     demand,
     //heaters
@@ -69,12 +71,19 @@ public class SBlocks {
     ts, undestroyable;
 
     public static void load() {
+        mita = new Block("mita")
+        {{
+            requirements(Category.defense, with(Items.scrap, 200));
+            size = 1;
+            solid = true;
+            update = true;
+            health = 100;
+        }};
 
         new Monorail("monorail") {{
             requirements(Category.effect, with(Items.scrap, 10));
             size = 1;
             health = 100;
-
         }};
 
         new DBlock("core") {{
