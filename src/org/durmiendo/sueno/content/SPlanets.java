@@ -13,8 +13,8 @@ import mindustry.game.Team;
 import mindustry.graphics.Pal;
 import mindustry.graphics.g3d.*;
 import mindustry.type.Planet;
-import org.durmiendo.sueno.graphics.g3d.Obj;
-import org.durmiendo.sueno.graphics.g3d.ObjParser;
+import org.durmiendo.sueno.graphics.g3d.wobj.Obj;
+import org.durmiendo.sueno.graphics.g3d.wobj.ObjParser;
 import org.durmiendo.sueno.maps.planet.HieloPlanetGenerator;
 
 
@@ -77,7 +77,7 @@ public class SPlanets {
                 hiddenItems.removeAll(Items.serpuloItems);
 
 
-                obj.add(ObjParser.load("hu/hu"));
+                obj.add(ObjParser.loadObj("hu/hu"));
 //                obj.add(ObjParser.load("mita/mita"));
             }
 

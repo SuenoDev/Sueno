@@ -1,4 +1,4 @@
-package org.durmiendo.sueno.graphics.g3d;
+package org.durmiendo.sueno.graphics.g3d.wobj;
 
 import arc.graphics.Color;
 import arc.graphics.Gl;

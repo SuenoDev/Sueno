@@ -1,11 +1,14 @@
-package org.durmiendo.sueno.graphics.g3d;
+package org.durmiendo.sueno.graphics.g3d.wobj;
 
 import arc.graphics.Color;
 import arc.graphics.Mesh;
 import arc.graphics.Texture;
 import arc.graphics.VertexAttribute;
 import arc.math.geom.Vec3;
-import arc.struct.*;
+import arc.struct.FloatSeq;
+import arc.struct.ObjectMap;
+import arc.struct.Seq;
+import arc.struct.ShortSeq;
 import arc.util.Log;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.utils.SLog;
@@ -23,17 +26,20 @@ public class ObjParser {
     public static int v;
     public static int i;
 
-    public static Obj load(String s, float scl) {
+
+
+
+    public static Obj loadObj(String s, float scl) {
         if (loaded.containsKey(s)) return loaded.get(s);
 
-        Obj o = load(s);
+        Obj o = loadObj(s);
         o.scl = scl;
         loaded.put(s, o);
 
         return o;
     }
 
-    public static Obj load(String s) {
+    public static Obj loadObj(String s) {
         if (loaded.containsKey(s)) return loaded.get(s);
 
         Obj o =  loadObj(
@@ -45,21 +51,9 @@ public class ObjParser {
         return o;
     }
 
-    private static Obj loadObj(String obj, String mtl) {
-        Obj result = new Obj();
 
-        v = 0;
-        i = 0;
-
+    private static ObjectMap<String, Obj.Mtl> loadMTL(String mtl) {
         ObjectMap<String, Obj.Mtl> mtls = new ObjectMap<>();
-
-        FloatSeq positions = new FloatSeq();
-        FloatSeq normals = new FloatSeq();
-        FloatSeq texCoords = new FloatSeq();
-
-        ObjectMap<String, Integer> vertexIndexMap = new ObjectMap<>(); // Ключ - строка "v/vt/vn", значение - индекс вершины в vertices
-        FloatSeq vertexList = new FloatSeq(); // Содержит уникальные данные вершин в формате x, y, z, nx, ny, nz, u, v
-        ShortSeq indexList = new ShortSeq(); // Содержит индексы вершин для отрисовки
 
         try (BufferedReader reader = new BufferedReader(new StringReader(mtl))) {
             String line;
@@ -97,8 +91,28 @@ public class ObjParser {
             }
         } catch (Exception e) {
             Log.err(e);
-            return Obj.zero;
+            return null;
         }
+
+        return mtls;
+    }
+
+    private static Obj loadObj(String obj, String mtl) {
+        Obj result = new Obj();
+
+        v = 0;
+        i = 0;
+
+        ObjectMap<String, Obj.Mtl> mtls = loadMTL(mtl);
+        if (mtls == null) return Obj.zero;
+
+        FloatSeq positions = new FloatSeq();
+        FloatSeq normals = new FloatSeq();
+        FloatSeq texCoords = new FloatSeq();
+
+        ObjectMap<String, Integer> vertexIndexMap = new ObjectMap<>(); // Ключ - строка "v/vt/vn", значение - индекс вершины в vertices
+        FloatSeq vertexList = new FloatSeq(); // Содержит уникальные данные вершин в формате x, y, z, nx, ny, nz, u, v
+        ShortSeq indexList = new ShortSeq(); // Содержит индексы вершин для отрисовки
 
 
         try (BufferedReader reader = new BufferedReader(new StringReader(obj))) {

@@ -5,7 +5,6 @@ import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.Gl;
 import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.SpriteBatch;
 import arc.graphics.g2d.TextureRegion;
 import arc.graphics.g3d.Camera3D;
 import arc.graphics.gl.FrameBuffer;
@@ -23,6 +22,8 @@ import mindustry.gen.Building;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.graphics.g3d.wobj.Obj;
+import org.durmiendo.sueno.graphics.g3d.wobj.ObjParser;
 
 import java.lang.reflect.Field;
 
@@ -30,19 +31,16 @@ public class S3Renderer implements Disposable {
     public Camera3D cam;
     public FrameBuffer buffer;
 
-    private static final float[] vertices = new float[SpriteBatch.SPRITE_SIZE];
-
-    Obj ohno = ObjParser.load("bat/models_accum", 2f/5f);
+    Obj ohno = ObjParser.loadObj("bat/models_accum", 2f/5f);
 
     public ObjectMap<Block, Obj> objs = new ObjectMap<>(){{
-        put(SBlocks.mita, ohno);
+        put(SBlocks.mita, ObjParser.loadObj("mita/mita", 1f/5f));
     }};
 
     public ObjectMap<Building, Builds> builds = new ObjectMap<>();
 
     Mat projection = new Mat();
     Mat transformation = new Mat();
-    Vec3 translation = new Vec3();
 
     public Shader shader = new Shader(
             SVars.internalFileTree.child("shaders/3d.vert"),
@@ -93,14 +91,12 @@ public class S3Renderer implements Disposable {
                 ex.printStackTrace();
             }
         });
-        TextureRegion r = new TextureRegion();
-
         Events.run(EventType.Trigger.preDraw, this::render);
+
+        TextureRegion r = new TextureRegion();
+        r.set(buffer.getTexture());
         Events.run(EventType.Trigger.draw, () -> {
             Draw.z(36);
-//            Draw.rect();
-//            Draw.blit(buffer.getTexture(), Shaders.screenspace);
-            r.set(buffer.getTexture());
             Draw.rect(r, Core.camera.position.x, Core.camera.position.y, Core.graphics.getWidth() / Vars.renderer.getDisplayScale(), Core.graphics.getHeight() / Vars.renderer.getDisplayScale());
         });
     }
