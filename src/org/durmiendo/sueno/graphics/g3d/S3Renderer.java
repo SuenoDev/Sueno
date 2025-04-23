@@ -31,7 +31,7 @@ public class S3Renderer implements Disposable {
     public Camera3D cam;
     public FrameBuffer buffer;
 
-    Obj ohno = ObjParser.loadObj("bat/models_accum", 2f/5f);
+//    Obj ohno = ObjParser.loadObj("bat/models_accum", 2f/5f);
 
     public ObjectMap<Block, Obj> objs = new ObjectMap<>(){{
         put(SBlocks.mita, ObjParser.loadObj("mita/mita", 1f/5f));

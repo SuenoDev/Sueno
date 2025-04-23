@@ -2,6 +2,7 @@ package org.durmiendo.sueno.content;
 
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.math.Angles;
 import arc.math.Mathf;
@@ -18,9 +19,7 @@ import mindustry.entities.Effect;
 import mindustry.entities.Mover;
 import mindustry.entities.abilities.Ability;
 import mindustry.entities.abilities.MoveEffectAbility;
-import mindustry.entities.bullet.BasicBulletType;
-import mindustry.entities.bullet.BulletType;
-import mindustry.entities.bullet.ExplosionBulletType;
+import mindustry.entities.bullet.*;
 import mindustry.entities.effect.ExplosionEffect;
 import mindustry.entities.part.RegionPart;
 import mindustry.entities.pattern.ShootAlternate;
@@ -222,7 +221,6 @@ public class SUnits {
                         randLenVectors(e.id, 5, 24f * e.fin(), (x, y) -> {
                             lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 1.6f);
                         });
-
                     });
                     lineEffect = new Effect(23f, e -> {
                         if (!(e.data instanceof Vec2 v)) return;
@@ -284,11 +282,133 @@ public class SUnits {
             hovering = true;
             health = 4400f;
             armor = 6;
+            speed = 4;
+            rotateSpeed = 5;
 
+
+            engineOffset = 8.7f;
+            trailColor = engineColor = Color.valueOf("BCF0F2");
+            engineSize = 1.75f;
+            trailLength = 30;
+            trailScl = 1.2f;
+            useEngineElevation = false;
+            naval = false;
+
+            weapons.add(new Weapon("sueno-vial-weapon"){{
+                y = 2.2f;
+                x = 4.6f;
+                shootSound = Sounds.flame;
+                shootY = 2f;
+                reload = 23f;
+                recoil = 1f;
+                rotate = true;
+
+                bullet = new BasicBulletType(4f, 76f){{
+                    ammoMultiplier = 3f;
+                    hitSize = 7f;
+                    lifetime = 75f;
+
+                    trailColor = Color.valueOf("BCF0F2");
+                    trailLength = 12;
+                    trailWidth = 1f;
+
+                    homingDelay = 3;
+                    homingPower = 0.005f;
+                    homingRange = 32f;
+
+                    statusDuration = 60f * 4;
+                    hitEffect = despawnEffect = new Effect(30, e -> {
+                        color(Color.valueOf("BCF0F2"), Color.white, e.fin());
+                        stroke(1.5f * e.fout());
+
+                        randLenVectors(e.id, 6, 24f * e.fin(), (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 3f);
+                        });
+                        stroke(0.6f * e.fout());
+                        Lines.circle(e.x, e.y, 12f * e.foutpowdown());
+                        color(Color.white);
+                        randLenVectors(e.id+1, 8, 24f * e.fin(), (x, y) -> {
+                            lineAngle(e.x + x, e.y + y, Mathf.angle(x, y), 1f + e.fout() * 1.6f);
+                        });
+                    });
+                }};
+            }}).add(new Weapon("sueno-vial-blade"){{
+                y = 6f;
+                x = 4f;
+                shootSound = Sounds.none;
+                shootY = 2f;
+                reload = 0.5f;
+                recoil = 1f;
+                rotate = false;
+                ejectEffect = Fx.none;
+
+                bullet = new RailBulletType(){{
+                    smokeEffect = chargeEffect = hitEffect = shootEffect = despawnEffect = endEffect = pierceEffect = Fx.none;
+                    lineEffect = new Effect(18f, e -> {
+//                        float z = Draw.z();
+                        Draw.z(SLayers.blades);
+
+                        tmp.set(e.x, e.y);
+
+                        Draw.color(b);
+                        Drawf.tri(tmp.x, tmp.y, 4f, 24f * e.foutpow(), e.rotation);
+                        Drawf.tri(tmp.x, tmp.y, 4f, -4f * e.foutpow(), e.rotation);
+
+                        Draw.color(b2);
+                        Drawf.tri(tmp.x, tmp.y, 3f, 18f * e.foutpow(), e.rotation);
+                        Drawf.tri(tmp.x, tmp.y, 3f, -2f * e.foutpow(), e.rotation);
+
+                        Draw.color(Color.white);
+                        Drawf.tri(tmp.x, tmp.y, 2f, 16f * e.foutpow(), e.rotation);
+                        Drawf.tri(tmp.x, tmp.y, 2f, -1.4f * e.foutpow(), e.rotation);;
+//                        Draw.z(z);
+                    });
+                    damage = 10;
+                    range = 26f;
+                    length = 25f;
+                }
+                    @Override
+                    public void draw(Bullet b) {}
+                };
+            }
+            Vec2 tmp = new Vec2();
+                Color b = Color.valueOf("ABE0FF");
+                Color b2 = Color.valueOf("CFFFFD");
+                @Override
+                public void draw(Unit unit, WeaponMount mount) {
+                }
+            });
 
             abilities.add(new FreezingAbility(new FreezingData(){{
+                tmrGenCapacity = -0.15f;
+                tmrGenSpeed = 0.7f;
 
+                tmrGenPowerFP = -0.00015f;
+                tmrGenRadiusFP = 32f;
+                tmrGenCapacityFP = -0.2f;
             }}));
+
+            parts.add(new SHoverPart(){{
+                mirror = true;
+                y = -8.2f;
+                x = 4.5f;
+                radius = 4f;
+                phase = 63f;
+                stroke = 1.5f;
+                speed = -0.35f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }}, new SHoverPart(){{
+                mirror = true;
+                y = -2.5f;
+                x = 7.6f;
+                radius = 6f;
+                phase = 63f;
+                stroke = 1.5f;
+                speed = 0.22f;
+                layerOffset = -0.001f;
+                color = Color.valueOf("79eef2");
+            }});
         }};
 
         space = new UnitType("space"){{

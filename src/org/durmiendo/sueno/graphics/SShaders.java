@@ -14,6 +14,7 @@ public class SShaders {
     public static VoidSpaceShader voidSpaceShader = new VoidSpaceShader();
     public static ContractionShader contractionShader = new ContractionShader();
     public static DeadShader deadShader = new DeadShader();
+    public static BladeShader bladeShader = new BladeShader();
     public static IceShader iceShader = new IceShader();
     public static NormalShader normalShader = new NormalShader();
     public static BlackHoleShader blackHoleShader = new BlackHoleShader();
@@ -128,6 +129,28 @@ public class SShaders {
             setUniformf("u_invsize", 1f/Core.camera.width, 1f/Core.camera.height);
         }
     }
+
+
+    public static class BladeShader extends Shader{
+        public BladeShader(){
+            super(
+                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/blade.frag")
+            );
+        }
+
+        @Override
+        public void apply(){
+            setUniformf("u_dp", Scl.scl(1f));
+            setUniformf("u_time", Time.time / Scl.scl(1f));
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
+            setUniformf("u_invsize", 1f/Core.camera.width, 1f/Core.camera.height);
+        }
+    }
+
 
     public static class NormalShader extends Shader{
         public NormalShader(){

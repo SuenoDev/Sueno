@@ -2,6 +2,7 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.graphics.g2d.TextureRegion;
+import arc.struct.Seq;
 import arc.util.Log;
 import mindustry.Vars;
 import mindustry.mod.Mod;
@@ -21,9 +22,6 @@ public class Sueno extends Mod {
     public Sueno() {
         SLog.init();
         SLog.info("Sueno new instance!");
-
-
-
 
         SVars.core = this;
     }
