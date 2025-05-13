@@ -7,6 +7,8 @@ import arc.graphics.g2d.Draw;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
+import arc.scene.event.InputEvent;
+import arc.scene.event.InputListener;
 import arc.scene.ui.CheckBox;
 import arc.scene.ui.ImageButton;
 import arc.scene.ui.Label;
@@ -15,6 +17,7 @@ import arc.scene.ui.layout.Table;
 import arc.util.Align;
 import arc.util.Log;
 import arc.util.Strings;
+import arc.util.Tmp;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -35,6 +38,8 @@ public class GodModeFragment extends Table {
     private boolean working = true;
     private boolean draw = false;
     private boolean setUnitT = true;
+    private static float x;
+    private static float y;
     public GodModeFragment() {
         super();
         Events.on(EventType.WorldLoadEndEvent.class, l -> {
@@ -46,6 +51,7 @@ public class GodModeFragment extends Table {
                 Draw.reset();
             }
         });
+
         visible(() -> show);
     }
 
@@ -57,21 +63,14 @@ public class GodModeFragment extends Table {
             k.table(t -> {
                 t.table(f -> {
                     f.background(Core.atlas.drawable("sueno-black75"));
-                    ImageButton a = new ImageButton(Icon.move, Styles.clearNonei);
-                    a.dragged((x, y) -> {
-                        k.x += Core.input.deltaX();
-                        k.y += Core.input.deltaY();
-                    });
-                    f.add(a).left().size(sizeUI);
+
                     f.button(Icon.upOpen, Styles.clearNonei, () -> {
                         show = !show;
                     }).left().size(sizeUI);
 
 
                     Switch s = new Switch(Icon.pause);
-                    s.click(b -> {
-                        TemperatureController.stop = !TemperatureController.stop;
-                    });
+                    s.click(TemperatureController::setSimulationPaused);
                     f.add(s).left().size(sizeUI);
 
                     Switch s2 = new Switch(Icon.eyeSmall);
@@ -111,13 +110,13 @@ public class GodModeFragment extends Table {
             return;
         }
         working = true;
-        CheckBox tfu = new CheckBox("T forced update");
-        tfu.changed(() -> {
-            tfu.setChecked(false);
-            Log.info("T forced updated");
-            SVars.temperatureController.temperatureCalculate();
-        });
-        add(tfu).left();
+//        CheckBox tfu = new CheckBox("T forced update");
+//        tfu.changed(() -> {
+//            tfu.setChecked(false);
+//            Log.info("T forced updated");
+//            SVars.temperatureController.calc();
+//        });
+//        add(tfu).left();
         row();
         CheckBox rch = new CheckBox("T reinit");
         rch.changed(() -> {
@@ -128,22 +127,22 @@ public class GodModeFragment extends Table {
         row();
 
         table(t -> {
-            label(() -> Strings.format("T update: @ms", TemperatureController.stop ? 0 : SVars.temperatureController.time)).left();
+            label(() -> Strings.format("T update: @ms", TemperatureController.simulationPaused ? 0 : SVars.temperatureController.getLastCalculationTimeMs())).left();
             row();
             label(() -> {
                 Vec2 pos = Core.input.mouseWorld();
 //                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-1);
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+1) / 2f),
-                        Strings.fixed(SVars.temperatureController.temperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
+                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.getRelativeTemperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+1) / 2f),
+                        Strings.fixed(SVars.temperatureController.getRelativeTemperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
 
             }).left();
             row();
             label(() -> {
 //                if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.temperatureAt(Vars.player.unit())+1) / 2f)),
-                        Strings.fixed(SVars.temperatureController.temperatureAt(Vars.player.unit()), 2));
+                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.getRelativeTemperatureOf(Vars.player.unit())+1) / 2f)),
+                        Strings.fixed(SVars.temperatureController.getRelativeTemperatureOf(Vars.player.unit()), 2));
 
             }).left();
         });
@@ -191,7 +190,7 @@ public class GodModeFragment extends Table {
         if (slider.getValue() > 0) {
             for (int x = Mathf.ceil(mx - r); x < Mathf.ceil(mx + r); x += 1) {
                 for (int y = Mathf.ceil(my -r); y < Mathf.ceil(my + r); y += 1) {
-                    SVars.temperatureController.set(x, y, v);
+                    SVars.temperatureController.setRelativeTemperatureAt(x, y, v);
                 }
             }
 
@@ -202,12 +201,12 @@ public class GodModeFragment extends Table {
                                     && u.tileY() >= Mathf.ceil(my - r)
                                     && u.tileX() <= Mathf.ceil(mx + r)
                                     && u.tileY() <= Mathf.ceil(my + r)
-                    ) SVars.temperatureController.set(u, v);
+                    ) SVars.temperatureController.setRelativeTemperatureOf(u, v);
                 });
             }
 
         } else {
-            SVars.temperatureController.set(Mathf.ceil(mx), Mathf.ceil(my), v);
+            SVars.temperatureController.setRelativeTemperatureAt(Mathf.ceil(mx), Mathf.ceil(my), v);
         }
     }
 
@@ -246,11 +245,11 @@ public class GodModeFragment extends Table {
                 for (int y = Mathf.ceil(Core.input.mouseWorldY()/8f-rr.getValue()); y < Mathf.ceil(Core.input.mouseWorldY()/8f+ rr.getValue()); y+=1) {
                     Vec2 p = Core.camera.project(new Vec2(x*8, y*8));
                     if (p.x/16f < 0 || p.x/16f > Vars.world.height() || p.y/16f < 0 || p.y/16f > Vars.world.height()) continue;
-                    float t = SVars.temperatureController.at(x, y);
+                    float t = SVars.temperatureController.getRelativeTemperatureAt(x, y);
                     String s;
                     s = Strings.fixed(t, 2);
                     Color c;
-                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.at(x, y)+1)/2f);
+                    c = Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.getRelativeTemperatureAt(x, y)+1)/2f);
 
                     Fonts.def.draw(s, p.x, p.y, c, Vars.renderer.getDisplayScale()*0.1f, false, Align.center);
                 }

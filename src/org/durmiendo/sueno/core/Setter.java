@@ -152,7 +152,6 @@ public class Setter {
                 Vars.renderer.effectBuffer.blit(SShaders.bladeShader);
             });
         });
-
 //
 //        SLog.load("normals");
 
@@ -195,10 +194,7 @@ public class Setter {
 
     private static void loadVars() {
         SLog.load("temperature controller hooks");
-        Events.on(EventType.WorldLoadBeginEvent.class, e -> {
-            if (SVars.temperatureController == null) SVars.temperatureController = new TemperatureController();
-            SVars.temperatureController.init(Vars.world.width(), Vars.world.height());
-        });
+        SVars.temperatureController = new TemperatureController();
 
         SLog.load("Setting maxZoom to x5 (" + Vars.renderer.maxZoom*5f + ")");
         Vars.renderer.maxZoom *= 5f;

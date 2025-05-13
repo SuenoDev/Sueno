@@ -27,13 +27,13 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
 
         if (hd.isHeat) {
             unit.heal(hd.regeneration / 8f / 3.5f * Time.delta);
-            if (SVars.temperatureController.at(unit) > hd.minSafeTemperature) {
+            if (SVars.temperatureController.getAbsoluteTemperatureOf(unit) > hd.minSafeTemperature) {
                 unit.heal(hd.overRegeneration / 8f / 3.5f /*(SVars.tempTemperatureController.at(unit) - hd.minSafeTemperature)*/ * Time.delta);
             }
 
-            if (SVars.temperatureController.at(unit) > hd.minSafeTemperature) {
+            if (SVars.temperatureController.getAbsoluteTemperatureOf(unit) > hd.minSafeTemperature) {
                 float dam = hd.damage / 8f + hd.overDamage *
-                        (SVars.temperatureController.at(unit) - hd.minSafeTemperature) / 3.5f * Time.delta;
+                        (SVars.temperatureController.getAbsoluteTemperatureOf(unit) - hd.minSafeTemperature) / 3.5f * Time.delta;
                 Groups.unit.each(u -> {
                     if (u.team != unit.team && u.dst(unit) / 8f < hd.damageRange) {
                         u.health -= dam;
@@ -50,15 +50,15 @@ public class HeatAbility extends mindustry.entities.abilities.Ability {
             }
 
 
-            if (hd.overArmor > 0 && SVars.temperatureController.at(unit) > hd.minSafeTemperature) {
+            if (hd.overArmor > 0 && SVars.temperatureController.getAbsoluteTemperatureOf(unit) > hd.minSafeTemperature) {
                 unit.armor = unit.type.armor + hd.overArmor;
             } // else {
 //                unit.armor = unit.type.armor - hd.overArmor;
 //            }
 
 
-            if ((SVars.temperatureController.at(unit) < hd.capacity) && !TemperatureController.stop) {
-                SVars.temperatureController.at(unit, hd.generateTemperature * Time.delta);
+            if ((SVars.temperatureController.getRelativeTemperatureOf(unit) < hd.capacity) && !TemperatureController.simulationPaused) {
+                SVars.temperatureController.setRelativeTemperatureOf(unit, hd.generateTemperature * Time.delta);
             } else {
                 //SVars.temperatureController.at(unit, -hd.generateTemperature * Time.delta * 0.1f);
             }

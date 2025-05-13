@@ -88,7 +88,7 @@ public class TemperatureSource extends Block {
         public void updateTile() {
             for (int x = (int) (tileX() - range/16 + size/2); x < (int) (tileX() + range/16+size/2+1); x++) {
                 for (int y = (int) (tileY() - range/16 + size/2); y < (int) (tileY() + range/16+size/2+1); y++) {
-                    SVars.temperatureController.set(x, y, te);
+                    SVars.temperatureController.setRelativeTemperatureAt(x, y, te);
                 }
             }
             super.updateTile();

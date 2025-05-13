@@ -42,7 +42,7 @@ public class MachineGunTurret extends ItemTurret {
         public void update() {
             super.update();
             if (!isShooting()) {
-                if (SVars.temperatureController.at(tileX(), tileY()) < 0.5f) a += reloadDEBuff * Time.delta;
+                if (SVars.temperatureController.getRelativeTemperatureAt(tileX(), tileY()) < 0.5f) a += reloadDEBuff * Time.delta;
                 else a += reloadDEBuff * Time.delta / 2f;
                 a = Math.min(a, reload);
             }

@@ -26,7 +26,7 @@ public class SItemTurret extends ItemTurret {
     public class ItemTurretBuild extends ItemTurret.ItemTurretBuild {
         public float getRandomShoot() {
             float r = Mathf.random(shootMin, shootMax);
-            if (SVars.temperatureController.at(Mathf.round(x), Mathf.round(y)) < 0.3f) {
+            if (SVars.temperatureController.getRelativeTemperatureAt(Mathf.round(x), Mathf.round(y)) < 0.3f) {
                 float rc = Mathf.random(shootMin, shootMax);
                 if (r > rc) r = rc;
             }

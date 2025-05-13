@@ -40,10 +40,10 @@ public class SCoreBlock extends CoreBlock {
     public class CoreBuild extends CoreBlock.CoreBuild implements Heated {
         @Override
         public void updateTile() {
-            if (!TemperatureController.stop) {
+            if (!TemperatureController.simulationPaused) {
                 for (int x = tileX()-Mathf.floor(size/2f); x < tileX()-Mathf.floor(size/2f)+size; x++) {
                     for (int y = tileY()-Mathf.floor(size/2f); y < tileY()-Mathf.floor(size/2f)+size; y++) {
-                        SVars.temperatureController.at(x, y, heatPower * Time.delta);
+                        SVars.temperatureController.setRelativeTemperatureAt(x, y, heatPower * Time.delta);
                     }
                 }
             }

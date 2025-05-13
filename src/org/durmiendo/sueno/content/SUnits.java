@@ -256,14 +256,14 @@ public class SUnits {
                 public final float deadIncrement = -0.0002f;
                     @Override
                     public void handlePierce(Bullet b, float initialHealth, float x, float y) {
-                        SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, deadIncrement);
+                        SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(x)/8,Mathf.round(y)/8, deadIncrement);
                         super.handlePierce(b, initialHealth, x, y);
                     }
 
                     @Override
                     public void despawned(Bullet b) {
                         super.despawned(b);
-                        SVars.temperatureController.at(Mathf.round(b.x)/8, Mathf.round(b.y)/8, deadIncrement);
+                        SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(b.x)/8, Mathf.round(b.y)/8, deadIncrement);
                     }
                 };
             }});
@@ -557,7 +557,7 @@ public class SUnits {
                 super.draw(unit);
                 Draw.draw(Layer.light, () -> {
                     Draw.color(Colorated.gradient(
-                            s, e, Math.min((SVars.temperatureController.at(unit) - 0.35f), 0f)
+                            s, e, Math.min((SVars.temperatureController.getRelativeTemperatureOf(unit) - 0.35f), 0f)
                     ));
                     Draw.scl(3.5f);
                     Draw.rect(SVars.core.getRegion("glow"), unit.x, unit.y);
@@ -667,7 +667,7 @@ public class SUnits {
 
                     @Override
                     public void handlePierce(Bullet b, float initialHealth, float x, float y) {
-                        SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.01f);
+                        SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(x)/8,Mathf.round(y)/8, 0.01f);
                         super.handlePierce(b, initialHealth, x, y);
 
                     }
@@ -676,7 +676,7 @@ public class SUnits {
                     public void despawned(Bullet b) {
                         super.despawned(b);
                         Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
-                        SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.01f);
+                        SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.01f);
                     }
                 };
             }});
@@ -808,7 +808,7 @@ public class SUnits {
                         }
                         @Override
                         public void handlePierce(Bullet b, float initialHealth, float x, float y) {
-                            SVars.temperatureController.at(Mathf.round(x)/8,Mathf.round(y)/8, 0.0005f);
+                            SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(x)/8,Mathf.round(y)/8, 0.0005f);
                             super.handlePierce(b, initialHealth, x, y);
                         }
 
@@ -816,7 +816,7 @@ public class SUnits {
                         public void despawned(Bullet b) {
                             super.despawned(b);
                             Vec2 nor = Tmp.v1.trns(b.rotation(), 1f).nor();
-                            SVars.temperatureController.at(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.0005f);
+                            SVars.temperatureController.setRelativeTemperatureAt(Mathf.round(b.x + nor.x * b.fdata)/8, Mathf.round(b.y + nor.y * b.fdata)/8, 0.0005f);
                         }
                     };
                 }};
@@ -952,7 +952,7 @@ public class SUnits {
 
                 @Override
                 protected void shoot(Unit unit, WeaponMount mount, float shootX, float shootY, float rotation) {
-                if (SVars.temperatureController.at(unit) > 0.65f) mount.bullet.damage*=1.2f;
+                if (SVars.temperatureController.getRelativeTemperatureOf(unit) > 0.65f) mount.bullet.damage*=1.2f;
 
                 super.shoot(unit, mount, shootX, shootY, rotation);
                 //Fx.dynamicExplosion.at(unit.x, unit.y, World.conv(4*8f));

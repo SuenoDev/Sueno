@@ -1,5 +1,7 @@
 package org.durmiendo.sueno.temperature;
 
+import arc.struct.IntMap;
+import arc.struct.ObjectIntMap;
 import arc.util.Time;
 import arc.util.io.Reads;
 import arc.util.io.Writes;
@@ -67,26 +69,29 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
 
     public void baseWrite(Writes writes) {
         //SLog.mark();
-        writes.i(SVars.temperatureController.width);
-        writes.i(SVars.temperatureController.height);
+        writes.i(SVars.temperatureController.getWidth());
+        writes.i(SVars.temperatureController.getHeight());
         //SLog.einfo("writing w and h");
 
         Time.mark();
-        for (float[] i : SVars.temperatureController.temperature) {
+        for (float[] i : SVars.temperatureController.getCurrentTemperatureGrid()) {
             for (float j : i) {
                 writes.f(j);
             }
         }
         //SLog.einfoElapsed("writing temperature");
 
-        writes.i(SVars.temperatureController.unitsTemperature.size);
+        IntMap<Float> unitMap = SVars.temperatureController.getUnitTemperatures();
+        writes.i(unitMap.size);
         //SLog.einfo("writing units save size");
 
         //SLog.mark();
-        SVars.temperatureController.unitsTemperature.each((u ,t) -> {
-            writes.i(u);
-            writes.f(t);
-        });
+        IntMap.Keys keys = unitMap.keys();
+        while (keys.hasNext) {
+            int key = keys.next();
+            writes.i(key);
+            writes.f(unitMap.get(key));
+        }
         //SLog.einfoElapsed("writing units save");
 
         writes.close();
@@ -99,7 +104,7 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         int h = reads.i();
         //SLog.einfo("reading w = @ and h = @", w, h);
 
-        if (SVars.temperatureController == null) SVars.temperatureController = new TemperatureController();
+//        if (SVars.temperatureController == null) SVars.temperatureController = new TemperatureController();
         SVars.temperatureController.init(w, h);
         //SLog.einfo("temperature controller inited");
 
@@ -110,9 +115,10 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         }
 
         //SLog.mark();
+        float[][] grid = SVars.temperatureController.getCurrentTemperatureGrid();
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                SVars.temperatureController.temperature[i][j] = reads.f();
+                grid[i][j] = reads.f();
             }
         }
         //SLog.einfoElapsed("setting temperature chunk");
@@ -121,10 +127,11 @@ public class TemperatureCustomChunk implements SaveFileReader.CustomChunk {
         //SLog.einfo("reading units save size = @", size);
 
         //SLog.mark();
+        IntMap<Float> unitMap = SVars.temperatureController.getUnitTemperatures();
         for (int i = 0; i < size; i++) {
             int id = reads.i();
             float t = reads.f();
-            SVars.temperatureController.unitsTemperature.put(id, t);
+            unitMap.put(id, t);
         }
         //SLog.einfoElapsed("reading units save");
 

@@ -40,7 +40,6 @@ public class UnDestroyable extends Wall {
         category = Category.effect;
 
         config(Boolean.class, (UDBuild base, Boolean isDraw) -> {
-
             for(UDBuild entity : base.chained){
                 if(entity.isDraw == isDraw){
                     continue;

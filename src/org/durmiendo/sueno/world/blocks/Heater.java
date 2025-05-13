@@ -13,6 +13,7 @@ import mindustry.world.meta.BlockGroup;
 import mindustry.world.meta.Env;
 import org.durmiendo.sueno.core.SVars;
 import org.durmiendo.sueno.math.SInterp;
+import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.world.blocks.build.Heated;
 
 public class Heater extends Block {
@@ -34,16 +35,15 @@ public class Heater extends Block {
         public float tpower = 1;
         @Override
         public void updateTile() {
-            if (!SVars.temperatureController.stop) {
-
+            if (!TemperatureController.simulationPaused) {
                 for (int x = tileX(); x < tileX()+size; x++) {
                     for (int y = tileY(); y < tileY()+size; y++) {
-                        SVars.temperatureController.at(
+                        SVars.temperatureController.setRelativeTemperatureAt(
                                 x, y,
                                 heatPower/size/16f*tpower*efficiency*
                                         (SInterp.recession.apply(
-                                                0+ SVars.temperatureController.def, SVars.temperatureController.maxSafeTemperature + SVars.temperatureController.def,
-                                                SVars.temperatureController.at(x,y)
+                                                0+ SVars.temperatureController.ambientTemperatureChangeRate, TemperatureController.maxSafeTemperature + SVars.temperatureController.ambientTemperatureChangeRate,
+                                                SVars.temperatureController.getRelativeTemperatureAt(x,y)
                                         )+1f)
                         );
                     }
