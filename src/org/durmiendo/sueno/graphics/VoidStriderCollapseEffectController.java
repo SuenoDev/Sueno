@@ -28,8 +28,8 @@ public class VoidStriderCollapseEffectController {
         });
     }
 
-    public static void at(float x, float y, SEffect effect) {
-        containers.add(effect.at(x, y));
+    public static void at(float x, float y, SEffect effect, float rad) {
+        containers.add(effect.at(x, y, rad));
     }
 
     public static void draw() {

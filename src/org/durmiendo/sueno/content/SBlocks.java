@@ -6,6 +6,7 @@ import arc.graphics.g2d.Fill;
 import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
+import arc.util.Time;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
@@ -21,29 +22,35 @@ import mindustry.entities.pattern.ShootPattern;
 import mindustry.gen.Building;
 import mindustry.gen.Bullet;
 import mindustry.gen.Sounds;
+import mindustry.graphics.Drawf;
 import mindustry.graphics.Layer;
 import mindustry.graphics.Pal;
 import mindustry.type.Category;
 import mindustry.type.ItemStack;
 import mindustry.world.Block;
+import mindustry.world.Tile;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
 import org.durmiendo.sueno.entities.bullet.AreaLaserBullet;
+import org.durmiendo.sueno.graphics.SFx;
 import org.durmiendo.sueno.world.blocks.DBlock;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
+import org.durmiendo.sueno.world.blocks.defense.TriShield;
 import org.durmiendo.sueno.world.blocks.defense.turrets.MachineGunTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SItemTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.SirenTurret;
 import org.durmiendo.sueno.world.blocks.defense.turrets.VioTurret;
 import org.durmiendo.sueno.world.blocks.distribution.Monorail;
 import org.durmiendo.sueno.world.blocks.environment.Ice;
+import org.durmiendo.sueno.world.blocks.production.VoidExtractor;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
 
@@ -58,19 +65,45 @@ public class SBlocks {
 
     //blocks
     rail, mita,
+    // ext
+    voidExtractor,
     //cores
     demand,
     //heaters
     heater,
+    
+    triShield,
 
     //floor
     dev, devNone,
+    // ores
+    phosphor,
+    
+    
     //turrets
     violence, slice, stab, slash, avoidance, adaptation, vengeance, siren,
     //test
     ts, undestroyable;
 
     public static void load() {
+        
+        triShield = new TriShield("tri_shield"){{
+            requirements(Category.defense, with(Items.scrap, 200));
+            size = 2;
+            solid = true;
+            update = true;
+            health = 100;
+        }};
+        
+        voidExtractor = new VoidExtractor("void_extractor"){{
+            requirements(Category.defense, with(Items.scrap, 200));
+            size = 2;
+            solid = true;
+            update = true;
+            health = 100;
+
+            range = 8f * 18f;
+        }};
         mita = new Block("mita")
         {{
             requirements(Category.defense, with(Items.scrap, 200));
@@ -246,58 +279,15 @@ public class SBlocks {
                 pierce = true;
                 pierceBuilding = true;
 
-                trailColor = Color.valueOf("d23732");
-                Color efc = Color.valueOf("ff9fba");
-                Color efcc = Color.valueOf("b42f41");
+                trailColor = Color.valueOf("F2F9B5");
                 trailLength = 12;
                 trailChance = 0.2f;
                 trailInterval = 1f;
                 trailWidth = 0.7f;
                 trailRotation = true;
+                
 
-                Vec2[] t = new Vec2[] {
-                        new Vec2(),
-                        new Vec2(),
-                        new Vec2(),
-                        new Vec2(),
-                        new Vec2(),
-                };
-
-                trailEffect = new Effect(22f, e -> {
-                    float ef = e.foutpowdown();
-                    float fe = e.finpow();
-                    float f  = e.fin();
-
-
-                    t[0].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+0, -20,   20)).scl(17 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+5 , -2, 2)*ef, Mathf.randomSeed(e.id+6 , -2, 2)*ef).add(Mathf.cosDeg(e.rotation)*f*72.4f, Mathf.sinDeg(e.rotation)*f*72.4f);
-                    t[1].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+1, -40,   40)).scl(14 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+7 , -2, 2)*fe, Mathf.randomSeed(e.id+8 , -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*32.1f, Mathf.sinDeg(e.rotation)*f*32.1f);
-                    t[2].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+2, -360, 360)).scl(10 * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+9 , -2, 2)*fe, Mathf.randomSeed(e.id+10, -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*26.8f, Mathf.sinDeg(e.rotation)*f*26.8f);
-                    t[3].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+3, -40,   40)).scl(6  * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+11, -2, 2)*fe, Mathf.randomSeed(e.id+12, -2, 2)*fe).add(Mathf.cosDeg(e.rotation)*f*20.5f, Mathf.sinDeg(e.rotation)*f*20.5f);
-                    t[4].set(1, 0).setAngle(e.rotation + Mathf.randomSeed(e.id+4, -20,   20)).scl(3  * f).add(e.x, e.y).add(Mathf.randomSeed(e.id+13, -2, 2)*ef, Mathf.randomSeed(e.id+14, -2, 2)*ef).add(Mathf.cosDeg(e.rotation)*f*10.3f, Mathf.sinDeg(e.rotation)*f*10.3f);
-
-
-                    Draw.color(trailColor);
-                    Lines.stroke(0.7f * ef);
-                    Lines.line(t[0].x, t[0].y, t[1].x, t[1].y);
-                    Lines.stroke(1.6f * ef);
-                    Lines.line(t[1].x, t[1].y, t[2].x, t[2].y);
-                    Lines.stroke(1.4f * ef);
-                    Lines.line(t[2].x, t[2].y, t[3].x, t[3].y);
-                    Lines.stroke(0.8f * ef);
-                    Lines.line(t[3].x, t[3].y, t[4].x, t[4].y);
-
-                    Draw.color(efc);
-                    Lines.stroke(0.1f * ef);
-                    Lines.line(t[0].x, t[0].y, t[1].x, t[1].y);
-                    Lines.stroke(0.6f * ef);
-                    Lines.line(t[1].x, t[1].y, t[2].x, t[2].y);
-                    Lines.stroke(0.4f * ef);
-                    Lines.line(t[2].x, t[2].y, t[3].x, t[3].y);
-                    Lines.stroke(0.2f * ef);
-                    Lines.line(t[3].x, t[3].y, t[4].x, t[4].y);
-
-                    Draw.reset();
-                });
+                trailEffect = SFx.redLight;
 
 
 //                despawnEffect = hitEffect = new Effect(16f, e -> {
@@ -317,6 +307,8 @@ public class SBlocks {
                 homingRange = 192;
                 homingPower = 0.08f;
             }}, 1f);
+            
+            
             addb(new BasicBulletType() {{
                 damage = 60f;
                 speed = 9f;
@@ -657,6 +649,12 @@ public class SBlocks {
         new Floor("none") {{
             size = 1;
             variants = 1;
+        }};
+        
+        phosphor = new OreBlock("phosphor", SItems.phosphor) {{
+            size = 1;
+            variants = 0;
+            itemDrop = SItems.phosphor;
         }};
 
         devNone = new Floor("test") {{

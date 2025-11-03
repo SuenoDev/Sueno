@@ -7,9 +7,9 @@ import arc.struct.ObjectMap;
 import mindustry.Vars;
 import mindustry.mod.Mods;
 import org.durmiendo.sap.SuenoSettings;
-import org.durmiendo.sueno.controllers.CelestialBodyController;
 import org.durmiendo.sueno.files.InternalFileTree;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
+import org.durmiendo.sueno.spacestations.SpaceStations;
 import org.durmiendo.sueno.statuses.StatusEffectsController;
 import org.durmiendo.sueno.temperature.TemperatureController;
 import org.durmiendo.sueno.ui.SUI;
@@ -24,12 +24,8 @@ public class SVars {
     /** JAR files accessor. **/
     public static InternalFileTree internalFileTree = new InternalFileTree(Sueno.class);
 
-    public static ObjectMap<Texture, Texture> textureToNormal = new ObjectMap<>();
-    public static ObjectMap<TextureRegion, float[]> regionToUV = new ObjectMap<>();
-    public static ObjectMap<Texture, String> regions = new ObjectMap<>();
-
     //controllers
-    public static CelestialBodyController celestialBodyController;
+    public static SpaceStations spaceStations;
     public static TemperatureController temperatureController;
     public static StatusEffectsController statusEffectsController;
 
@@ -48,4 +44,14 @@ public class SVars {
 
     @SuenoSettings(def = 1)
     public static boolean versionWarning = true;
+    
+    @SuenoSettings(def = 1, steep = .1f, min = 1, max = 6, accuracy = 1)
+    public static float quality = 1.0f;
+    
+    @SuenoSettings(def = 1, steep = 1f, min = 1, max = 3, accuracy = 1)
+    public static float qval;
+    
+    public static float getQuality() {
+        return quality * quality;
+    }
 }

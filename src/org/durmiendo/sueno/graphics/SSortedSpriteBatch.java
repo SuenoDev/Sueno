@@ -9,6 +9,7 @@ import arc.graphics.gl.Shader;
 import arc.math.Mathf;
 import arc.math.geom.Point2;
 import arc.struct.IntIntMap;
+import arc.util.Log;
 import arc.util.Structs;
 
 import java.lang.reflect.Field;
@@ -45,7 +46,7 @@ public class SSortedSpriteBatch extends SpriteBatch {
 
     protected void set(String name, Object value) {
         try {
-            Field tmpVertices = getClass().getField(name);
+            Field tmpVertices = SpriteBatch.class.getDeclaredField(name);
             tmpVertices.setAccessible(true);
             tmpVertices.set(this, value);
         } catch (Exception e) {
@@ -250,6 +251,7 @@ public class SSortedSpriteBatch extends SpriteBatch {
             req.run = null;
             numRequests ++;
         }else{
+            if (region instanceof RegionsTextures) Log.err("inst");
             if (region.texture != lastTexture) {
                 switchTexture(region.texture);
             } else if (idx+SPRITE_SIZEN > vertices.length) {
@@ -472,12 +474,13 @@ public class SSortedSpriteBatch extends SpriteBatch {
         getShader().bind();
         setupMatrices();
 
-        if (vertices[7] != 0 || vertices[8] != 0 || vertices[25] != 0 || vertices[26] != 0) {
-            getShader().setUniformf("u_norm", 0);
+//        if (vertices[7] != 0 || vertices[8] != 0 || vertices[25] != 0 || vertices[26] != 0) {
+//            getShader().setUniformf("u_norm", 0);
 //            Log.info("u: " + vertices[7] + " v: " + vertices[8] + " u2: " + vertices[25] + " v2: " + vertices[26]);
-        } else {
-            getShader().setUniformf("u_norm", 2);
-        }
+//        } else {
+            getShader().setUniformf("u_norm", 2.0f);
+//        }
+        
         if(customShader != null && apply){
             getShader().apply();
         }
@@ -490,7 +493,7 @@ public class SSortedSpriteBatch extends SpriteBatch {
         blending.apply();
 
         lastTexture.bind();
-//        if (n != null) n.bind(3);
+//        if (normal != null) n.bind(3);
 
         Mesh mesh = this.mesh;
         mesh.setVertices(vertices, 0, idx);

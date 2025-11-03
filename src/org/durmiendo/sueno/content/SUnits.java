@@ -997,9 +997,8 @@ public class SUnits {
         };
 
         voidStrider = new VoidStriderUnitType("void-strider"){{
-
             outlineColor = Color.valueOf("141414");
-            speed = 1.1f;
+            speed = 0.42f;
             hitSize = 26f;
             stepShake = 0.2f;
             rotateSpeed = 2.2f;

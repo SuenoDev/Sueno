@@ -2,18 +2,20 @@ package org.durmiendo.sueno.core;
 
 import arc.Core;
 import arc.Events;
+import arc.func.Cons;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.Lines;
+import arc.struct.ObjectSet;
 import arc.util.Time;
 import mindustry.Vars;
 import mindustry.game.EventType;
-import mindustry.graphics.Layer;
+import mindustry.gen.Drawc;
+import mindustry.gen.Groups;
+import mindustry.gen.Unit;
 import mindustry.io.SaveVersion;
-import org.durmiendo.sueno.controllers.CelestialBodyController;
-import org.durmiendo.sueno.graphics.SLayers;
-import org.durmiendo.sueno.graphics.SShaders;
-import org.durmiendo.sueno.graphics.VoidStriderCollapseEffectController;
-import org.durmiendo.sueno.graphics.g3d.S3Renderer;
+import org.durmiendo.sueno.graphics.*;
+import org.durmiendo.sueno.spacestations.SpaceStations;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
 import org.durmiendo.sueno.temperature.TemperatureController;
@@ -80,9 +82,9 @@ public class Setter {
         SVars.input = new SuenoInputProcessor();
         Core.input.addProcessor(SVars.input);
 
-
-        SLog.load("celestial body controller (not used)");
-        SVars.celestialBodyController = new CelestialBodyController();
+        
+        SLog.load("space stations");
+        SVars.spaceStations = new SpaceStations();
 
 //        SLog.load("status effects controller");
 //        SVars.statusEffectsController = new StatusEffectsController();
@@ -94,7 +96,10 @@ public class Setter {
     private static void loadChunks() {
         SLog.load("temperature custom chunk");
         SaveVersion.addCustomChunk("sueno-temperature-chunk", new TemperatureCustomChunk());
+        
     }
+    
+    
 
     private static void loadRender() {
 //        new S3Renderer();
@@ -106,6 +111,23 @@ public class Setter {
 //            SLog.err("Renderer dont load :(");
 //            throw new RuntimeException(e);
 //        }
+//
+//        final SSortedSpriteBatch ssb = new SSortedSpriteBatch();
+//        Shader[] before = new Shader[1];
+//        Batch[] b = new Batch[1];
+//
+//        Events.run(EventType.Trigger.preDraw, () -> {
+//            b[0] = Core.batch;
+//            Draw.batch(ssb);
+//            before[0] = Draw.getShader();
+//            Draw.shader(SShaders.normalShader, true);
+//        });
+//
+//        Events.run(EventType.Trigger.postDraw, () -> {
+//            Draw.batch(b[0]);
+//            Draw.shader(before[0]);
+//            Draw.reset();
+//        });
 
 ///*        Events.on(EventType.WorldLoadEndEvent.class, ev -> Time.run(120f, () ->*/ SLog.loadTime(() -> {
 
@@ -192,12 +214,36 @@ public class Setter {
 //        });
     }
 
+    private static final ObjectSet<Unit> unitBuffer = new ObjectSet<>();
+
     private static void loadVars() {
         SLog.load("temperature controller hooks");
         SVars.temperatureController = new TemperatureController();
-
+        
+        SLog.load("set circle precision from " + 0.4f + " to " + 2f);
+        Lines.setCirclePrecision(2f);
+        
         SLog.load("Setting maxZoom to x5 (" + Vars.renderer.maxZoom*5f + ")");
         Vars.renderer.maxZoom *= 5f;
+
+        SLog.load("Setting unit fix");
+        Cons unitValidator = e -> {
+            if (e instanceof Unit u && !u.isValid()) unitBuffer.add(u);
+        };
+        Events.run(EventType.Trigger.update, () -> {
+            Groups.all.each(unitValidator);
+            Groups.draw.each(unitValidator);
+            Groups.unit.each(unitValidator);
+            Groups.sync.each(unitValidator);
+
+            unitBuffer.each(u -> {
+                Groups.all.remove(u);
+                Groups.sync.remove(u);
+                Groups.draw.remove(u);
+                Groups.unit.remove(u);
+            });
+        });
+
 
         SLog.load("Setting minZoom to x2 (" + Vars.renderer.minZoom/5f + ")");
         Vars.renderer.minZoom /= 5f;

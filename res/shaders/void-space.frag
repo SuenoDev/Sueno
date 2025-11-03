@@ -85,8 +85,8 @@ void main(){
 
         color.rgb *= noise * ctmp;
         float l = len((vec3(noise)*cnoise + vec3(noise))/2.0)/1.2;
-        color.a = pow(.9, l/5.);
-        color.rgb *= 0.3*l*l;
+        color.rgb *= 0.75*l*l;
+        color.a = pow(.4, l/5.) * (color.r + color.b + color.g);
     }
 
     gl_FragColor = color;

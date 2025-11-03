@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.entities.bullet;
 
+import arc.graphics.g2d.Draw;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.util.Time;
@@ -7,6 +8,9 @@ import mindustry.entities.bullet.BasicBulletType;
 import mindustry.gen.Bullet;
 import mindustry.gen.Groups;
 import mindustry.gen.Posc;
+import mindustry.graphics.Layer;
+import org.durmiendo.sueno.content.SGraphics;
+import org.durmiendo.sueno.graphics.Q;
 
 public class SunBulletType extends BasicBulletType {
     public static float damageAbsorption = 0.35f;
@@ -34,6 +38,18 @@ public class SunBulletType extends BasicBulletType {
                 }
             }
         });
+    }
+    
+    @Override
+    public void draw(Bullet b) {
+        Q.multi(
+                () -> super.draw(b),
+                () -> {
+                    Draw.z(115f);
+                    Draw.rect(SGraphics.sun.getTextureRegion(), b.x, b.y, 64f, 64f);
+                    Draw.reset();
+                }
+        );
     }
 }
 

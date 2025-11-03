@@ -92,6 +92,6 @@ public abstract class CelestialBody {
     }
 
     public void destroy() {
-        SVars.celestialBodyController.removeCB(this);
+//        SVars.celestialBodyController.removeCB(this);
     };
 }

@@ -34,7 +34,7 @@ public class S3Renderer implements Disposable {
 //    Obj ohno = ObjParser.loadObj("bat/models_accum", 2f/5f);
 
     public ObjectMap<Block, Obj> objs = new ObjectMap<>(){{
-        put(SBlocks.mita, ObjParser.loadObj("mita/mita", 1f/5f));
+        put(SBlocks.mita, ObjParser.loadObj("mita/mita", new Vec3(1f/5f,1f/5f,1f/5f)));
     }};
 
     public ObjectMap<Building, Builds> builds = new ObjectMap<>();
@@ -92,7 +92,6 @@ public class S3Renderer implements Disposable {
             }
         });
         Events.run(EventType.Trigger.preDraw, this::render);
-
         TextureRegion r = new TextureRegion();
         r.set(buffer.getTexture());
         Events.run(EventType.Trigger.draw, () -> {
@@ -184,7 +183,7 @@ public class S3Renderer implements Disposable {
             tmp.scl(1f/310f);
             tmp.z = -1f/Vars.renderer.getDisplayScale();
 
-            b.value.obj.render(tmp, tmp2, cam.combined, mtmp2, cam, lights, scale);
+            b.value.obj.render(tmp, tmp2, cam.combined, mtmp2, cam, lights);
         }
 
 

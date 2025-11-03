@@ -3,21 +3,19 @@ package org.durmiendo.sueno.ui.fragments;
 import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
+import arc.graphics.Mesh;
+import arc.graphics.VertexAttribute;
+import arc.graphics.g2d.Batch;
 import arc.graphics.g2d.Draw;
+import arc.graphics.g2d.SpriteBatch;
 import arc.input.KeyCode;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.scene.event.InputEvent;
 import arc.scene.event.InputListener;
-import arc.scene.ui.CheckBox;
-import arc.scene.ui.ImageButton;
-import arc.scene.ui.Label;
-import arc.scene.ui.Slider;
+import arc.scene.ui.*;
 import arc.scene.ui.layout.Table;
-import arc.util.Align;
-import arc.util.Log;
-import arc.util.Strings;
-import arc.util.Tmp;
+import arc.util.*;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Groups;
@@ -81,6 +79,7 @@ public class GodModeFragment extends Table {
 
                     f.button(Icon.refreshSmall, Styles.clearNonei, () -> build(0)).left().size(sizeUI);
                     f.button(Icon.terminal, Styles.clearNonei, () -> build(1)).left().size(sizeUI);
+                    f.button(Icon.editorSmall, Styles.clearNonei, () -> SVars.ui.dynTexList.show()).left().size(sizeUI);
 
                 }).left().minWidth(getWidth());
                 t.row();
@@ -94,9 +93,9 @@ public class GodModeFragment extends Table {
     public void build(int page) {
         clear();
         background(Core.atlas.drawable("sueno-black75"));
-        add("").minWidth(sizeUI*6).left();
+        add("").minWidth(sizeUI * 6).left();
         row();
-
+        
         if (page == 1) {
             for (int s : SLog.data.keys().toArray().toArray()) {
                 label(() -> SLog.data.get(s)).left();
@@ -125,7 +124,7 @@ public class GodModeFragment extends Table {
         });
         add(rch).left();
         row();
-
+        
         table(t -> {
             label(() -> Strings.format("T update: @ms", TemperatureController.simulationPaused ? 0 : SVars.temperatureController.getLastCalculationTimeMs())).left();
             row();
@@ -133,17 +132,17 @@ public class GodModeFragment extends Table {
                 Vec2 pos = Core.input.mouseWorld();
 //                if (SVars.temperatureController.at((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) == 0f) return "T at:[green] " + (-1);
                 return Strings.format("T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, (SVars.temperatureController.getRelativeTemperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize))+1) / 2f),
+                        Colorated.gradient(Color.cyan, Color.red, (SVars.temperatureController.getRelativeTemperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)) + 1) / 2f),
                         Strings.fixed(SVars.temperatureController.getRelativeTemperatureAt((int) (pos.x / Vars.tilesize), (int) (pos.y / Vars.tilesize)), 2));
-
+                
             }).left();
             row();
             label(() -> {
 //                if (Vars.player.dead() || SVars.temperatureController.at(Vars.player.unit())==0f) return "T of you at:[green] " + SVars.temperatureController.normalTemp;
                 return Strings.format("you T at:[#@] @",
-                        Colorated.gradient(Color.cyan,Color.red, ((SVars.temperatureController.getRelativeTemperatureOf(Vars.player.unit())+1) / 2f)),
+                        Colorated.gradient(Color.cyan, Color.red, ((SVars.temperatureController.getRelativeTemperatureOf(Vars.player.unit()) + 1) / 2f)),
                         Strings.fixed(SVars.temperatureController.getRelativeTemperatureOf(Vars.player.unit()), 2));
-
+                
             }).left();
         });
         row();
@@ -165,8 +164,8 @@ public class GodModeFragment extends Table {
         row();
         add(slider1).left();
         row();
-        Slider s = new Slider(-1, 1, 1 /100f, false);
-        label(() -> "set T (j): " + Strings.fixed(s.getValue(),2)).left();
+        Slider s = new Slider(-1, 1, 1 / 100f, false);
+        label(() -> "set T (j): " + Strings.fixed(s.getValue(), 2)).left();
         Events.run(EventType.Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.j)) {
                 setT(s.getValue(), slider1.getValue());

@@ -12,6 +12,7 @@ import org.durmiendo.sueno.core.SVars;
 
 public class SShaders {
     public static VoidSpaceShader voidSpaceShader = new VoidSpaceShader();
+    public static VoidSpaceShader2 voidSpaceShader2 = new VoidSpaceShader2();
     public static ContractionShader contractionShader = new ContractionShader();
     public static DeadShader deadShader = new DeadShader();
     public static BladeShader bladeShader = new BladeShader();
@@ -24,6 +25,11 @@ public class SShaders {
     public static Shader g3d = new Shader(
             SVars.internalFileTree.child("shaders/3d.vert"),
             SVars.internalFileTree.child("shaders/3d.frag")
+    );
+    
+    public static Shader g4d = new Shader(
+            SVars.internalFileTree.child("shaders/4d.vert"),
+            SVars.internalFileTree.child("shaders/4d.frag")
     );
 
     public static class IceShader extends Shader{
@@ -58,10 +64,30 @@ public class SShaders {
         }
     }
 
+    public static class VoidSpaceShader2 extends Shader{
+        public VoidSpaceShader2(){
+            super(
+//                    Shaders.getShaderFi("screenspace.vert"),
+                    SVars.internalFileTree.child("shaders/void-space.vert"),
+                    SVars.internalFileTree.child("shaders/void-space.frag")
+            );
+        }
+
+        @Override
+        public void apply(){
+            setUniformf("u_offset",
+                    Core.camera.position.x - Core.camera.width / 2,
+                    Core.camera.position.y - Core.camera.height / 2);
+            setUniformf("u_texsize", Core.camera.width, Core.camera.height);
+            setUniformf("u_time", Time.time);
+        }
+    }
+
     public static class VoidSpaceShader extends Shader{
         public VoidSpaceShader(){
             super(
                     Shaders.getShaderFi("screenspace.vert"),
+//                    SVars.internalFileTree.child("shaders/void-space.vert"),
                     SVars.internalFileTree.child("shaders/void-space.frag")
             );
         }

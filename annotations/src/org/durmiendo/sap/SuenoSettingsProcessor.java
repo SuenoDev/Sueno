@@ -42,7 +42,6 @@ public class SuenoSettingsProcessor extends BaseProc {
 
             uiBuildSpec.addCode("mindustry.Vars.ui.settings.addCategory(\"sueno-settings\", \"sueno-sueno-white\", s -> {\n");
 
-
             Stream<? extends Element> sorted = elements.stream().sorted((a, b) -> {
                 int aa = ((VariableElement) as(a)).asType().getKind().ordinal();
                 int bb = ((VariableElement) as(b)).asType().getKind().ordinal();
@@ -76,7 +75,7 @@ public class SuenoSettingsProcessor extends BaseProc {
                     case BYTE: {
                         uiBuildSpec.addCode(Strings.format(
                                 "  s.sliderPref(arc.Core.bundle.get(\"@\"), @, @, @, @, v -> {\n" +
-                                        "    @ = v;\n" +
+                                        "    @ = (byte) v;\n" +
                                         "    arc.Core.settings.put(\"@\", v);\n" +
                                         "    return v;\n" +
                                         "  });\n",

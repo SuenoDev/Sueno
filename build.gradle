@@ -116,12 +116,27 @@ project.tasks.create("copyBuildRelease")
 project.tasks.compileJava { JavaCompile task ->
     task.options.encoding = "UTF-8"
     task.options.compilerArgs += "-Xlint:none"
+
+    // Используем '--release 8' для компиляции в байт-код Java 8
+    task.options.compilerArgs += ['--release', '8']
+
+    // Добавляем --add-exports, чтобы разрешить доступ к Unsafe
+    // без этого компилятор выдаст ошибку
+//    task.options.compilerArgs += '--add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED'
+
     task.options.generatedSourceOutputDirectory.set(project.file("gen"))
 
-    task.options.compilerArgs += ['--release', '8']
-    task.targetCompatibility = JavaVersion.VERSION_1_8
-    task.sourceCompatibility = JavaVersion.VERSION_20
+    // Для Android, `targetCompatibility` и `sourceCompatibility` могут быть установлены на 1.8.
+    // Если это сборка для ПК, они могут быть выше.
+    if (!project.ext.useandroid) {
+        task.sourceCompatibility = JavaVersion.VERSION_20
+        task.targetCompatibility = JavaVersion.VERSION_20
+    } else {
+        task.sourceCompatibility = JavaVersion.VERSION_1_8
+        task.targetCompatibility = JavaVersion.VERSION_1_8
+    }
 
+    // Остальные флаги остаются
     task.options.forkOptions.jvmArgs += [
             "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",

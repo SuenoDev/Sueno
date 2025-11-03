@@ -12,7 +12,8 @@ public class SItems {
     vanadium,
     kalite,
     nitium,
-    realite;
+    realite,
+    phosphor;
 
 
 
@@ -23,5 +24,6 @@ public class SItems {
         kalite = new Item("kalite");
         nitium = new Item("nitium");
         realite = new Item("realite");
+        phosphor = new Item("phosphor");
     }
 }

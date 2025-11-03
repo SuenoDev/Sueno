@@ -27,3 +27,4 @@ artifacts/
 *.bin
 
 /annotations/build/
+s.sh

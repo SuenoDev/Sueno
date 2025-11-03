@@ -5,11 +5,9 @@ import arc.Core;
 import arc.Events;
 import arc.graphics.Color;
 import arc.graphics.Texture.TextureFilter;
-import arc.graphics.g2d.Draw;
-import arc.graphics.g2d.Fill;
-import arc.graphics.g2d.Lines;
-import arc.graphics.g2d.TextureRegion;
+import arc.graphics.g2d.*;
 import arc.graphics.gl.FrameBuffer;
+import arc.graphics.gl.Shader;
 import arc.math.Mathf;
 import arc.math.geom.QuadTree;
 import arc.math.geom.Rect;
@@ -409,6 +407,7 @@ public class SBlockRenderer extends BlockRenderer {
         }
         Draw.reset();
     }
+    
 
     public void drawBlocks(){
 //        Draw.draw(Layer.block, () -> {
@@ -426,44 +425,46 @@ public class SBlockRenderer extends BlockRenderer {
 
                 boolean visible = (build == null || !build.inFogTo(pteam));
 
-                //comment wasVisible part for hiding?
+                
                 if (block != Blocks.air && (visible || build.wasVisible)) {
-                    block.drawBase(tile);
-                    Draw.reset();
-                    Draw.z(Layer.block);
-
-                    if (block.customShadow) {
-                        Draw.z(Layer.block - 1);
-                        block.drawShadow(tile);
+//                    Draw.draw(Layer.block, () -> {
+                    
+                        block.drawBase(tile);
+                        Draw.reset();
                         Draw.z(Layer.block);
-                    }
-
-                    if (build != null) {
-                        if (visible) {
-                            build.visibleFlags |= (1L << pteam.id);
-                            if (!build.wasVisible) {
-                                build.wasVisible = true;
-                                updateShadow(build);
-                                renderer.minimap.update(tile);
-                            }
-                        }
-
-                        if (build.damaged()) {
-                            Draw.z(Layer.blockCracks);
-                            build.drawCracks();
+                        
+                        if (block.customShadow) {
+                            Draw.z(Layer.block - 1);
+                            block.drawShadow(tile);
                             Draw.z(Layer.block);
                         }
-
-                        if (build.team != pteam) {
-                            if (build.block.drawTeamOverlay) {
-                                build.drawTeam();
+                        
+                        if (build != null) {
+                            if (visible) {
+                                build.visibleFlags |= (1L << pteam.id);
+                                if (!build.wasVisible) {
+                                    build.wasVisible = true;
+                                    updateShadow(build);
+                                    renderer.minimap.update(tile);
+                                }
+                            }
+                            
+                            if (build.damaged()) {
+                                Draw.z(Layer.blockCracks);
+                                build.drawCracks();
                                 Draw.z(Layer.block);
                             }
-                        } else if (renderer.drawStatus && block.hasConsumers) {
-                            build.drawStatus();
+                            
+                            if (build.team != pteam) {
+                                if (build.block.drawTeamOverlay) {
+                                    build.drawTeam();
+                                    Draw.z(Layer.block);
+                                }
+                            } else if (renderer.drawStatus && block.hasConsumers) {
+                                build.drawStatus();
+                            }
                         }
-                    }
-                    Draw.reset();
+//                    });
                 } else if (!visible) {
                     //TODO here is the question: should buildings you lost sight of remain rendered? if so, how should this information be stored?
                     //uncomment lines below for buggy persistence
