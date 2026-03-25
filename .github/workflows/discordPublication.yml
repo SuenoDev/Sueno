@@ -13,10 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK 20
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
+          java-version: '20'
           distribution: 'temurin'
 
       - name: Build mod jars
@@ -63,11 +63,10 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed-title: "Сборка Sueno #${{ github.run_number }}"
+          embed-title: "Сборка #${{ github.run_number }}"
           embed-description: |
             ### ${{ github.event.head_commit.message }}
-            **Сборщик:** ${{ steps.builder-info.outputs.b_name }}
-            **Номер компиляции:** ${{ steps.builder-info.outputs.b_num }}
+            **От:** ${{ steps.builder-info.outputs.b_name }}
           embed-color: 15386701
           embed-url: ${{ github.event.head_commit.url }}
           embed-image-url: ${{ steps.check-image.outputs.image_url }}
