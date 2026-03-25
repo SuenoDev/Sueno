@@ -59,8 +59,8 @@ jobs:
             echo "image_url=" >> $GITHUB_OUTPUT
           fi
 
-      - name: Discord Webhook Action
-        uses: tsickert/discord-webhook@v5.3.0
+      - name: Discord Webhook (Text)
+        uses: tsickert/discord-webhook@v7.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           embed-title: "Сборка #${{ github.run_number }}"
@@ -70,4 +70,9 @@ jobs:
           embed-url: ${{ github.event.head_commit.url }}
           embed-image-url: ${{ steps.check-image.outputs.image_url }}
           embed-footer-text: "Версия мода: ${{ steps.get-version.outputs.version }} | Build ID: ${{ steps.builder-info.outputs.b_num }} | By: ${{ steps.builder-info.outputs.b_name }}"
+
+      - name: Discord Webhook (File)
+        uses: tsickert/discord-webhook@v7.0.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK }}
           filename: artifacts/Sueno-${{ steps.get-version.outputs.version }}.${{ github.run_number }}.jar
