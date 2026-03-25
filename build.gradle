@@ -1,143 +1,86 @@
-project.repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
-    maven{ url  "https://raw.githubusercontent.com/Zelaux/Repo/master/repository" }
-    maven { url "https://www.jitpack.io" }
-
-//    maven { url "https://raw.githubusercontent.com/GlennFolker/glTFrenzyMaven/main"}
+plugins {
+    id 'java'
+    id 'maven-publish'
 }
 
-project.plugins.apply("java")
-project.plugins.apply("idea")
-project.plugins.apply("maven-publish")
+group = "SuenoDev.Sueno"
+version = "1.0"
+
+sourceCompatibility = 8
+targetCompatibility = 8
 
 ext {
-    var localFile = file("settings/local.json")
-    local = localFile.exists() ? new groovy.json.JsonSlurper().parseText(localFile.text) : null
-
-    var settingsFile = file("settings/settings.json")
-    settings = settingsFile.exists() ? new groovy.json.JsonSlurper().parseText(settingsFile.text) : null
-
-    project.group = project.ext.settings?.projectSettings?.group ?: "group"
-    project.version = project.ext.settings?.projectSettings?.version ?: "nil"
-
-    buildScriptExtensions = []
-    settings?.extensions?.each { String ext ->
-        project.file("extensions/$ext").listFiles()?.each { File file ->
-            buildScriptExtensions += file
-        }
-    }
-
-    doExec = { String cmd ->
-        cmd.execute(null, rootProject.projectDir).waitForProcessOutput(System.out, System.err)
-    }
-
-    getOutputJar = { Project p ->
-        return "Sueno.jar"
-    }
-
-    child = { File p, String c ->
-        return new File(p, c)
-    }
-
-    // parse dependencies
-    deps = [:]
-    var depsConf = project.ext.settings?.dependencies
-    var depsList = [:]
-    depsConf?.list?.each { dep ->
-        var k = dep.keySet()[0]
-        var v = dep[k]
-        depsList[k] = v
-    }
-    depsConf?.deps?.each { depType ->
-        k = depType.key
-        depType.value.each { String v ->
-            var dep = null
-            if (v.startsWith("project:")) {
-                dep = project.project(v.substring(8))
-            } else if (v.startsWith("list:")) {
-                dep = depsList[v.substring(5)]
-            } else if (v.startsWith("direct:")) {
-                dep = v.substring(7)
-            }
-
-            if (dep == null)
-                project.logger.log(LogLevel.ERROR, "Uncknown depedency type $v")
-            else {
-                if (!project.ext.deps.containsKey(k)) {
-                    project.ext.deps[k] = []
-                }
-                project.ext.deps[k] += dep
-            }
-        }
-    }
-
-    // find sdkRoot in configs
-    var root = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: project.ext.local?.jvm?.home
-    sdkRoot = (root == null ? null : new File(root))
-
-    dexFile = project.ext.child(project.buildDir, "dex.jar")
-    var ua = project.ext.local?.build?.buildAndroid
-    useandroid = ((ua == null) || ua)
+    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT") ?: project.findProperty("androidSdkRoot")
+    mindustryVersion = 'v146'
+    arcVersion = 'v146'
 }
 
-project.tasks.create("fixNames") {
+sourceSets.main {
+    java.srcDirs = ['src', 'gen']
+    resources.srcDirs = ['res']
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://www.jitpack.io" }
+    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven { url "https://raw.githubusercontent.com/Zelaux/Repo/master/repository" }
+}
+
+dependencies {
+    compileOnly "com.github.Anuken.Arc:arc-core:$arcVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+
+    compileOnly "com.github.Zelaux.MindustryModCore:annotations:repo-test7"
+    annotationProcessor "com.github.Zelaux.MindustryModCore:annotations:repo-test7"
+
+    annotationProcessor "com.github.Anuken:jabel:93fde537c7"
+    compileOnly "com.github.Anuken:jabel:93fde537c7"
+
+    compileOnly project(":annotations")
+    annotationProcessor project(":annotations")
+}
+
+task bumpVersion {
+    outputs.upToDateWhen { false }
+
     doLast {
-        project.sourceSets.main.resources.srcDirs.each { File dir ->
-            if (dir.exists()) {
-                dir.eachFileRecurse(groovy.io.FileType.FILES) { File file ->
-                    if (file.name.endsWith(".hjson") || file.name.endsWith(".properties"))
-                        file.write file.text.replaceAll("mm-", "mdvlm-")
+        def versionFile = file("res/data/builder")
+        if (versionFile.exists()) {
+            try {
+                String content = versionFile.text.trim()
+                String[] parts = content.split('/')
+                if (parts.length == 2) {
+                    int ver = Integer.parseInt(parts[1]) + 1
+                    versionFile.text = "${parts[0]}/$ver"
+                    println "[:Build:] Version bumped to: ${parts[0]}/$ver"
                 }
+            } catch (Exception e) {
+                println "[:Build:] Failed to parse builder file."
             }
+        } else {
+            versionFile.parentFile.mkdirs()
+            versionFile.text = "durmiendo/1"
         }
     }
 }
+processResources.dependsOn bumpVersion
 
-project.group = project.ext.settings?.projectSettings?.group ?: "group"
-project.version = project.ext.settings?.projectSettings?.version ?: "nil"
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+    options.compilerArgs += ["-Xlint:deprecation"]
+    options.compilerArgs += ["-h", file("jni/include")]
+    options.generatedSourceOutputDirectory.set(file("gen"))
+    options.release.set(8)
 
-// src - java sources
-// gen - generated java sources
-// res - resources (e.g. assets)
-project.sourceSets.main.java.srcDirs = [
-        "src", "gen"
-]
-project.sourceSets.main.resources.srcDirs = [
-        "res"
-]
-
-project.tasks.create("dex")
-project.tasks.create("buildRelease", Jar)
-project.tasks.create("copyBuildRelease")
-
-
-project.tasks.compileJava { JavaCompile task ->
-    task.options.encoding = "UTF-8"
-    task.options.compilerArgs += "-Xlint:none"
-
-    // Используем '--release 8' для компиляции в байт-код Java 8
-    task.options.compilerArgs += ['--release', '8']
-
-    // Добавляем --add-exports, чтобы разрешить доступ к Unsafe
-    // без этого компилятор выдаст ошибку
-//    task.options.compilerArgs += '--add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED'
-
-    task.options.generatedSourceOutputDirectory.set(project.file("gen"))
-
-    // Для Android, `targetCompatibility` и `sourceCompatibility` могут быть установлены на 1.8.
-    // Если это сборка для ПК, они могут быть выше.
-    if (!project.ext.useandroid) {
-        task.sourceCompatibility = JavaVersion.VERSION_20
-        task.targetCompatibility = JavaVersion.VERSION_20
-    } else {
-        task.sourceCompatibility = JavaVersion.VERSION_1_8
-        task.targetCompatibility = JavaVersion.VERSION_1_8
+    doFirst {
+        delete file("gen")
+        file("gen").mkdirs()
     }
 
-    // Остальные флаги остаются
-    task.options.forkOptions.jvmArgs += [
+    options.fork = true
+    options.forkOptions.jvmArgs += [
             "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
@@ -145,131 +88,122 @@ project.tasks.compileJava { JavaCompile task ->
             "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
             "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
             "--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED"
     ]
+}
+
+task jarAndroid(type: Jar) {
+    dependsOn classes
+    archiveFileName = "classes.jar"
+
+    from sourceSets.main.output
+    from(file("mod.hjson"))
+    from(file("icon.png"))
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+task dex(type: Exec) {
+    dependsOn jarAndroid
+
+    def dexOutput = new File(buildDir, "libs/classes.dex")
+
+    if (sdkRoot == null || !new File(sdkRoot).exists()) {
+        enabled = false
+        commandLine "echo", "Android SDK not found. Skipping Dex."
+    } else {
+        doFirst {
+            dexOutput.parentFile.mkdirs()
+        }
+
+        def buildTools = new File(sdkRoot, "build-tools")
+        if (!buildTools.exists()) throw new GradleException("Android Build Tools not found")
+
+        def toolVersion = buildTools.list().sort().last()
+        def d8Name = System.getProperty('os.name').toLowerCase().contains('win') ? 'd8.bat' : 'd8'
+        def d8 = new File(buildTools, "$toolVersion/$d8Name")
+        def androidJar = new File(sdkRoot, "platforms/android-30/android.jar")
+
+        commandLine d8, "--min-api", "14", "--output", dexOutput.parent, "--lib", androidJar, jarAndroid.archiveFile.get()
+    }
+}
+
+task compileNatives(type: Exec) {
+    group = "build"
+    description = "Compiles C++ sources using CMake"
+
+    inputs.dir file("jni")
+    outputs.file file("natives/libsueno-native.so")
+
+    onlyIf { file("jni/CMakeLists.txt").exists() }
 
     doFirst {
-        delete options.generatedSourceOutputDirectory.get().asFile.listFiles()
+        file("jni/build").mkdirs()
+    }
+
+    workingDir "jni/build"
+
+    commandLine 'sh', '-c', 'cmake .. -DCMAKE_BUILD_TYPE=Release && make -j$(nproc) && cp libsueno-native.so ../../natives/'
+
+    doLast {
+        println "[:Natives:] C++ library compiled and copied to natives/"
     }
 }
 
-project.dependencies {
-    annotationProcessor "com.github.Anuken:jabel:93fde537c7"
+task dist(type: Jar) {
+    dependsOn compileNatives
+    dependsOn jarAndroid
+    if (tasks.dex.enabled) dependsOn dex
 
-//    implementation 'com.github.Zelaux.ArcLibrary:graphics-g3d:v1.0.6'
+    archiveFileName = "Sueno.jar"
+    destinationDirectory = file("build/libs")
 
-//    implementation 'com.github.GlennFolker:glTFrenzy:v146.0.1'
-    if (project.ext.deps.implementation != null)
-        implementation project.ext.deps.implementation
+    if (tasks.dex.enabled && file("$buildDir/libs/classes.dex").exists()) {
+        from(file("$buildDir/libs/classes.dex"))
+    }
 
-    if (project.ext.deps.api != null)
-        api project.ext.deps.api
+    from(zipTree(jarAndroid.archiveFile.get()))
 
-    if (project.ext.deps.compileOnly != null)
-        compileOnly project.ext.deps.compileOnly
-
-    if (project.ext.deps.annotationProcessor != null)
-        annotationProcessor project.ext.deps.annotationProcessor
+    from(file("natives")) {
+        into "natives"
+    }
 }
 
+task install(type: Copy) {
+    dependsOn dist
 
-project.tasks.copyBuildRelease { Task task ->
-    task.dependsOn project.tasks.buildRelease
+    if (project.hasProperty("modsPath")) {
+        from dist.archiveFile
+        into project.findProperty("modsPath")
 
-    task.doLast {
-        project.ext.local?.copy?.each { p ->
-            project.copy { CopySpec spec ->
-                spec.from project.tasks.buildRelease.archiveFile.get()
-                spec.into p
-            }
+        doLast {
+            println "[:Install:] Mod copied to " + project.findProperty("modsPath")
+        }
+    } else {
+        doFirst {
+            println "[:Install:] 'modsPath' not set in gradle.properties. Skipping install."
         }
     }
 }
 
+task run(type: Exec) {
+    dependsOn install
 
-project.tasks.jar { Jar jar ->
-    jar.archiveFileName.set "classes.jar"
+    if (project.hasProperty("gameJarPath")) {
+        // Запускаем игру
+        commandLine "java", "-jar", project.findProperty("gameJarPath")
 
-    jar.duplicatesStrategy DuplicatesStrategy.EXCLUDE
-    jar.from {
-        project.configurations.runtimeClasspath.collect { File file ->
-            file.isDirectory() ? file : zipTree(file)
+        // args "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+
+    } else {
+        doFirst {
+            println "[:Run:] 'gameJarPath' not set in gradle.properties. Cannot run."
         }
     }
-}
-
-// collect classes and dex jars
-project.tasks.buildRelease { Jar jar ->
-    File f = file("res/data/builder")
-    String a = f.newReader().readLine();
-    String[] b = a.split('/');
-    int ver = Integer.parseInt(b[1]);
-    ver+=1;
-    f.write(b[0] + '/' + ver);
-
-    jar.dependsOn project.tasks.dex
-    jar.dependsOn project.tasks.jar
-
-    jar.archiveFileName = project.ext.getOutputJar(project)
-
-    jar.from {
-        project.ext.useandroid ? [project.zipTree(project.tasks.jar.archiveFile.get()), project.zipTree(dexFile)] :
-                [project.zipTree(project.tasks.jar.archiveFile.get())]
-    }
-
-    jar.destinationDirectory.set project.file("artifacts")
-}
-
-// create dex jar
-project.tasks.dex { Task task ->
-    task.dependsOn project.tasks.jar
-
-    // create dex jar
-    task.doLast {
-        // delete previous dex jar
-        if (project.ext.dexFile.exists())
-            project.delete project.ext.dexFile
-
-        println project.ext.useandroid ? "Building dex jar" : "Dex jar building skipped"
-
-        if (project.ext.useandroid) {
-            // find d8 and android.jar locations
-            if (project.ext.sdkRoot == null || !project.ext.sdkRoot.exists())
-                throw new GradleException("No Android SDK found.")
-            var platformRoot = project.ext.child(project.ext.sdkRoot, "platforms").listFiles().find { File file ->
-                project.ext.child(file, "android.jar").exists()
-            }
-            String d8Name = System.getenv("OS") == "Windows_NT" ? "d8.bat" : "d8"
-            var buildToolsRoot = project.ext.child(project.ext.sdkRoot, "build-tools").listFiles().find { File file ->
-                project.ext.child(file, d8Name).exists()
-            }
-
-            if (!platformRoot || !buildToolsRoot)
-                throw new GradleException("" +
-                        (!platformRoot ? "No android.jar found. Ensure that you have an Android platform installed." : "") +
-                        (!buildToolsRoot ? "No $d8Name found. Ensure that you have an Android build tools installed." : ""))
-
-            // collect all classpath
-            var classpath = (configurations.compileClasspath.asList()
-                    + configurations.runtimeClasspath.asList()
-                    + project.ext.child(platformRoot, "android.jar"))
-            var dependencies = ""
-            for (path in classpath) {
-                dependencies += "--classpath $path.absolutePath "
-            }
-
-            // run d8
-            project.ext.doExec(
-                    "$buildToolsRoot/$d8Name $dependencies ${project.tasks.jar.archiveFile.get()}" +
-                            " --min-api 14 --output $dexFile.absolutePath")
-        }
-    }
-}
-
-project.ext.buildScriptExtensions?.each { File file ->
-    project.apply(from: file)
 }

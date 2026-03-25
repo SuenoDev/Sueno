@@ -104,6 +104,15 @@ public class SLog {
 
     public static void err(String msg) {
         String err = Strings.format("[red]@: @", getCaller(), msg);
+        genError(err);
+    }
+    
+    public static void err(String msg, Throwable e) {
+        String err = Strings.format("[red]@: @\n@", getCaller(), msg, e);
+        genError(err);
+    }
+    
+    private static void genError(String err) {
         StringBuilder b = new StringBuilder();
         for (int i = 0; i < err.length()-4; i++) {
             b.append("=");
@@ -113,7 +122,8 @@ public class SLog {
         log(err + "[white]");
         log("[red]@[white]", a);
     }
-
+    
+    
     public static void mark() {
         line();
         Time.mark();

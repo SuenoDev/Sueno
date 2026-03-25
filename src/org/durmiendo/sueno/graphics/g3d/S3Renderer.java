@@ -22,6 +22,7 @@ import mindustry.gen.Building;
 import mindustry.world.Block;
 import org.durmiendo.sueno.content.SBlocks;
 import org.durmiendo.sueno.core.SVars;
+import org.durmiendo.sueno.graphics.SShaders;
 import org.durmiendo.sueno.graphics.g3d.wobj.Obj;
 import org.durmiendo.sueno.graphics.g3d.wobj.ObjParser;
 
@@ -35,6 +36,7 @@ public class S3Renderer implements Disposable {
 
     public ObjectMap<Block, Obj> objs = new ObjectMap<>(){{
         put(SBlocks.mita, ObjParser.loadObj("mita/mita", new Vec3(1f/5f,1f/5f,1f/5f)));
+        put(SBlocks.demand, ObjParser.loadObj("core/untitled1", new Vec3(0.1f,0.1f,0.1f)));
     }};
 
     public ObjectMap<Building, Builds> builds = new ObjectMap<>();
@@ -96,7 +98,9 @@ public class S3Renderer implements Disposable {
         r.set(buffer.getTexture());
         Events.run(EventType.Trigger.draw, () -> {
             Draw.z(36);
+            Draw.color(Color.white);
             Draw.rect(r, Core.camera.position.x, Core.camera.position.y, Core.graphics.getWidth() / Vars.renderer.getDisplayScale(), Core.graphics.getHeight() / Vars.renderer.getDisplayScale());
+            Draw.color();
         });
     }
 
@@ -114,91 +118,73 @@ public class S3Renderer implements Disposable {
     public Vec3 tmp2 = new Vec3(0f, 0f, 0f);
     public Vec3 tmp3 = new Vec3(0f, 0f, 0f);
     public Vec3 tmp4 = new Vec3(0f, 0f, 0f);
-    public Vec3 lights = new Vec3(0f, 0, 1f);
-
+    public Vec3 lights = new Vec3(0.5f, -0.5f, -1f).nor();
+    
     public Mat3D mtmp = new Mat3D();
     public Mat3D mtmp2 = new Mat3D();
-
+    
     public void render() {
         Draw.flush();
+        
+        cam.up.set(Vec3.Y);
+        projection.setOrtho(0, 0, Core.graphics.getWidth(), Core.graphics.getHeight());
+        transformation.idt();
+        
+        cam.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        cam.position.set(0, 0, 0);
+        cam.direction.set(0, 0, -1f);
+        cam.lookAt(0, 0f, -1);
+        cam.update();
+        
+        buffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
+        
+        buffer.begin(Color.clear);
+        
         Gl.clear(Gl.depthBufferBit);
         Gl.enable(Gl.depthTest);
         Gl.depthMask(true);
-
-        Gl.enable(Gl.cullFace);
-        Gl.cullFace(Gl.back);
-
-        cam.up.set(Vec3.Y);
-
-        projection.setOrtho(0, 0, Core.graphics.getWidth(), Core.graphics.getHeight());
-        transformation.idt();
-
-        cam.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-//        cam.position.set(Core.camera.position.x, Core.camera.position.y, Vars.renderer.getDisplayScale());
-        cam.position.set(0, 0, 0);
-        cam.direction.set(0, 0,-1f);
-        cam.lookAt(0, 0f, -1);
-//        cam.lookAt(Core.camera.position.x, 0f, Core.camera.position.y);
-//        cam.position.set(Core.camera.position.x, Core.camera.position.y, Vars.renderer.getDisplayScale()+4f);
-
-        cam.update();
-
-        buffer.resize(Core.graphics.getWidth(), Core.graphics.getHeight());
-
-
-        buffer.begin(Color.clear);
-        shader.bind();
-
-        baseRender();
-
-        buffer.end();
-
+        
         Gl.disable(Gl.cullFace);
+        
+        Shader sh = SShaders.g3d;
+        sh.bind();
+        sh.setUniformf("u_campos", cam.position.x, cam.position.y, cam.position.z);
+        sh.setUniformf("u_lightdir", lights.x, lights.y, lights.z);
+        
+        baseRender();
+        
+        buffer.end();
+        
         Gl.disable(Gl.depthTest);
         Gl.depthMask(false);
-
-        Draw.blit(buffer, shader);
-//        Draw.flush();
+        
+        Gl.activeTexture(Gl.texture0);
+        if(Core.atlas != null && Core.atlas.texture() != null) {
+            Core.atlas.texture().bind(0);
+        }
+        
+        Draw.flush();
     }
-
-    Vec3 scale = new Vec3(1f, 1f, 1f).scl(2f);
-
+    
     void baseRender() {
-        mtmp2.set(transformation);
-
-
+        mtmp2.idt(); // View matrix (identity, так как всё делает cam.combined)
+        
         for (ObjectMap.Entry<Building, Builds> b : builds) {
             if (!b.key.isAdded()) {
                 builds.remove(b.key);
                 continue;
             }
-            scale.set(1f, 1f, 1f).scl(1/15f);
-            tmp2.set(-Mathf.PI/2f,b.value.build.rotdeg()*Mathf.degRad, 0f);
-            tmp4.set(b.value.build.getX(), b.value.build.getY(), 0f);
-
-            tmp.set(tmp4);
-            tmp.sub(Core.camera.position.x, Core.camera.position.y, 0);
-            tmp.y*=-1f;
-
-            tmp.scl(1f/310f);
-            tmp.z = -1f/Vars.renderer.getDisplayScale();
-
+            
+            // Берем РЕАЛЬНЫЕ мировые координаты тайла
+            tmp.set(b.value.build.x, b.value.build.y, 0f);
+            
+            // ВАЖНО: Mat3D в Arc использует ГРАДУСЫ, а не радианы!
+            // -90f поворачивает модель так, чтобы она стояла на земле (если в Blender ось Z - верх)
+            tmp2.set(-90f, b.value.build.rotdeg(), 0f);
+            
+            // Используем статический шейдер, который внутри Obj
             b.value.obj.render(tmp, tmp2, cam.combined, mtmp2, cam, lights);
         }
-
-
-//        scale.set(1f, 1f, 1f).scl(1/12f);
-//        tmp2.set(-Mathf.PI/2f,r*Mathf.degRad, 0f);
-//        tmp4.set(400f,400f, 0f);
-//
-//        tmp.set(tmp4);
-//        tmp.sub(Core.camera.position.x, Core.camera.position.y, 0);
-//        tmp.y*=-1f;
-//
-//        tmp.scl(1f/320f);
-//        tmp.z = -1f/Vars.renderer.getDisplayScale();
-//
-//        ohno.render(tmp, tmp2, cam.combined, mtmp2, cam, lights, scale);
     }
 
     public void dispose() {

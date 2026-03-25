@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.graphics.g3d.wobj;
 
+import arc.Core;
 import arc.graphics.Color;
 import arc.graphics.Gl;
 import arc.graphics.Mesh;
@@ -36,6 +37,7 @@ public class Obj {
             
             worldTransform.idt();
             worldTransform.translate(pos);
+            // ВАЖНО: здесь поворот в градусах (так работает Arc)
             worldTransform.rotate(Vec3.X, rot.x);
             worldTransform.rotate(Vec3.Y, rot.y);
             worldTransform.rotate(Vec3.Z, rot.z);
@@ -46,8 +48,10 @@ public class Obj {
             Texture tex = m.mtl.texture;
             if (tex != null) {
                 tex.bind(0);
-                shader.setUniformi("u_texture", 0);
+            } else {
+                Core.atlas.white().texture.bind(0);
             }
+            shader.setUniformi("u_texture", 0);
             
             applyMaterial(m);
             

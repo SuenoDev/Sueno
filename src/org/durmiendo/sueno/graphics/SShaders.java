@@ -6,6 +6,7 @@ import arc.graphics.gl.Shader;
 import arc.scene.ui.layout.Scl;
 import arc.struct.ObjectMap;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.graphics.Shaders;
 import org.durmiendo.sueno.core.SVars;
 
@@ -47,6 +48,7 @@ public class SShaders {
                     Core.camera.position.y - Core.camera.height / 2);
             setUniformf("u_texsize", Core.camera.width, Core.camera.height);
             setUniformf("u_time", Time.time);
+            setUniformf("u_cscl", Vars.renderer.getDisplayScale());
         }
     }
 

@@ -1,74 +1,58 @@
-project.repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
-    maven { url "https://www.jitpack.io" }
+plugins {
+    id 'java'
 }
 
-project.plugins.apply("java")
-project.plugins.apply("idea")
-project.plugins.apply("maven-publish")
+sourceCompatibility = 8
+targetCompatibility = 8
 
-project.sourceSets.main.java.srcDirs = [
-        "src", "gen"
-]
-project.sourceSets.main.resources.srcDirs = [
-        "res"
-]
+repositories {
+    mavenCentral()
+    maven { url "https://www.jitpack.io" }
+    maven { url "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+}
 
-project.tasks.compileJava { JavaCompile task ->
-    task.options.forkOptions.executable = "D:/.jdks/corretto-1.8.0_372/bin/javac.exe"
-    //task.options.fork = true
+dependencies {
+    implementation "com.github.Anuken.Arc:arc-core:v146"
+    implementation "com.squareup:javapoet:1.13.0"
+}
 
-    task.options.encoding = "UTF-8"
-    task.options.compilerArgs += "-Xlint:none"
-    task.options.generatedSourceOutputDirectory.set(project.file("gen"))
+sourceSets.main {
+    java.srcDirs = ['src']
+    resources.srcDirs = ['res']
+}
 
-    //task.options.compilerArgs += ['--release', '8']
-    task.targetCompatibility = JavaVersion.VERSION_1_8
-    task.sourceCompatibility = JavaVersion.VERSION_1_8
-
-    task.options.forkOptions.jvmArgs += [
-            "--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED",
-            "--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
-            "--add-opens=java.base/sun.reflect.annotation=ALL-UNNAMED"
-    ]
-
-    doFirst {
-        delete options.generatedSourceOutputDirectory.get().asFile.listFiles()
-    }
+task generateProcessorRegistry {
+    def outputDir = file("$buildDir/generated/resources/services")
+    outputs.dir outputDir
 
     doLast {
-        var processorDir = new File(file(project.sourceSets.main.resources.srcDirs.first()), "META-INF/services/")
-        processorDir.mkdirs()
-        var processorFile = new File(processorDir, "javax.annotation.processing.Processor")
+        def processorFile = new File(outputDir, "META-INF/services/javax.annotation.processing.Processor")
+        processorFile.parentFile.mkdirs()
 
-        var text = new StringBuilder()
-        project.sourceSets.main.java.srcDirs.each { File f ->
-            f.eachFileRecurse(groovy.io.FileType.FILES){ file ->
-                boolean isProcessor = file.text.contains('// annotation processor')
-                if(file.name.endsWith(".java") && isProcessor){
-                    text.append(file.path.substring(f.path.length() + 1)).append("\n")
+        StringBuilder content = new StringBuilder()
+
+        sourceSets.main.java.srcDirs.each { srcDir ->
+            if (srcDir.exists()) {
+                srcDir.eachFileRecurse(groovy.io.FileType.FILES) { file ->
+                    if (file.name.endsWith(".java") && file.text.contains("// annotation processor")) {
+                        String relPath = file.path.substring(srcDir.path.length() + 1)
+                        String className = relPath.replace(File.separator, ".").replace(".java", "")
+                        content.append(className).append("\n")
+                    }
                 }
             }
         }
 
-        processorFile.text = text.toString().replace(".java", "").replace("/", ".").replace("\\", ".")
+        if (content.length() > 0) {
+            processorFile.text = content.toString()
+        }
     }
 }
 
-project.dependencies {
-    //annotationProcessor "com.github.Anuken:jabel:93fde537c7"
+sourceSets.main.resources.srcDir "$buildDir/generated/resources/services"
 
-    compileOnly "com.github.Anuken.Arc:arc-core:v145"
-    compileOnly "com.squareup:javapoet:1.13.0"
+processResources {
+    dependsOn generateProcessorRegistry
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

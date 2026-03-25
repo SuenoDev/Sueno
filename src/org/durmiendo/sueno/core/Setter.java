@@ -15,6 +15,7 @@ import mindustry.gen.Groups;
 import mindustry.gen.Unit;
 import mindustry.io.SaveVersion;
 import org.durmiendo.sueno.graphics.*;
+import org.durmiendo.sueno.graphics.g3d.S3Renderer;
 import org.durmiendo.sueno.spacestations.SpaceStations;
 import org.durmiendo.sueno.processors.SuenoInputProcessor;
 import org.durmiendo.sueno.settings.SettingsBuilder;
@@ -102,7 +103,7 @@ public class Setter {
     
 
     private static void loadRender() {
-//        new S3Renderer();
+        new S3Renderer();
 //        try {
 //            Field f = Vars.renderer.getClass().getDeclaredField("blocks");
 //            f.setAccessible(true);

@@ -15,6 +15,8 @@ void main() {
     vec4 worldPos4 = u_worldTrans * a_position;
     v_worldPos = worldPos4.xyz;
     v_normal = normalize(mat3(u_worldTrans) * a_normal);
+
+
     v_texcoord = a_texCoord0;
     gl_Position = u_proj * u_view * worldPos4;
 }

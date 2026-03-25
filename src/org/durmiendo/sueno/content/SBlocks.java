@@ -1,5 +1,6 @@
 package org.durmiendo.sueno.content;
 
+import arc.files.Fi;
 import arc.graphics.Color;
 import arc.graphics.g2d.Draw;
 import arc.graphics.g2d.Fill;
@@ -7,9 +8,11 @@ import arc.graphics.g2d.Lines;
 import arc.math.Mathf;
 import arc.math.geom.Vec2;
 import arc.util.Time;
+import mindustry.Vars;
 import mindustry.content.Fx;
 import mindustry.content.Items;
 import mindustry.content.StatusEffects;
+import mindustry.core.ContentLoader;
 import mindustry.entities.Effect;
 import mindustry.entities.UnitSorts;
 import mindustry.entities.bullet.ArtilleryBulletType;
@@ -40,6 +43,7 @@ import mindustry.world.meta.Env;
 import mindustry.world.meta.Stat;
 import org.durmiendo.sueno.entities.bullet.AreaLaserBullet;
 import org.durmiendo.sueno.graphics.SFx;
+import org.durmiendo.sueno.utils.SInterp;
 import org.durmiendo.sueno.world.blocks.DBlock;
 import org.durmiendo.sueno.world.blocks.Heater;
 import org.durmiendo.sueno.world.blocks.TemperatureSource;
@@ -53,6 +57,8 @@ import org.durmiendo.sueno.world.blocks.environment.Ice;
 import org.durmiendo.sueno.world.blocks.production.VoidExtractor;
 import org.durmiendo.sueno.world.blocks.storage.SCoreBlock;
 import org.durmiendo.sueno.world.blocks.walls.UnDestroyable;
+
+import javax.swing.text.AbstractDocument;
 
 import static arc.graphics.g2d.Draw.color;
 import static arc.graphics.g2d.Lines.*;
@@ -273,7 +279,7 @@ public class SBlocks {
 
             addb(new BasicBulletType() {{
                 damage = 180f;
-                speed = 20f;
+                speed = 12f;
                 lifetime = 30f;
 
                 pierce = true;
@@ -306,30 +312,33 @@ public class SBlocks {
                 despawnEffect = hitEffect = Fx.none;
                 homingRange = 192;
                 homingPower = 0.08f;
-            }}, 1f);
+            }}, 3f);
             
             
             addb(new BasicBulletType() {{
-                damage = 60f;
-                speed = 9f;
+                damage = 400f;
+                speed = 31f;
                 lifetime = 50f;
 
                 pierce = false;
                 pierceBuilding = false;
 
                 trailColor = Color.valueOf("d23732");
-                Color efc = Color.valueOf("ff9fba");
-                Color efcc = Color.valueOf("b42f41");
                 trailLength = 5;
 
-                trailChance = 0.1f;
+                trailChance = 0.01f;
                 trailInterval = 0.1f;
                 trailWidth = 0.7f;
-                trailEffect = trailEffect;
+                trailEffect = new Effect(35f, e -> {
+                    float r = Mathf.randomSeed(e.id, -15, 15);
+                    Drawf.tri(e.x, e.y, 2f * e.fin(SInterp.old), 18f * e.fin(SInterp.old), e.rotation - 120 + r);
+                    Drawf.tri(e.x, e.y, 2f * e.fin(SInterp.old), 18f * e.fin(SInterp.old), e.rotation - 210 + r);
+                    Fill.circle(e.x, e.y, 1f * e.fin(SInterp.old));
+                });
 
                 homingRange = 8*20;
                 homingPower = 3f;
-            }}, 0);
+            }}, 1f);
 //            addb(new BasicBulletType() {{
 //                damage = 60f;
 //                speed = 18f;
@@ -352,7 +361,7 @@ public class SBlocks {
         }
             public void setStats() {
                 super.setStats();
-                this.stats.add(Stat.abilities, "[#aa2828]Да прольется кровь");
+                this.stats.add(Stat.abilities, "[#aa2828]Да прольётся кровь");
             }
         };
 

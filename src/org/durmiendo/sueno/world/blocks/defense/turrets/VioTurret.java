@@ -147,7 +147,7 @@ public class VioTurret extends PowerTurret {
 //        if (!isphos(x - 1, y, bx, by))
 //            Lines.line(xr - 4f, yr - 2f, xr - 4f, yr + 2f);
         
-        Draw.color(Color.white);
+        Draw.reset();
     }
     
     public class VioTurretBuild extends PowerTurret.PowerTurretBuild {

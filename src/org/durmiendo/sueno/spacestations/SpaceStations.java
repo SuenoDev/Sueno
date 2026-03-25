@@ -37,7 +37,7 @@ public class SpaceStations {
     
     
     public SpaceStations() {
-        cube = ObjParser.loadObj("router/router", new Vec3(0.1f,0.1f,0.1f));
+        cube = ObjParser.loadObj("core/untitled1", new Vec3(0.1f,0.1f,0.1f));
         SLog.info(cube.materials.first().mtl.name);
         SLog.info(cube.materials.first().mtl.texture.toString());
         
