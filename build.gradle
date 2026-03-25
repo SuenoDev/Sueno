@@ -109,7 +109,7 @@ task jarAndroid(type: Jar) {
     archiveFileName = "classes.jar"
 
     from sourceSets.main.output
-    from(file("mod.hjson"))
+    from(file("mod.json"))
     from(file("icon.png"))
 
     from {
@@ -133,10 +133,15 @@ task dex(type: Exec) {
         def buildTools = new File(sdkRoot, "build-tools")
         if (!buildTools.exists()) throw new GradleException("Android Build Tools not found")
 
-        def toolVersion = buildTools.list().sort().last()
+        def toolVersion = buildTools.listFiles().sort().last().name
         def d8Name = System.getProperty('os.name').toLowerCase().contains('win') ? 'd8.bat' : 'd8'
         def d8 = new File(buildTools, "$toolVersion/$d8Name")
-        def androidJar = new File(sdkRoot, "platforms/android-30/android.jar")
+
+        def platformsDir = new File(sdkRoot, "platforms")
+        def latestPlatform = platformsDir.listFiles()?.sort()?.reverse()?.find { new File(it, "android.jar").exists() }
+        if (latestPlatform == null) throw new GradleException("No android.jar found in SDK.")
+
+        def androidJar = new File(latestPlatform, "android.jar")
 
         commandLine d8, "--min-api", "14", "--output", dexOutput.parent, "--lib", androidJar, jarAndroid.archiveFile.get()
     }
