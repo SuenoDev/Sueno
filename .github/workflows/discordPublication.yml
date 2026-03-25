@@ -66,9 +66,8 @@ jobs:
           embed-title: "Сборка #${{ github.run_number }}"
           embed-description: |
             ### ${{ github.event.head_commit.message }}
-            **От:** ${{ steps.builder-info.outputs.b_name }}
           embed-color: 15386701
           embed-url: ${{ github.event.head_commit.url }}
           embed-image-url: ${{ steps.check-image.outputs.image_url }}
-          embed-footer-text: "Версия мода: ${{ steps.get-version.outputs.version }} | Build ID: ${{ steps.builder-info.outputs.b_num }}"
+          embed-footer-text: "Версия мода: ${{ steps.get-version.outputs.version }} | Build ID: ${{ steps.builder-info.outputs.b_num }} | By: ${{ steps.builder-info.outputs.b_name }}"
           filename: artifacts/Sueno-${{ steps.get-version.outputs.version }}.${{ github.run_number }}.jar
