@@ -108,6 +108,8 @@ task jarAndroid(type: Jar) {
     dependsOn classes
     archiveFileName = "classes.jar"
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     from sourceSets.main.output
     from(file("mod.json"))
     from(file("icon.png"))
@@ -177,6 +179,8 @@ task dist(type: Jar) {
     archiveFileName = "Sueno.jar"
     destinationDirectory = file("build/libs")
 
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     if (tasks.dex.enabled && file("$buildDir/libs/classes.dex").exists()) {
         from(file("$buildDir/libs/classes.dex"))
     }
@@ -209,7 +213,6 @@ task run(type: Exec) {
     dependsOn install
 
     if (project.hasProperty("gameJarPath")) {
-        // Запускаем игру
         commandLine "java", "-jar", project.findProperty("gameJarPath")
 
         // args "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
