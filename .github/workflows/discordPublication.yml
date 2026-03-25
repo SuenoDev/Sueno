@@ -22,7 +22,7 @@ jobs:
       - name: Build mod jars
         run: |
           chmod +x gradlew
-          ./gradlew install --stacktrace
+          ./gradlew dist --stacktrace
 
       - name: Get Builder Info
         id: builder-info
