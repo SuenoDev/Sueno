@@ -27,12 +27,9 @@ jobs:
       - name: Get Builder Info
         id: builder-info
         run: |
-          # Читаем файл res/data/builder
           CONTENT=$(cat res/data/builder)
-          # Разбиваем на имя и номер
           B_NAME=$(echo $CONTENT | cut -d'/' -f1)
           B_NUM=$(echo $CONTENT | cut -d'/' -f2)
-          # Сохраняем в переменные шага
           echo "b_name=$B_NAME" >> $GITHUB_OUTPUT
           echo "b_num=$B_NUM" >> $GITHUB_OUTPUT
 
@@ -44,7 +41,8 @@ jobs:
 
       - name: Rename jar
         run: |
-          mv artifacts/Sueno.jar artifacts/Sueno-${{ steps.get-version.outputs.version }}.${{ github.run_number }}.jar
+          mkdir -p artifacts
+          mv build/libs/Sueno.jar artifacts/Sueno-${{ steps.get-version.outputs.version }}.${{ github.run_number }}.jar
 
       - name: Upload built jar file
         uses: actions/upload-artifact@v4
