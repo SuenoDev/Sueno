@@ -69,7 +69,7 @@ jobs:
           embed-color: 15386701
           embed-url: ${{ github.event.head_commit.url }}
           embed-image-url: ${{ steps.check-image.outputs.image_url }}
-          embed-footer-text: "Версия мода: ${{ steps.get-version.outputs.version }} | Build ID: ${{ steps.builder-info.outputs.b_num }} | By: ${{ steps.builder-info.outputs.b_name }}"
+          embed-footer-text: "Version: ${{ steps.get-version.outputs.version }} | id: ${{ steps.builder-info.outputs.b_num }} | By: ${{ steps.builder-info.outputs.b_name }}"
 
       - name: Discord Webhook (File)
         uses: tsickert/discord-webhook@v7.0.0

@@ -12,7 +12,10 @@ artifacts/
 
 ### Generated files
 /gen/
-
+/jni/build/
+/annotations/build/
+annotations/build/
+jni/build/
 
 /run/
 
